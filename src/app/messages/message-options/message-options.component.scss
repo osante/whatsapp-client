@@ -1,0 +1,6 @@
+li {
+    @apply flex items-center dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-sm p-2 cursor-pointer;
+    > span {
+        @apply ml-2;
+    }
+}

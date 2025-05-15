@@ -1,0 +1,56 @@
+<div
+    class="w-40 shadow-xl rounded-sm bg-gray-100 dark:bg-gray-700 z-10"
+    *ngIf="!showEmojiPicker"
+>
+    <ul class="space-y-2">
+        <!-- 'bg-gray-200 dark:bg-gray-800': messageType === 'raw', -->
+        <li (click)="replyToMessage()">
+            <mat-icon class="material-icons-outlined">reply</mat-icon>
+            <span i18n>Reply</span>
+        </li>
+
+        <li (click)="markAsRead()" *ngIf="message.receiver_data">
+            <img
+                width="24"
+                src="assets/icons/flaticon/double-green-check-mark-24.png"
+                alt="Double blue tick"
+            />
+            <span i18n>Mark as read</span>
+        </li>
+
+        <li (click)="openMessageInfo()">
+            <mat-icon class="material-icons-outlined">info</mat-icon>
+            <span i18n>Message data</span>
+        </li>
+
+        <li
+            (click)="toggleEmojiPicker()"
+            *ngIf="(message | messageData).type !== MessageType.reaction"
+        >
+            <mat-icon class="material-icons-outlined">add_reaction</mat-icon>
+            <span i18n>Add reaction</span>
+        </li>
+    </ul>
+</div>
+
+<emoji-mart
+    [style]="{
+        width: '280px',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        borderRadius: '0.5rem',
+    }"
+    (emojiSelect)="onEmojiSelect($event)"
+    *ngIf="showEmojiPicker"
+></emoji-mart>
+
+<app-message-info-data
+    [message]="message"
+    (closeModal)="closeMessageInfo()"
+    *ngIf="showMessageInfo"
+></app-message-info-data>
+
+<app-timeout-error-modal
+    [message]="errorStr"
+    [data]="errorData"
+    #errorModal
+></app-timeout-error-modal>

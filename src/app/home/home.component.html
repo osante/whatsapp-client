@@ -1,0 +1,65 @@
+<div class="w-screen h-screen flex justify-center">
+    <app-sidebar class="" [activePage]="currentFragment"></app-sidebar>
+
+    <app-chats-sidebar
+        [ngClass]="{
+            hidden: currentFragment !== HomeFragment.chats,
+        }"
+        (select)="conversations.getCurrentMessagingProductContactId($event)"
+        #chatsSidebar
+    ></app-chats-sidebar>
+
+    <div
+        class="w-full dark:bg-gray-800"
+        [ngClass]="{
+            hidden:
+                currentFragment !== HomeFragment.chats ||
+                queryParamIs('mode', 'new_contact'),
+        }"
+    >
+        <app-conversations
+            class=""
+            #conversations
+            (searchAtContactId)="
+                chatsSidebar.addMessagingProductContactIdField($event)
+            "
+            [ngClass]="{
+                hidden: !hasQueryParam('messaging_product_contact.id'),
+            }"
+        ></app-conversations>
+    </div>
+
+    <div
+        class="w-full dark:bg-gray-800"
+        *ngIf="
+            currentFragment === HomeFragment.chats &&
+            !hasQueryParam('messaging_product_contact.id') &&
+            queryParamIs('mode', 'new_contact')
+        "
+    >
+        <app-new-contact></app-new-contact>
+    </div>
+
+    <app-template-sidebar
+        class=""
+        *ngIf="currentFragment === HomeFragment.templates"
+    ></app-template-sidebar>
+
+    <app-template-details
+        class="w-full dark:bg-gray-800"
+        *ngIf="currentFragment === HomeFragment.templates"
+    ></app-template-details>
+
+    <app-campaigns-sidebar
+        *ngIf="
+            currentFragment === HomeFragment.campaigns && !environment.isLite
+        "
+    ></app-campaigns-sidebar>
+
+    <app-campaign-details
+        class="w-full dark:bg-gray-800"
+        *ngIf="
+            currentFragment === HomeFragment.campaigns && !environment.isLite
+        "
+    ></app-campaign-details>
+</div>

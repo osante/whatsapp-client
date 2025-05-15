@@ -1,0 +1,50 @@
+<div
+    class="flex justify-between items-center p-2 bg-gray-200 dark:bg-gray-700 dark:text-white relative dark:main-shadow"
+>
+    <a
+        [routerLink]="[]"
+        [queryParams]="contactDetailsQueryParams"
+        queryParamsHandling="merge"
+        class="flex items-center w-full"
+    >
+        <img
+            [src]="messagingProductContact.contact.photo_path"
+            alt="Profile Picture"
+            class="rounded-full w-12 h-12"
+            *ngIf="messagingProductContact.contact.photo_path"
+        />
+
+        <!-- Show Font Awesome icon if profilePictureSrcInput is not provided -->
+        <i
+            class="fas fa-user-circle text-gray-500 dark:text-gray-400 text-5xl"
+            *ngIf="!messagingProductContact.contact.photo_path"
+        ></i>
+
+        <div class="ml-3">
+            <h2
+                class="text-lg text-gray-800 dark:text-gray-200 font-medium truncate"
+            >
+                {{
+                    messagingProductContact.contact.name ||
+                        messagingProductContact.product_details.phone_number
+                }}
+            </h2>
+        </div>
+    </a>
+
+    <div class="relative">
+        <app-small-button
+            [active]="optionsModalOpen"
+            (click)="this.optionsModalOpen = !this.optionsModalOpen"
+            matIcon="menu"
+        ></app-small-button>
+
+        <!-- Modal -->
+        <app-options
+            *ngIf="optionsModalOpen"
+            (close)="this.optionsModalOpen = false"
+            class="absolute top-full right-0 mt-2 z-10 rounded-md"
+        >
+        </app-options>
+    </div>
+</div>

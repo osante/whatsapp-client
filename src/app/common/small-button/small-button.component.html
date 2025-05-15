@@ -1,0 +1,34 @@
+<button
+    [ngClass]="{
+        'aspect-square flex items-center justify-center rounded-full active:bg-gray-200 dark:active:bg-gray-600 outline-none': true,
+        'bg-gray-300 dark:bg-gray-500': active,
+        'hover:bg-gray-400 dark:hover:bg-gray-600': !active,
+    }"
+    [style]="'width: ' + width"
+    #button
+>
+    <!-- Custom Content -->
+    <ng-container *ngIf="customContent">
+        <ng-container *ngTemplateOutlet="customContent"></ng-container>
+    </ng-container>
+
+    <!-- Image -->
+    <img
+        [src]="src"
+        class="aspect-square brightness-50 dark:brightness-100"
+        *ngIf="!customContent && src"
+    />
+
+    <!-- Material Icon -->
+    <mat-icon
+        [fontIcon]="matIcon"
+        *ngIf="!customContent && matIcon"
+        class="aspect-square text-gray-500 dark:text-white material-icons-outlined"
+    ></mat-icon>
+
+    <mat-icon
+        [fontIcon]="matSymbol"
+        *ngIf="!customContent && matSymbol"
+        class="aspect-square text-gray-500 dark:text-white material-symbols-outlined"
+    ></mat-icon>
+</button>

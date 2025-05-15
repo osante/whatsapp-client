@@ -1,0 +1,328 @@
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import {
+    Conversation,
+    ConversationMessagingProductContact,
+} from "../../../core/message/model/conversation.model";
+import { CommonModule } from "@angular/common";
+import { FormsModule, NgForm } from "@angular/forms";
+import { ContactControllerService } from "../../../core/contact/controller/contact-controller.service";
+import { MessagingProductContactControllerService } from "../../../core/messaging-product/controller/messaging-product-contact-controller.service";
+import { SmallButtonComponent } from "../../common/small-button/small-button.component";
+import { ConversationControllerService } from "../../../core/message/controller/conversation-controller.service";
+import { DateOrderEnum } from "../../../core/common/model/date-order.model";
+import { MediaPreviewComponent } from "./media-preview/media-preview.component";
+import { Router, RouterModule } from "@angular/router";
+import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
+import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
+import { MatIconModule } from "@angular/material/icon";
+import { NGXLogger } from "ngx-logger";
+
+@Component({
+    selector: "app-contact-info",
+    imports: [
+        CommonModule,
+        FormsModule,
+        SmallButtonComponent,
+        MediaPreviewComponent,
+        TimeoutErrorModalComponent,
+        MatIconModule,
+        RouterModule,
+    ],
+    templateUrl: "./contact-info.component.html",
+    styleUrls: ["./contact-info.component.scss"],
+    standalone: true,
+})
+export class ContactInfoComponent implements OnInit {
+    // Existing properties
+    isEditing: boolean = false;
+    isLoading: boolean = false; // General loading state
+    originalContact: ConversationMessagingProductContact | null = null;
+    quantityOfMediaLinksAndDocs: number = 0;
+    media: Conversation[] = [];
+
+    @Input() messagingProductContact!: ConversationMessagingProductContact;
+    @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
+
+    // New loading flags for specific actions
+    isDeleting: boolean = false;
+    isBlocking: boolean = false;
+    isUnblocking: boolean = false;
+
+    // New error message variables
+    errorStr: string = "";
+    errorData: any;
+
+    constructor(
+        private contactControllerService: ContactControllerService,
+        private messagingProductContactController: MessagingProductContactControllerService,
+        private conversationController: ConversationControllerService,
+        private queryParamsService: QueryParamsService,
+        private router: Router,
+        private logger: NGXLogger,
+    ) {}
+
+    async ngOnInit(): Promise<void> {
+        this.isLoading = true; // Start general loading
+        // Reset all error messages
+        this.errorStr = "";
+        try {
+            if (this.messagingProductContact?.id) {
+                await this.countMediaLinksAndDocs();
+                await this.getInitialMedia();
+                return;
+            }
+
+            // Initialize a new messaging product contact if not present
+            this.messagingProductContact = {
+                id: "",
+                contact_id: "",
+                messaging_product_id: "",
+                blocked: false,
+                product_details: {
+                    phone_number: "",
+                    wa_id: "",
+                },
+                created_at: new Date(),
+                updated_at: new Date(),
+                last_read_at: new Date(),
+                contact: {
+                    id: "",
+                    created_at: new Date(),
+                    updated_at: new Date(),
+                    name: "",
+                    email: "",
+                    photo_path: "",
+                },
+            };
+            this.toggleEdit();
+        } catch (error) {
+            this.handleErr("Failed to initialize contact info.", error);
+        } finally {
+            this.isLoading = false; // End general loading
+        }
+    }
+
+    toggleEdit() {
+        if (!this.messagingProductContact?.id) {
+            this.isEditing = true;
+            return;
+        }
+        this.isEditing = !this.isEditing;
+        if (this.isEditing) {
+            // Deep copy to prevent reference issues
+            this.originalContact = JSON.parse(
+                JSON.stringify(this.messagingProductContact),
+            );
+        }
+    }
+
+    async submitChanges(form: NgForm) {
+        // Reset general error message
+        this.errorStr = "";
+
+        if (form.invalid) {
+            // Mark all fields as touched to trigger validation messages
+            form.form.markAllAsTouched();
+            return;
+        }
+
+        this.isLoading = true; // Start general loading
+        try {
+            if (!this.messagingProductContact?.id) {
+                const contact = await this.contactControllerService.create(
+                    this.messagingProductContact.contact,
+                );
+                const messagingProductContact =
+                    await this.messagingProductContactController.createWhatsAppContact(
+                        {
+                            contact_id: contact.id,
+                            product_details: {
+                                phone_number:
+                                    this.messagingProductContact.product_details
+                                        .phone_number,
+                                wa_id: this.messagingProductContact
+                                    .product_details.phone_number,
+                            },
+                        },
+                    );
+
+                await this.router.navigate([], {
+                    queryParams: {
+                        "messaging_product_contact.id":
+                            messagingProductContact.id,
+                        mode: "contact_info",
+                        ...this.queryParamsService.globalQueryParams,
+                    },
+                    queryParamsHandling: "replace",
+                    preserveFragment: true,
+                });
+                return;
+            }
+            if (this.messagingProductContact.contact.id) {
+                const updateData = {
+                    id: this.messagingProductContact.contact.id,
+                    name: this.messagingProductContact.contact.name,
+                    email: this.messagingProductContact.contact.email,
+                    photo_path: this.messagingProductContact.contact.photo_path,
+                };
+
+                await this.contactControllerService.update(updateData);
+                this.isEditing = false; // Exit edit mode on success
+            }
+        } catch (error) {
+            this.handleErr(
+                "Failed to submit changes. Please try again.",
+                error,
+            );
+        } finally {
+            this.isLoading = false; // End general loading
+        }
+    }
+
+    cancelEdit() {
+        if (this.originalContact) {
+            // Restore the original contact data
+            this.messagingProductContact = this.originalContact;
+        }
+        this.isEditing = false; // Exit edit mode
+    }
+
+    async blockContact() {
+        // Reset previous error message
+        this.errorStr = "";
+
+        const confirmBlock = window.confirm(
+            "Are you sure you want to block this contact? You will not be able to receive any messages from this contact.",
+        );
+        if (confirmBlock) {
+            this.isBlocking = true; // Start blocking loading state
+            try {
+                await this.messagingProductContactController.block(
+                    this.messagingProductContact.id,
+                );
+                this.messagingProductContact.blocked = true;
+            } catch (error) {
+                this.handleErr(
+                    "Failed to block contact. Please try again.",
+                    error,
+                );
+            } finally {
+                this.isBlocking = false; // End blocking loading state
+            }
+        }
+    }
+
+    async deleteContact() {
+        // Reset previous error message
+        this.errorStr = "";
+
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this contact? All contacts linked to this one in all platforms will be deleted with all messages.",
+        );
+        if (confirmDelete) {
+            this.isDeleting = true; // Start deleting loading state
+            try {
+                await this.contactControllerService.delete(
+                    this.messagingProductContact.contact_id,
+                );
+                await this.router.navigate(["/home"], { fragment: "chats" });
+                window.location.reload();
+            } catch (error: any) {
+                this.handleErr(
+                    "Failed to delete contact. Please try again.",
+                    error,
+                );
+            } finally {
+                this.isDeleting = false; // End deleting loading state
+            }
+        }
+    }
+
+    async deleteWhatsAppContact() {
+        // Reset previous error message
+        this.errorStr = "";
+
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this contact? All messages with this contact will be lost.",
+        );
+        if (confirmDelete) {
+            this.isDeleting = true; // Start deleting loading state
+            try {
+                await this.messagingProductContactController.delete(
+                    this.messagingProductContact.contact_id,
+                );
+                await this.router.navigate(["/home"], { fragment: "chats" });
+                window.location.reload();
+            } catch (error: any) {
+                this.handleErr(
+                    "Failed to delete contact. Please try again.",
+                    error,
+                );
+            } finally {
+                this.isDeleting = false; // End deleting loading state
+            }
+        }
+    }
+
+    async unblockContact() {
+        // Reset previous error message
+        this.errorStr = "";
+
+        this.isUnblocking = true; // Start unblocking loading state
+        try {
+            await this.messagingProductContactController.unblock(
+                this.messagingProductContact.id,
+            );
+            this.messagingProductContact.blocked = false;
+        } catch (error: any) {
+            this.handleErr(
+                "Failed to unblock contact. Please try again.",
+                error,
+            );
+        } finally {
+            this.isUnblocking = false; // End unblocking loading state
+        }
+    }
+
+    async countMediaLinksAndDocs() {
+        try {
+            this.quantityOfMediaLinksAndDocs =
+                await this.conversationController.countConversationContentLike(
+                    this.messagingProductContact.id,
+                    'type:\\s*"(image|video|document)"',
+                );
+        } catch (error: any) {
+            this.handleErr("Failed to count media and documents.", error);
+        }
+    }
+
+    async getInitialMedia() {
+        try {
+            this.media =
+                await this.conversationController.conversationContentLike(
+                    this.messagingProductContact.id,
+                    'type:\\s*"(image|video)"',
+                    undefined,
+                    { limit: 5, offset: 0 },
+                    { created_at: DateOrderEnum.desc },
+                );
+        } catch (error: any) {
+            this.handleErr("Failed to load media and documents.", error);
+        }
+    }
+
+    closeQueryParams = {
+        mode: "chat",
+    };
+
+    mediaInfoQueryParams = {
+        mode: "contact_media",
+    };
+
+    handleErr(message: string, err: any) {
+        this.errorData = err?.response?.data;
+        this.errorStr = err?.response?.data?.description || message;
+        this.logger.error("Async error", err);
+        this.errorModal.openModal();
+    }
+}

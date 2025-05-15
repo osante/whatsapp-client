@@ -1,0 +1,15 @@
+li {
+    @apply flex items-center dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-1 cursor-pointer;
+
+    > span {
+        @apply ml-2;
+    }
+}
+
+.selected {
+    @apply bg-gray-200 dark:bg-gray-800;
+}
+
+li.focus-ring {
+    @apply outline outline-2 outline-blue-600 dark:outline-blue-400;
+}

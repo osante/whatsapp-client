@@ -1,0 +1,5 @@
+<app-file-upload
+    (change)="change.emit($event)"
+    [acceptedFormats]="acceptedFormats[type]"
+    *ngIf="type; in: acceptedFormats"
+></app-file-upload>

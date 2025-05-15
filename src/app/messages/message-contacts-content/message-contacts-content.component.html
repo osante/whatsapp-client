@@ -1,0 +1,25 @@
+<div class="">
+    <button
+        class="flex items-center text-md py-5 px-3 border-b-gray-500"
+        (click)="openModal()"
+    >
+        <i
+            class="fas fa-user-circle text-gray-500 dark:text-gray-400 text-5xl mr-3"
+        ></i>
+
+        <p class="text-start">
+            <span class="font-medium">{{
+                contacts.length ? contacts[0].name.formatted_name : ""
+            }}</span>
+            <span *ngIf="contacts.length > 1" i18n>
+                and {{ contacts.length - 1 }} more contacts</span
+            >
+        </p>
+    </button>
+</div>
+
+<app-message-contacts-modal
+    [contacts]="contacts"
+    (close)="closeModal()"
+    *ngIf="modalVisible"
+></app-message-contacts-modal>

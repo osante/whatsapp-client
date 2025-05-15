@@ -1,0 +1,191 @@
+<div
+    class="bg-gray-200 dark:bg-gray-700 py-2 w-14 h-screen overflow-auto flex flex-col justify-between items-center border-gray-300 dark:border-gray-700 border-r"
+>
+    <div class="flex flex-col items-center justify-center">
+        <div
+            [ngClass]="{
+                'flex flex-col items-center justify-center transition-all duration-300 overflow-hidden': true,
+                'max-h-0': isCollapsed,
+                'max-h-80': !isCollapsed,
+            }"
+        >
+            <button
+                id="sidebar-toggle"
+                class="rounded-lg w-10 aspect-square border flex items-center justify-center text-white border-gray-500 dark:border-gray-500"
+                (click)="
+                    queryParamsService.sidebarOpen
+                        ? queryParamsService.closeSidebar()
+                        : queryParamsService.openSidebar()
+                "
+            >
+                <i
+                    [ngClass]="{
+                        'fa-solid fa-chevron-right transition-transform duration-300 outline-none': true,
+                        'text-gray-500 dark:text-gray-500': true,
+                        'rotate-180': queryParamsService.sidebarOpen,
+                    }"
+                ></i>
+            </button>
+
+            <hr
+                class="my-5 border-b w-8 border-gray-600 dark:border-gray-600"
+            />
+        </div>
+
+        <a
+            [routerLink]="['/', RoutePath.home]"
+            [fragment]="HomeFragment.chats"
+            [queryParams]="queryParamsService.globalQueryParams"
+            queryParamsHandling="replace"
+            class="navigator"
+        >
+            <app-small-button
+                [active]="activePage === HomeFragment.chats"
+                matTooltip="Chats"
+                matIcon="chat"
+                i18n-matTooltip
+            >
+            </app-small-button>
+        </a>
+
+        <a
+            [routerLink]="['/', RoutePath.home]"
+            [fragment]="HomeFragment.templates"
+            [queryParams]="queryParamsService.globalQueryParams"
+            queryParamsHandling="replace"
+            class="navigator"
+        >
+            <app-small-button
+                [active]="activePage === HomeFragment.templates"
+                matTooltip="Templates"
+                matSymbol="format_image_left"
+                i18n-matTooltip
+            >
+            </app-small-button>
+        </a>
+
+        <a
+            [routerLink]="['/', RoutePath.home]"
+            [fragment]="HomeFragment.campaigns"
+            [queryParams]="queryParamsService.globalQueryParams"
+            queryParamsHandling="replace"
+            class="navigator"
+            *ngIf="!environment.isLite"
+        >
+            <app-small-button
+                matIcon="campaign"
+                [active]="activePage === HomeFragment.campaigns"
+                matTooltip="Campaigns"
+                i18n-matTooltip
+            ></app-small-button>
+        </a>
+
+        <a
+            href="https://wacraft.astervia.tech"
+            class="navigator unavailable-pro-feature"
+            *ngIf="environment.isLite"
+        >
+            <app-small-button
+                matIcon="campaign"
+                [active]="activePage === HomeFragment.campaigns"
+                matTooltip="Campaigns is a supporter feature. See the supporter area for more."
+                i18n-matTooltip
+            ></app-small-button>
+        </a>
+
+        <a
+            [routerLink]="['/', RoutePath.automation]"
+            [queryParams]="queryParamsService.globalQueryParams"
+            queryParamsHandling="replace"
+            class="navigator"
+            *ngIf="
+                userStore.currentUser &&
+                !environment.isLite &&
+                (userStore.currentUser.role === Role.admin ||
+                    userStore.currentUser.role === Role.developer ||
+                    userStore.currentUser.role === Role.automation)
+            "
+        >
+            <app-small-button
+                [active]="activePage === RoutePath.automation"
+                matTooltip="Automations"
+                matSymbol="automation"
+                i18n-matTooltip
+            ></app-small-button>
+        </a>
+
+        <a
+            href="https://wacraft.astervia.tech"
+            class="navigator unavailable-pro-feature"
+            *ngIf="environment.isLite"
+        >
+            <app-small-button
+                [active]="activePage === RoutePath.automation"
+                matTooltip="Automations is a supporter feature. See the supporter area for more."
+                matSymbol="automation"
+                i18n-matTooltip
+            ></app-small-button>
+        </a>
+
+        <a
+            [routerLink]="['/', RoutePath.webhooks]"
+            [queryParams]="queryParamsService.globalQueryParams"
+            queryParamsHandling="replace"
+            class="navigator"
+            *ngIf="
+                userStore.currentUser &&
+                (userStore.currentUser.role === Role.admin ||
+                    userStore.currentUser.role === Role.developer ||
+                    userStore.currentUser.role === Role.automation)
+            "
+        >
+            <app-small-button
+                matIcon="webhook"
+                [active]="activePage === RoutePath.webhooks"
+                matTooltip="Webhooks"
+                i18n-matTooltip
+            ></app-small-button>
+        </a>
+
+        <a
+            [routerLink]="['/', RoutePath.users]"
+            [queryParams]="queryParamsService.globalQueryParams"
+            queryParamsHandling="replace"
+            class="navigator"
+            *ngIf="
+                userStore.currentUser &&
+                userStore.currentUser.role === Role.admin
+            "
+        >
+            <app-small-button
+                [active]="activePage === RoutePath.users"
+                matTooltip="Users"
+                matIcon="people"
+                i18n-matTooltip
+            >
+            </app-small-button>
+        </a>
+    </div>
+
+    <div class="flex flex-col items-center justify-center">
+        <a
+            [routerLink]="['/', RoutePath.account]"
+            [queryParams]="queryParamsService.globalQueryParams"
+            queryParamsHandling="replace"
+            class=""
+        >
+            <app-small-button
+                [active]="activePage === 'account'"
+                matTooltip="Account configuration"
+                matIcon="settings"
+                i18n-matTooltip
+            ></app-small-button>
+        </a>
+    </div>
+</div>
+
+<app-shortcuts
+    [navItems]="navItems"
+    *ngIf="showShortcuts"
+    (close)="showShortcuts = false"
+></app-shortcuts>

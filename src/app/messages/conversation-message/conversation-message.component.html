@@ -1,0 +1,171 @@
+<div
+    [ngClass]="{
+        'flex items-start': true,
+        'flex-row-reverse': message.sender_data,
+    }"
+>
+    <div
+        class="flex items-center"
+        (mouseenter)="showOptionsArrow()"
+        (mouseleave)="hideOptionsArrow()"
+    >
+        <div
+            class="break-words dark:text-white text-sm rounded-md max-w-xs sm:max-w-md lg:max-w-lg xl:max-w-2xl relative"
+            [ngClass]="{
+                'bg-blue-300 dark:bg-blue-800':
+                    message.sender_data &&
+                    messageType != MessageType.interactive &&
+                    messageType != MessageType.template,
+                'bg-gray-100 dark:bg-gray-700':
+                    !message.sender_data &&
+                    messageType != MessageType.interactive &&
+                    messageType != MessageType.template,
+            }"
+            [ngStyle]="{
+                'word-break': 'break-word',
+                'white-space': 'pre-wrap',
+            }"
+        >
+            <div
+                class="pt-1 px-1"
+                *ngIf="
+                    messageType != MessageType.interactive &&
+                    messageType != MessageType.template &&
+                    message.receiver_data?.context &&
+                    (message.receiver_data?.context?.forwarded ||
+                        message.receiver_data?.context?.frequently_forwarded)
+                "
+            >
+                <app-message-forwarded-header
+                    [context]="message.receiver_data?.context"
+                ></app-message-forwarded-header>
+            </div>
+            <div
+                class="w-full pt-1 px-1"
+                *ngIf="
+                    messageType != MessageType.interactive &&
+                    messageType != MessageType.template &&
+                    (message.sender_data?.context?.message_id ||
+                        message.receiver_data?.context?.id ||
+                        (message | messageData).reaction?.message_id)
+                "
+            >
+                <app-message-reply-header
+                    [message]="message"
+                    [sent]="!!message.sender_data"
+                    [contactName]="contactName"
+                    [backgroundColor]="!!message.sender_data ? 'blue' : 'gray'"
+                    (asyncContentLoaded)="asyncContentLoaded.emit()"
+                ></app-message-reply-header>
+            </div>
+
+            <!-- Text Message -->
+            <p
+                *ngIf="messageType == MessageType.text"
+                class="px-1 pt-1"
+                [textContent]="(message | messageData)?.text?.body"
+            ></p>
+
+            <app-message-contacts-content
+                class="w-80 flex items-center"
+                [contacts]="(message | messageData).contacts || []"
+                *ngIf="messageType == MessageType.contacts"
+            ></app-message-contacts-content>
+
+            <app-message-media-content
+                class="w-full flex items-center px-1 pt-1"
+                [messageType]="messageType"
+                [mediaData]="useMediaData"
+                [isSent]="!!message.sender_data"
+                (asyncContentLoaded)="asyncContentLoaded.emit()"
+                *ngIf="isMediaType"
+            ></app-message-media-content>
+
+            <app-message-interactive-content
+                class="w-full flex items-center"
+                [message]="message"
+                [sent]="sent"
+                [contactName]="contactName"
+                [isSent]="!!message.sender_data"
+                *ngIf="messageType == MessageType.interactive"
+            >
+            </app-message-interactive-content>
+
+            <app-message-template-content
+                class="w-full flex items-center"
+                [message]="message"
+                [sent]="sent"
+                [contactName]="contactName"
+                (asyncContentLoaded)="asyncContentLoaded.emit()"
+                *ngIf="messageType == MessageType.template"
+                #templateMessage
+            ></app-message-template-content>
+
+            <app-message-location-content
+                [message]="message"
+                [sent]="sent"
+                [isSent]="!!message.sender_data"
+                class="w-full flex items-center px-1 pt-1"
+                *ngIf="messageType == MessageType.location"
+            >
+            </app-message-location-content>
+
+            <app-message-reaction-content
+                [message]="message"
+                [sent]="sent"
+                [isSent]="!!message.sender_data"
+                class="w-full flex items-center px-1 pt-1"
+                *ngIf="messageType == MessageType.reaction"
+            >
+            </app-message-reaction-content>
+
+            <app-message-button-content
+                [buttonData]="buttonData"
+                [sent]="sent"
+                class="w-full flex items-center px-1 pt-1"
+                *ngIf="messageType == ReceivedMessageType.button"
+            ></app-message-button-content>
+
+            <app-message-info
+                [message]="message"
+                [sent]="sent"
+                *ngIf="
+                    messageType != MessageType.interactive &&
+                    messageType != MessageType.template
+                "
+            ></app-message-info>
+
+            <!-- Open options modal -->
+            <button
+                [ngClass]="{
+                    'absolute top-1 rounded-full flex items-center justify-center aspect-square w-6 backdrop-blur-lg ': true,
+                    'left-2': message.sender_data,
+                    'right-2': message.receiver_data,
+                }"
+                (click)="clickOptionsArrow()"
+                *ngIf="optionsArrow || optionsOpen"
+            >
+                <i class="fa-solid fa-chevron-down" *ngIf="!optionsOpen"></i>
+                <i class="fa-solid fa-chevron-up" *ngIf="optionsOpen"></i>
+            </button>
+
+            <!-- Options modal -->
+            <app-message-options
+                [toPhoneNumber]="
+                    messagingProductContact.product_details.phone_number
+                "
+                [toId]="messagingProductContact.id"
+                [message]="message"
+                (close)="closeOptions()"
+                (reply)="reply.emit()"
+                (reactionSent)="reactionSent.emit($event)"
+                [ngClass]="{
+                    'absolute bottom-full z-10': true,
+                    'right-full -mr-8': message.sender_data,
+                    'left-full -ml-8': message.receiver_data,
+                }"
+                *ngIf="optionsOpen"
+            ></app-message-options>
+        </div>
+    </div>
+</div>

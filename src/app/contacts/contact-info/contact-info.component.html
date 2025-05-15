@@ -1,0 +1,377 @@
+<div
+    class="dark:text-white w-full h-full flex flex-col items-center border-l dark:border-gray-700 dark:bg-gray-900 overflow-y-scroll scrollable relative"
+>
+    <div
+        class="pt-4 pb-4 w-full flex flex-col items-center dark:border-gray-700 dark:bg-gray-800"
+    >
+        <a
+            [routerLink]="[]"
+            [queryParams]="closeQueryParams"
+            queryParamsHandling="merge"
+        >
+            <app-small-button
+                class="absolute top-2 right-2"
+                matIcon="close"
+                aria-label="Close"
+            ></app-small-button>
+        </a>
+
+        <div class="flex items-center relative">
+            <img
+                *ngIf="messagingProductContact.contact.photo_path"
+                [src]="messagingProductContact.contact.photo_path"
+                alt="Profile Picture"
+                class="mb-2 aspect-square w-48 rounded-full"
+            />
+            <i
+                *ngIf="!messagingProductContact.contact.photo_path"
+                class="mb-2 fas fa-user-circle text-gray-500 text-9xl w-9xl aspect-square"
+            ></i>
+            <!-- Edit Button -->
+            <button
+                class="absolute bottom-0 right-0 bg-gray-300 dark:bg-gray-800 dark:text-white rounded-full p-2 aspect-square"
+                (click)="toggleEdit()"
+                aria-label="Edit"
+                [disabled]="isLoading"
+            >
+                <mat-icon class="material-icons-outlined brightness-50"
+                    >edit_square</mat-icon
+                >
+            </button>
+        </div>
+
+        <!-- Editable Form -->
+        <form
+            *ngIf="isEditing"
+            #contactForm="ngForm"
+            class="w-full flex flex-col items-center space-y-2 text-center relative"
+        >
+            <!-- Photo URL -->
+            <div>
+                <input
+                    [(ngModel)]="messagingProductContact.contact.photo_path"
+                    name="photoPath"
+                    class="bg-gray-200 dark:bg-gray-700 dark:text-white rounded px-2 py-1 w-full text-center"
+                    placeholder="Photo URL"
+                    i18n-placeholder
+                    type="url"
+                    [disabled]="isLoading"
+                />
+            </div>
+
+            <!-- Editable Name -->
+            <div>
+                <input
+                    [(ngModel)]="messagingProductContact.contact.name"
+                    name="name"
+                    class="bg-gray-200 dark:bg-gray-700 dark:text-white rounded px-2 py-1 w-full text-center"
+                    placeholder="Name"
+                    i18n-placeholder
+                    required
+                    #name="ngModel"
+                    [disabled]="isLoading"
+                />
+                <!-- Name Validation Error -->
+                <div
+                    *ngIf="name.invalid && (name.dirty || name.touched)"
+                    class="text-red-500 text-sm mt-1"
+                >
+                    Name is required.
+                </div>
+            </div>
+
+            <!-- Editable Email -->
+            <div>
+                <input
+                    [(ngModel)]="messagingProductContact.contact.email"
+                    name="email"
+                    class="bg-gray-200 dark:bg-gray-700 dark:text-white rounded px-2 py-1 w-full text-center"
+                    placeholder="Email"
+                    type="email"
+                    #email="ngModel"
+                    [disabled]="isLoading"
+                />
+                <!-- Email Validation Error -->
+                <div
+                    *ngIf="
+                        messagingProductContact.contact.email &&
+                        email.invalid &&
+                        (email.dirty || email.touched)
+                    "
+                    class="text-red-500 text-sm mt-1"
+                >
+                    A valid email is required.
+                </div>
+            </div>
+
+            <!-- Editable Phone Number -->
+            <div>
+                <input
+                    [(ngModel)]="
+                        messagingProductContact.product_details.phone_number
+                    "
+                    name="phoneNumber"
+                    class="bg-gray-200 dark:bg-gray-700 dark:text-white rounded px-2 py-1 w-full text-center"
+                    placeholder="Phone number"
+                    i18n-placeholder
+                    type="tel"
+                    [required]="isEditing"
+                    pattern="^[0-9]{10,15}$"
+                    #phoneNumber="ngModel"
+                    aria-describedby="phoneNumberError"
+                    [disabled]="isLoading"
+                />
+                <!-- Phone Number Validation Errors -->
+                <div
+                    *ngIf="
+                        phoneNumber.invalid &&
+                        (phoneNumber.dirty || phoneNumber.touched)
+                    "
+                    id="phoneNumberError"
+                    class="text-red-500 text-sm mt-1"
+                >
+                    <span *ngIf="phoneNumber.errors?.['required']">
+                        Phone number is required.
+                    </span>
+                    <span *ngIf="phoneNumber.errors?.['pattern']">
+                        Phone number must be between 10 to 15 digits.
+                    </span>
+                </div>
+            </div>
+
+            <!-- Edit Control Buttons -->
+            <div class="mt-2 flex space-x-4">
+                <button
+                    type="button"
+                    class="bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 transition flex items-center justify-center"
+                    (click)="submitChanges(contactForm)"
+                    [disabled]="contactForm.invalid || isLoading"
+                >
+                    <!-- Show spinner inside the button when loading -->
+                    <svg
+                        *ngIf="isLoading"
+                        class="animate-spin h-5 w-5 mr-2 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                    >
+                        <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                        ></circle>
+                        <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
+                    </svg>
+                    <span i18n>Submit</span>
+                </button>
+                <button
+                    type="button"
+                    class="bg-red-600 text-white rounded px-4 py-2 hover:bg-red-700 transition"
+                    (click)="cancelEdit()"
+                    *ngIf="messagingProductContact.id"
+                    [disabled]="isLoading"
+                    [textContent]="'Cancel'"
+                ></button>
+            </div>
+        </form>
+
+        <!-- Display Mode -->
+        <div *ngIf="!isEditing" class="space-y-2 text-center">
+            <h2 class="text-xl font-medium">
+                <span>{{
+                    messagingProductContact.contact.name || "Unknown"
+                }}</span>
+            </h2>
+            <p class="text-sm text-thin text-gray-600" i18n>
+                {{
+                    messagingProductContact.contact.email ||
+                        "Email not available"
+                }}
+            </p>
+            <p class="text-sm text-thin text-gray-600">
+                <span>
+                    {{
+                        messagingProductContact.product_details.phone_number ||
+                            "Phone number not available"
+                    }}
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <div
+        class="w-full max-w-full mt-4 pb-4 dark:bg-gray-800 overflow-hidden"
+        *ngIf="messagingProductContact.id"
+    >
+        <a
+            [routerLink]="[]"
+            queryParamsHandling="merge"
+            [queryParams]="mediaInfoQueryParams"
+            class="w-full py-4 px-4 flex justify-between text-md text-gray-500 cursor-pointer"
+        >
+            <span i18n>Media and docs</span>
+            <span>
+                <span class="mr-3">{{ quantityOfMediaLinksAndDocs }}</span>
+                <i class="fas fa-chevron-right"></i>
+            </span>
+        </a>
+
+        <div
+            class="w-full max-w-full space-x-2 pl-2 overflow-x-scroll hide-scrollbar whitespace-nowrap"
+        >
+            <app-media-preview
+                class="w-40 inline-block"
+                *ngFor="let message of media"
+                [message]="message"
+            ></app-media-preview>
+        </div>
+    </div>
+
+    <div
+        class="w-full mt-4 dark:bg-gray-800"
+        *ngIf="messagingProductContact.id"
+    >
+        <!-- Unblock Button -->
+        <button
+            class="pl-8 py-4 text-start w-full text-green-500 hover:bg-green-800 hover:text-white flex items-center transition-colors duration-200 relative"
+            *ngIf="messagingProductContact.blocked"
+            (click)="unblockContact()"
+            [disabled]="isUnblocking || isLoading"
+        >
+            <i class="fas fa-unlock-alt mr-4"></i>
+            <span>Unblock contact</span>
+            <!-- Spinner for Unblocking -->
+            <svg
+                *ngIf="isUnblocking"
+                class="animate-spin h-5 w-5 ml-2 text-white absolute right-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+            >
+                <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                ></circle>
+                <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+            </svg>
+        </button>
+
+        <!-- Block Button -->
+        <button
+            class="pl-8 py-4 text-start w-full text-red-500 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center transition-colors duration-200 relative"
+            *ngIf="!messagingProductContact.blocked"
+            (click)="blockContact()"
+            [disabled]="isBlocking || isLoading"
+        >
+            <i class="fas fa-ban mr-4"></i>
+            <span i18n>Block</span>
+            <!-- Spinner for Blocking -->
+            <svg
+                *ngIf="isBlocking"
+                class="animate-spin h-5 w-5 ml-2 text-white absolute right-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+            >
+                <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                ></circle>
+                <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+            </svg>
+        </button>
+
+        <!-- Delete Button -->
+        <button
+            class="pl-8 py-4 text-start w-full text-red-500 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center transition-colors duration-200 relative"
+            (click)="deleteContact()"
+            [disabled]="isDeleting || isLoading"
+        >
+            <i class="fas fa-trash mr-4"></i>
+            <span i18n>Delete</span>
+            <!-- Spinner for Deleting -->
+            <svg
+                *ngIf="isDeleting"
+                class="animate-spin h-5 w-5 ml-2 text-white absolute right-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+            >
+                <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                ></circle>
+                <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+            </svg>
+        </button>
+
+        <!-- This must be included when handling many messaging products. -->
+        <!-- <button -->
+        <!--     class="pl-8 py-4 text-start w-full text-red-500 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center transition-colors duration-200 relative" -->
+        <!--     (click)="deleteWhatsAppContact()" -->
+        <!--     [disabled]="isDeleting || isLoading" -->
+        <!-- > -->
+        <!--     <i class="fa-brands fa-whatsapp mr-4"></i> -->
+        <!--     <span>Delete WhatsApp contact</span> -->
+        <!--     <!-- Spinner for Deleting -->
+        <!--     <svg -->
+        <!--         *ngIf="isDeleting" -->
+        <!--         class="animate-spin h-5 w-5 ml-2 text-white absolute right-4" -->
+        <!--         xmlns="http://www.w3.org/2000/svg" -->
+        <!--         fill="none" -->
+        <!--         viewBox="0 0 24 24" -->
+        <!--     > -->
+        <!--         <circle -->
+        <!--             class="opacity-25" -->
+        <!--             cx="12" -->
+        <!--             cy="12" -->
+        <!--             r="10" -->
+        <!--             stroke="currentColor" -->
+        <!--             stroke-width="4" -->
+        <!--         ></circle> -->
+        <!--         <path -->
+        <!--             class="opacity-75" -->
+        <!--             fill="currentColor" -->
+        <!--             d="M4 12a8 8 0 018-8v8H4z" -->
+        <!--         ></path> -->
+        <!--     </svg> -->
+        <!-- </button> -->
+    </div>
+</div>
+
+<app-timeout-error-modal
+    [message]="errorStr"
+    [data]="errorData"
+    #errorModal
+></app-timeout-error-modal>

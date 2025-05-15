@@ -1,0 +1,68 @@
+<div
+    class="h-screen w-full dark:bg-gray-800 grid grid-cols-12 grid-rows-12 relative"
+>
+    <div
+        [ngClass]="{
+            'flex flex-col row-span-12': true,
+            'col-span-12 ': !contactInfoEnabled && !contactMediaEnabled,
+            'col-span-7': contactInfoEnabled || contactMediaEnabled,
+        }"
+    >
+        <!-- Top: User Data -->
+        <app-conversation-header
+            [messagingProductContact]="messagingProductContact"
+            (searchAtContactId)="searchAtContactId.next($event)"
+            (contactDetails)="openContactInfo()"
+        ></app-conversation-header>
+
+        <!-- Middle: Messages -->
+        <app-conversation-body
+            class="flex-1 overflow-y-auto hide-scrollbar"
+            [messagingProductContact]="messagingProductContact"
+            [contactName]="
+                messagingProductContact.contact.name ||
+                messagingProductContact.product_details.phone_number
+            "
+            (reply)="conversationFooter.setReplyToMessage($event)"
+            (reactionSent)="
+                userConversationStore.addUnsent(
+                    $event,
+                    messagingProductContact.id
+                )
+            "
+            #body
+        ></app-conversation-body>
+
+        <!-- Bottom: New Message -->
+        <app-conversation-footer
+            class="overflow-y-auto scrollable"
+            [toId]="messagingProductContact.id"
+            (sent)="
+                userConversationStore.addUnsent(
+                    $event,
+                    messagingProductContact.id
+                )
+            "
+            [contactName]="
+                messagingProductContact.contact.name ||
+                messagingProductContact.product_details.phone_number
+            "
+            [toPhoneNumber]="
+                messagingProductContact.product_details.phone_number
+            "
+            #conversationFooter
+        ></app-conversation-footer>
+    </div>
+
+    <!-- Right side: User Information (25% width) -->
+    <div class="col-span-5 row-span-12" *ngIf="contactInfoEnabled">
+        <app-contact-info
+            [messagingProductContact]="messagingProductContact"
+        ></app-contact-info>
+    </div>
+
+    <div class="col-span-5 row-span-12" *ngIf="contactMediaEnabled">
+        <app-contact-media [messagingProductContact]="messagingProductContact">
+        </app-contact-media>
+    </div>
+</div>

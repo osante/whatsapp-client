@@ -1,0 +1,51 @@
+<div class="h-screen w-full flex justify-center items-center dark:bg-gray-800">
+    <div class="bg-white dark:bg-gray-700 p-8 rounded shadow-md w-80">
+        <h2 class="text-2xl font-bold mb-8 text-gray-800 dark:text-white">
+            Login
+        </h2>
+        <div class="mb-5">
+            <label
+                for="username"
+                class="block mb-2 text-sm text-gray-600 dark:text-gray-300"
+                i18n
+                >Username</label
+            >
+            <input
+                type="text"
+                name="username"
+                class="w-full px-3 py-2 border rounded-md text-gray-600 dark:bg-gray-600 dark:border-gray-600 dark:text-gray-300"
+                required
+                (keydown.control.enter)="login()"
+                #username
+            />
+        </div>
+        <div class="mb-5">
+            <label
+                for="password"
+                class="block mb-2 text-sm text-gray-600 dark:text-gray-300"
+                i18n
+                >Password</label
+            >
+            <input
+                type="password"
+                name="password"
+                class="w-full px-3 py-2 border rounded-md text-gray-600 dark:bg-gray-600 dark:border-gray-600 dark:text-gray-300"
+                required
+                (keydown.enter)="login()"
+                #password
+            />
+        </div>
+
+        <div class="mb-5" *ngIf="errorMessage">
+            <span class="text-red-600">{{ errorMessage }}</span>
+        </div>
+
+        <button
+            class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded-md text-white text-sm dark:bg-blue-500 dark:hover:bg-blue-400"
+            (click)="login()"
+            i18n
+        >
+            Submit
+        </button>
+    </div>
+</div>

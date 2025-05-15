@@ -1,0 +1,66 @@
+<div
+    class="flex flex-row items-center text-gray-600 dark:text-gray-400 text-sm"
+>
+    <!-- Messages with specifier emoji -->
+    <div
+        class="mr-1"
+        *ngIf="
+            [
+                'image',
+                'video',
+                'audio',
+                'sticker',
+                'location',
+                'interactive',
+                'template',
+                'reaction',
+                'contacts',
+            ].indexOf(message.type) > -1
+        "
+    >
+        <div *ngIf="message.type === 'image'">
+            <mat-icon class="material-icons-outlined message-type-icon"
+                >image</mat-icon
+            >
+        </div>
+        <div *ngIf="message.type === 'video'">
+            <mat-icon class="material-icons-outlined message-type-icon"
+                >videocam</mat-icon
+            >
+        </div>
+        <div *ngIf="message.type === 'sticker'">
+            <mat-icon class="material-symbols-outlined message-type-icon"
+                >ar_stickers</mat-icon
+            >
+        </div>
+        <div *ngIf="message.type === 'document'">
+            <mat-icon class="material-icons-outlined message-type-icon"
+                >description</mat-icon
+            >
+        </div>
+        <div *ngIf="message.type === 'location'">
+            <mat-icon class="material-icons-outlined message-type-icon"
+                >pin_drop</mat-icon
+            >
+        </div>
+        <div *ngIf="message.type === 'interactive'">
+            <mat-icon class="material-symbols-outlined message-type-icon"
+                >interactive_space</mat-icon
+            >
+        </div>
+        <div *ngIf="message.type === 'template'">
+            <mat-icon class="material-symbols-outlined message-type-icon"
+                >format_image_left</mat-icon
+            >
+        </div>
+        <div *ngIf="message.type === 'reaction'">
+            <mat-icon class="material-icons-outlined message-type-icon"
+                >add_reaction</mat-icon
+            >
+        </div>
+        <div *ngIf="message.type === 'contacts'">
+            <i class="fa fa-user text-xm"></i>
+        </div>
+    </div>
+    {{ message | messagePreview }}
+</div>

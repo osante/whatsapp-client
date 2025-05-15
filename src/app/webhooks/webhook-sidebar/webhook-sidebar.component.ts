@@ -1,0 +1,162 @@
+import { CommonModule } from "@angular/common";
+import {
+    Component,
+    ElementRef,
+    HostListener,
+    OnInit,
+    QueryList,
+    ViewChild,
+    ViewChildren,
+} from "@angular/core";
+import { WebhookPreviewComponent } from "./webhook-preview/webhook-preview.component";
+import { RouterModule } from "@angular/router";
+import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
+import { WebhookStoreService } from "../../../core/webhook/store/webhook-store.service";
+import { SmallButtonComponent } from "../../common/small-button/small-button.component";
+import { KeyboardNavigableList } from "../../common/keyboard/keyboard-navigable-list.base";
+import { NGXLogger } from "ngx-logger";
+
+@Component({
+    selector: "app-webhook-sidebar",
+    imports: [
+        CommonModule,
+        SmallButtonComponent,
+        WebhookPreviewComponent,
+        FormsModule,
+        MatIconModule,
+        RouterModule,
+    ],
+    templateUrl: "./webhook-sidebar.component.html",
+    styleUrl: "./webhook-sidebar.component.scss",
+    standalone: true,
+})
+export class WebhookSidebarComponent
+    extends KeyboardNavigableList
+    implements OnInit
+{
+    private scrolling: boolean = false;
+
+    @ViewChild("searchTextarea")
+    searchTextarea!: ElementRef<HTMLTextAreaElement>;
+
+    constructor(
+        public queryParamsService: QueryParamsService,
+        public webhookStore: WebhookStoreService,
+        private logger: NGXLogger,
+    ) {
+        super();
+    }
+
+    adjustHeight(event: Event): void {
+        const element = event.target as HTMLElement;
+        if (!element) return;
+        element.style.height = "auto"; // Reset height to auto to get the correct scrollHeight
+        element.style.height = `${element.scrollHeight}px`; // Set height to scrollHeight
+    }
+
+    async ngOnInit() {
+        await this.getWebhooks();
+    }
+
+    async getWebhooks(): Promise<void> {
+        this.scrolling = true;
+
+        await this.webhookStore.get();
+
+        this.scrolling = false;
+    }
+
+    onScroll(event: Event) {
+        const element = event.target as HTMLElement;
+        if (
+            // Check if the user has scrolled to the bottom of the element
+            !(
+                element.scrollHeight - element.scrollTop <=
+                    element.clientHeight + 100 &&
+                // Check if some request is being performed
+                !this.scrolling
+            )
+        )
+            return;
+
+        if (
+            // Check if user is not searching
+            !this.webhookStore.searchValue &&
+            !this.webhookStore.reachedMaxLimit
+        )
+            this.getWebhooks();
+        else if (
+            this.webhookStore.searchValue &&
+            !this.webhookStore.reachedMaxSearchLimit &&
+            !this.webhookStore.isExecuting &&
+            !this.webhookStore.pendingExecution
+        )
+            this.getSearchWebhooks();
+    }
+
+    async getSearchWebhooks(): Promise<void> {
+        this.scrolling = true;
+
+        await this.webhookStore.getSearch();
+
+        this.scrolling = false;
+    }
+
+    async getInitialSearchWebhooks(): Promise<void> {
+        this.scrolling = true;
+
+        this.webhookStore.getInitialSearch();
+
+        this.scrolling = false;
+    }
+
+    async addMessagingProductContactIdField(messagingProductContactId: string) {
+        await this.webhookStore.addFilter({
+            text: `Messaging product contact id ${messagingProductContactId}`,
+        });
+    }
+
+    @ViewChildren(WebhookPreviewComponent, { read: ElementRef })
+    protected rows!: QueryList<ElementRef<HTMLElement>>;
+
+    protected onEnter(i: number) {
+        this.rows.toArray()[i].nativeElement.click();
+    }
+
+    @ViewChild("draggableContainer")
+    draggableContainer!: ElementRef<HTMLElement>;
+    isResizing = false;
+    sidebarWidth = 400;
+    @HostListener("window:mousemove", ["$event"])
+    private onMouseMove(event: MouseEvent) {
+        if (!this.isResizing) return;
+        if (!this.queryParamsService.sidebarOpen)
+            this.queryParamsService.openSidebar();
+
+        const newWidth =
+            event.clientX - this.draggableContainer.nativeElement.offsetLeft;
+        this.sidebarWidth = newWidth;
+
+        if (newWidth <= 10) this.queryParamsService.closeSidebar();
+
+        event.preventDefault();
+    }
+
+    @HostListener("window:mouseup")
+    private onMouseUp() {
+        this.isResizing = false;
+    }
+
+    @HostListener("window:keydown.control.shift.f", ["$event"])
+    private onControlShiftF(event: KeyboardEvent) {
+        event.preventDefault();
+        this.searchTextarea.nativeElement.focus();
+    }
+
+    startResizing(event: MouseEvent) {
+        this.isResizing = true;
+        event.preventDefault(); // Prevent text selection
+    }
+}

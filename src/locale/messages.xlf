@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="1410978112566738410" datatype="html">
+        <source> Account settings </source>
+      </trans-unit>
+      <trans-unit id="8953033926734869941" datatype="html">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="1431416938026210429" datatype="html">
+        <source>Password</source>
+      </trans-unit>
+      <trans-unit id="5377078063439833222" datatype="html">
+        <source> Edit </source>
+      </trans-unit>
+      <trans-unit id="2330577642930707695" datatype="html">
+        <source> Cancel </source>
+      </trans-unit>
+      <trans-unit id="3620188369327429839" datatype="html">
+        <source> Save </source>
+      </trans-unit>
+      <trans-unit id="7493868697410114420" datatype="html">
+        <source> Local settings </source>
+      </trans-unit>
+      <trans-unit id="4757941663738549598" datatype="html">
+        <source>Auto Preview</source>
+      </trans-unit>
+      <trans-unit id="5160229478047652977" datatype="html">
+        <source>Choose options</source>
+      </trans-unit>
+      <trans-unit id="3012906865384504293" datatype="html">
+        <source>Image</source>
+      </trans-unit>
+      <trans-unit id="6549265851868599441" datatype="html">
+        <source>Video</source>
+      </trans-unit>
+      <trans-unit id="347407180135731058" datatype="html">
+        <source>Audio</source>
+      </trans-unit>
+      <trans-unit id="1992801119633304393" datatype="html">
+        <source>Sticker</source>
+      </trans-unit>
+      <trans-unit id="6252070156626006029" datatype="html">
+        <source>None</source>
+      </trans-unit>
+      <trans-unit id="2188854519574316630" datatype="html">
+        <source>Server</source>
+      </trans-unit>
+      <trans-unit id="2906587845957718064" datatype="html">
+        <source>Local</source>
+      </trans-unit>
+      <trans-unit id="7103588127254721505" datatype="html">
+        <source>Theme</source>
+      </trans-unit>
+      <trans-unit id="1378667119726634696" datatype="html">
+        <source> Auto mark as read </source>
+      </trans-unit>
+      <trans-unit id="4816216590591222133" datatype="html">
+        <source>Enabled</source>
+      </trans-unit>
+      <trans-unit id="5769292297914455214" datatype="html">
+        <source>Disabled</source>
+      </trans-unit>
+      <trans-unit id="7581323695994806382" datatype="html">
+        <source> Campaign settings </source>
+      </trans-unit>
+      <trans-unit id="816133379157038472" datatype="html">
+        <source>Total messages</source>
+      </trans-unit>
+      <trans-unit id="1237454417488072736" datatype="html">
+        <source>Messages sent</source>
+      </trans-unit>
+      <trans-unit id="5673230718654324625" datatype="html">
+        <source>Unsent messages</source>
+      </trans-unit>
+      <trans-unit id="6660925946511264619" datatype="html">
+        <source> Delete </source>
+      </trans-unit>
+      <trans-unit id="7838270342502908017" datatype="html">
+        <source>Send campaign</source>
+      </trans-unit>
+      <trans-unit id="4817460679030375794" datatype="html">
+        <source> Add messages to campaign </source>
+      </trans-unit>
+      <trans-unit id="6452372740127749380" datatype="html">
+        <source>Messages</source>
+      </trans-unit>
+      <trans-unit id="6667243164818342579" datatype="html">
+        <source> Upload new messages using a file. Only template messages can initiate a conversation (lasting 24 hours). If you attempt to send another type of message, it may take too long and result in an error. </source>
+      </trans-unit>
+      <trans-unit id="4448087870578974349" datatype="html">
+        <source> Upload a JSON file containing message specifications. The JSON should be an array of objects similar to the sender_data used to send raw messages. Copy a sender_data object from the templates section to create a new message. </source>
+      </trans-unit>
+      <trans-unit id="5041945428247238943" datatype="html">
+        <source>Upload a CSV file with message specifications. Download the CSV template to complete it in the templates section.</source>
+      </trans-unit>
+      <trans-unit id="4149946407013624127" datatype="html">
+        <source> Successes: <x id="INTERPOLATION" equiv-text="{{ successes }}"/> </source>
+      </trans-unit>
+      <trans-unit id="7863725525046685709" datatype="html">
+        <source> Errors due to invalid object: <x id="INTERPOLATION" equiv-text="{{ errors }}"/> </source>
+      </trans-unit>
+      <trans-unit id="577038887888857351" datatype="html">
+        <source> Add </source>
+      </trans-unit>
+      <trans-unit id="7530965177276291749" datatype="html">
+        <source> Campaigns </source>
+      </trans-unit>
+      <trans-unit id="4580988005648117665" datatype="html">
+        <source>Search</source>
+      </trans-unit>
+      <trans-unit id="3325180562659478330" datatype="html">
+        <source>name</source>
+      </trans-unit>
+      <trans-unit id="6181907632373133266" datatype="html">
+        <source>Chats</source>
+      </trans-unit>
+      <trans-unit id="7922989125096435449" datatype="html">
+        <source>Contact</source>
+      </trans-unit>
+      <trans-unit id="8066608938393600549" datatype="html">
+        <source>Message</source>
+      </trans-unit>
+      <trans-unit id="4312076893369530530" datatype="html">
+        <source>Photo URL</source>
+      </trans-unit>
+      <trans-unit id="8121141462865337916" datatype="html">
+        <source>Phone number</source>
+      </trans-unit>
+      <trans-unit id="935187492052582731" datatype="html">
+        <source>Submit</source>
+      </trans-unit>
+      <trans-unit id="7708270344948043036" datatype="html">
+        <source>
+          <x id="INTERPOLATION" equiv-text="{{ messagingProductContact.contact.email || &quot;Email not available&quot; }}"/>
+        </source>
+      </trans-unit>
+      <trans-unit id="996433680894356794" datatype="html">
+        <source>Media and docs</source>
+      </trans-unit>
+      <trans-unit id="420763834450076269" datatype="html">
+        <source>Block</source>
+      </trans-unit>
+      <trans-unit id="7022070615528435141" datatype="html">
+        <source>Delete</source>
+      </trans-unit>
+      <trans-unit id="3788223467829427155" datatype="html">
+        <source><x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container [ngSwitch]=&quot;mode&quot;&gt;"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span *ngSwitchCase=&quot;MediaMode.image&quot;&gt;"/>Image<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span *ngSwitchCase=&quot;MediaMode.video&quot;&gt;"/>Video<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="START_TAG_SPAN_2" ctype="x-span_2" equiv-text="&lt;span *ngSwitchCase=&quot;MediaMode.audio&quot;&gt;"/>Audio<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="START_TAG_SPAN_3" ctype="x-span_3" equiv-text="&lt;span *ngSwitchCase=&quot;MediaMode.sticker&quot;&gt;"/>Sticker<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="START_TAG_SPAN_4" ctype="x-span_4" equiv-text="&lt;span *ngSwitchCase=&quot;MediaMode.document&quot;&gt;"/>Document<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="START_TAG_SPAN_5" ctype="x-span_5" equiv-text="&lt;span *ngSwitchDefault&gt;"/><x id="INTERPOLATION" equiv-text="{{ mode | capitalizeFirstLetter }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/><x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container&gt;"/></source>
+      </trans-unit>
+      <trans-unit id="8605421971099461066" datatype="html">
+        <source>Upload file</source>
+      </trans-unit>
+      <trans-unit id="4180374702588082219" datatype="html">
+        <source>Send link</source>
+      </trans-unit>
+      <trans-unit id="5245885537204283295" datatype="html">
+        <source>Media link</source>
+      </trans-unit>
+      <trans-unit id="780171311544519471" datatype="html">
+        <source>Caption (optional)</source>
+      </trans-unit>
+      <trans-unit id="3489957268654931751" datatype="html">
+        <source>Type a message...</source>
+      </trans-unit>
+      <trans-unit id="5028777105388019087" datatype="html">
+        <source>Details</source>
+      </trans-unit>
+      <trans-unit id="3250391385569692601" datatype="html">
+        <source>Media</source>
+      </trans-unit>
+      <trans-unit id="7504733845501654372" datatype="html">
+        <source>Interactive Type</source>
+      </trans-unit>
+      <trans-unit id="7084378498770243742" datatype="html">
+        <source>Button</source>
+      </trans-unit>
+      <trans-unit id="7906458871395232033" datatype="html">
+        <source>List</source>
+      </trans-unit>
+      <trans-unit id="7301100839831612889" datatype="html">
+        <source>Header Type</source>
+      </trans-unit>
+      <trans-unit id="6162693758764653365" datatype="html">
+        <source>Text</source>
+      </trans-unit>
+      <trans-unit id="950338657895578107" datatype="html">
+        <source> Image </source>
+      </trans-unit>
+      <trans-unit id="6021926196500860373" datatype="html">
+        <source> Video </source>
+      </trans-unit>
+      <trans-unit id="8317092845662281711" datatype="html">
+        <source> Audio </source>
+      </trans-unit>
+      <trans-unit id="113453605867064051" datatype="html">
+        <source> Document </source>
+      </trans-unit>
+      <trans-unit id="3597932961286677186" datatype="html">
+        <source>Header</source>
+      </trans-unit>
+      <trans-unit id="4498980736130456955" datatype="html">
+        <source>Interactive message header...</source>
+      </trans-unit>
+      <trans-unit id="1157630416437993334" datatype="html">
+        <source>Body</source>
+      </trans-unit>
+      <trans-unit id="2520992826005008677" datatype="html">
+        <source>Interactive message body...</source>
+      </trans-unit>
+      <trans-unit id="4636291172448223646" datatype="html">
+        <source>Footer</source>
+      </trans-unit>
+      <trans-unit id="9016892844846492142" datatype="html">
+        <source>Footer text...</source>
+      </trans-unit>
+      <trans-unit id="1926858095448136592" datatype="html">
+        <source>List sections</source>
+      </trans-unit>
+      <trans-unit id="3795029841604666695" datatype="html">
+        <source>Buttons</source>
+      </trans-unit>
+      <trans-unit id="5945590258286868068" datatype="html">
+        <source>Button <x id="INTERPOLATION" equiv-text="{{ i }}"/></source>
+      </trans-unit>
+      <trans-unit id="4910631867841099191" datatype="html">
+        <source>Add option</source>
+      </trans-unit>
+      <trans-unit id="4282269331448011107" datatype="html">
+        <source>Self</source>
+      </trans-unit>
+      <trans-unit id="5813867925497374051" datatype="html">
+        <source>Map</source>
+      </trans-unit>
+      <trans-unit id="5696578547712505713" datatype="html">
+        <source>Name (optional)</source>
+      </trans-unit>
+      <trans-unit id="2041939447608272512" datatype="html">
+        <source>Address (optional)</source>
+      </trans-unit>
+      <trans-unit id="205186163515786593" datatype="html">
+        <source>Forwarded</source>
+      </trans-unit>
+      <trans-unit id="5747579300914625788" datatype="html">
+        <source>Message details</source>
+      </trans-unit>
+      <trans-unit id="4502286564339177240" datatype="html">
+        <source>Reply</source>
+      </trans-unit>
+      <trans-unit id="1616968388083998795" datatype="html">
+        <source>Mark as read</source>
+      </trans-unit>
+      <trans-unit id="137077169546539097" datatype="html">
+        <source>Message data</source>
+      </trans-unit>
+      <trans-unit id="720557322859638078" datatype="html">
+        <source>You</source>
+      </trans-unit>
+      <trans-unit id="5248717555542428023" datatype="html">
+        <source>Username</source>
+      </trans-unit>
+      <trans-unit id="4943998242904350511" datatype="html">
+        <source> Submit </source>
+      </trans-unit>
+      <trans-unit id="894965666917873756" datatype="html">
+        <source>Document</source>
+      </trans-unit>
+      <trans-unit id="7759619609150755464" datatype="html">
+        <source>Interactive</source>
+      </trans-unit>
+      <trans-unit id="471816275243265264" datatype="html">
+        <source>Location</source>
+      </trans-unit>
+      <trans-unit id="2091295268977103253" datatype="html">
+        <source>Raw</source>
+      </trans-unit>
+      <trans-unit id="5661038859247240836" datatype="html">
+        <source>Total messages to be processed:</source>
+      </trans-unit>
+      <trans-unit id="5433675495457939071" datatype="html">
+        <source>Templates</source>
+      </trans-unit>
+      <trans-unit id="8864658120410603626" datatype="html">
+        <source>Campaigns</source>
+      </trans-unit>
+      <trans-unit id="6112696339048270378" datatype="html">
+        <source>Automations</source>
+      </trans-unit>
+      <trans-unit id="3888993997380000721" datatype="html">
+        <source>Webhooks</source>
+      </trans-unit>
+      <trans-unit id="4555457172864212828" datatype="html">
+        <source>Users</source>
+      </trans-unit>
+      <trans-unit id="1344813883591844650" datatype="html">
+        <source>Account configuration</source>
+      </trans-unit>
+      <trans-unit id="9103027846478201610" datatype="html">
+        <source> Template details </source>
+      </trans-unit>
+      <trans-unit id="2826581353496868063" datatype="html">
+        <source>Language</source>
+      </trans-unit>
+      <trans-unit id="1806667489382256324" datatype="html">
+        <source>Category</source>
+      </trans-unit>
+      <trans-unit id="5611592591303869712" datatype="html">
+        <source>Status</source>
+      </trans-unit>
+      <trans-unit id="5229871880268061938" datatype="html">
+        <source> Message builder </source>
+      </trans-unit>
+      <trans-unit id="4313544752013453805" datatype="html">
+        <source> Upload file </source>
+      </trans-unit>
+      <trans-unit id="3874932175248518277" datatype="html">
+        <source>Copy data to send message as raw</source>
+      </trans-unit>
+      <trans-unit id="3652294927062564443" datatype="html">
+        <source>Send template to users</source>
+      </trans-unit>
+      <trans-unit id="4065257875696168354" datatype="html">
+        <source>Download CSV data to fill and add messages to campaign</source>
+      </trans-unit>
+      <trans-unit id="6490688569532630280" datatype="html">
+        <source>Send</source>
+      </trans-unit>
+      <trans-unit id="1781426626227834604" datatype="html">
+        <source>Select contacts</source>
+      </trans-unit>
+      <trans-unit id="6981830104215014781" datatype="html">
+        <source>category</source>
+      </trans-unit>
+      <trans-unit id="2347724151568473592" datatype="html">
+        <source>language</source>
+      </trans-unit>
+      <trans-unit id="7522557240209303660" datatype="html">
+        <source>content</source>
+      </trans-unit>
+      <trans-unit id="110381562001284660" datatype="html">
+        <source> User settings </source>
+      </trans-unit>
+      <trans-unit id="4145496584631696119" datatype="html">
+        <source>Role</source>
+      </trans-unit>
+      <trans-unit id="4228319514212568219" datatype="html">
+        <source> Users </source>
+      </trans-unit>
+      <trans-unit id="122114774689391224" datatype="html">
+        <source>role</source>
+      </trans-unit>
+      <trans-unit id="7561273264199874409" datatype="html">
+        <source>Frequetly forwarded</source>
+      </trans-unit>
+      <trans-unit id="1357848114610913352" datatype="html">
+        <source>Add section</source>
+      </trans-unit>
+      <trans-unit id="425634559412949745" datatype="html">
+        <source>Add row</source>
+      </trans-unit>
+      <trans-unit id="265658160238489310" datatype="html">
+        <source>&quot;None&quot; means that will not track messages read. &quot;Server&quot; means that will track messages read at the server, synched with other users. &quot;Local&quot; means that will track messages read only in your session locally.</source>
+      </trans-unit>
+      <trans-unit id="3499697918872116089" datatype="html">
+        <source>Defines where your message read will be registered. Used to track messages you didn&apos;t read yet.</source>
+      </trans-unit>
+      <trans-unit id="5846976123417004220" datatype="html">
+        <source>Read control</source>
+      </trans-unit>
+      <trans-unit id="626781142089573549" datatype="html">
+        <source>Click to upload</source>
+      </trans-unit>
+      <trans-unit id="8553821068513277979" datatype="html">
+        <source>or drag and drop</source>
+      </trans-unit>
+      <trans-unit id="3087245697907079876" datatype="html">
+        <source>📁 Upload file</source>
+      </trans-unit>
+      <trans-unit id="3618320480978185544" datatype="html">
+        <source>🔗 Send link</source>
+      </trans-unit>
+      <trans-unit id="1614991601298392832" datatype="html">
+        <source>File uploaded:</source>
+      </trans-unit>
+      <trans-unit id="6597755120494388551" datatype="html">
+        <source> Remove file </source>
+      </trans-unit>
+      <trans-unit id="1826215573205981970" datatype="html">
+        <source>Company</source>
+      </trans-unit>
+      <trans-unit id="2641814217326987367" datatype="html">
+        <source>WA</source>
+      </trans-unit>
+      <trans-unit id="2883859734114302285" datatype="html">
+        <source>URLs</source>
+      </trans-unit>
+      <trans-unit id="29767780071958964" datatype="html">
+        <source> and <x id="INTERPOLATION" equiv-text="{{ contacts.length - 1 }}"/> more contacts</source>
+      </trans-unit>
+      <trans-unit id="3076687427621376223" datatype="html">
+        <source>Organization</source>
+      </trans-unit>
+      <trans-unit id="3330719799429457265" datatype="html">
+        <source>Add URL</source>
+      </trans-unit>
+      <trans-unit id="3527397396272421601" datatype="html">
+        <source>Add reaction</source>
+      </trans-unit>
+      <trans-unit id="3768927257183755959" datatype="html">
+        <source>Save</source>
+      </trans-unit>
+      <trans-unit id="3955967824702499842" datatype="html">
+        <source>Department</source>
+      </trans-unit>
+      <trans-unit id="412337078276683092" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ contacts.length }}"/> contacts</source>
+      </trans-unit>
+      <trans-unit id="4407559560004943843" datatype="html">
+        <source>Last Name</source>
+      </trans-unit>
+      <trans-unit id="4456600014400387676" datatype="html">
+        <source>Formatted Name</source>
+      </trans-unit>
+      <trans-unit id="4467990164108770021" datatype="html">
+        <source>Add Contact</source>
+      </trans-unit>
+      <trans-unit id="5701618810648052610" datatype="html">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="5762151072276461448" datatype="html">
+        <source>Phones</source>
+      </trans-unit>
+      <trans-unit id="5945986349492910662" datatype="html">
+        <source>Contacts</source>
+      </trans-unit>
+      <trans-unit id="6028371114637047813" datatype="html">
+        <source>First Name</source>
+      </trans-unit>
+      <trans-unit id="665798924888164847" datatype="html">
+        <source>Add Phone</source>
+      </trans-unit>
+      <trans-unit id="6786637141307824568" datatype="html">
+        <source>Emails</source>
+      </trans-unit>
+      <trans-unit id="8608255812134805029" datatype="html">
+        <source>Add Email</source>
+      </trans-unit>
+      <trans-unit id="8777876005321924624" datatype="html">
+        <source>Contact <x id="INTERPOLATION" equiv-text="{{ i + 1 }}"/></source>
+      </trans-unit>
+      <trans-unit id="1289200136647215485" datatype="html">
+        <source>Move selection up / down</source>
+      </trans-unit>
+      <trans-unit id="1348774649041038169" datatype="html">
+        <source>Navigation</source>
+      </trans-unit>
+      <trans-unit id="8308560471171358725" datatype="html">
+        <source>Open help</source>
+      </trans-unit>
+      <trans-unit id="3137599440665086165" datatype="html">
+        <source>Focus templates list</source>
+      </trans-unit>
+      <trans-unit id="3424859174110346498" datatype="html">
+        <source>Open selected chat</source>
+      </trans-unit>
+      <trans-unit id="4311086947531633683" datatype="html">
+        <source>Open selected campaign</source>
+      </trans-unit>
+      <trans-unit id="6398969587818603892" datatype="html">
+        <source>Close dialog</source>
+      </trans-unit>
+      <trans-unit id="4717491147966397069" datatype="html">
+        <source>Conversation</source>
+      </trans-unit>
+      <trans-unit id="5002586829803800530" datatype="html">
+        <source>Select message type</source>
+      </trans-unit>
+      <trans-unit id="5521719604636467989" datatype="html">
+        <source>Focus users list</source>
+      </trans-unit>
+      <trans-unit id="6439365426343089851" datatype="html">
+        <source>General</source>
+      </trans-unit>
+      <trans-unit id="7078237045277975063" datatype="html">
+        <source>Open message type selector</source>
+      </trans-unit>
+      <trans-unit id="7250907400509970989" datatype="html">
+        <source>Open selected webhook</source>
+      </trans-unit>
+      <trans-unit id="7559846727306844936" datatype="html">
+        <source>Focus chats list</source>
+      </trans-unit>
+      <trans-unit id="7602674453136730486" datatype="html">
+        <source>Focus webhooks list</source>
+      </trans-unit>
+      <trans-unit id="7819314041543176992" datatype="html">
+        <source>Close</source>
+      </trans-unit>
+      <trans-unit id="7909832491975819067" datatype="html">
+        <source>Focus campaigns list</source>
+      </trans-unit>
+      <trans-unit id="8344427131876198378" datatype="html">
+        <source> Keyboard shortcuts </source>
+      </trans-unit>
+      <trans-unit id="2346024984047785710" datatype="html">
+        <source>Toggle sidebar</source>
+      </trans-unit>
+      <trans-unit id="8650684650239260630" datatype="html">
+        <source>Open selected template</source>
+      </trans-unit>
+      <trans-unit id="2924426478692870428" datatype="html">
+        <source>Jump to sidebar buttons</source>
+      </trans-unit>
+      <trans-unit id="1074613951806286019" datatype="html">
+        <source>Focus messages list</source>
+      </trans-unit>
+      <trans-unit id="1349920970794534452" datatype="html">
+        <source>Reply to message</source>
+      </trans-unit>
+      <trans-unit id="3347045600678860291" datatype="html">
+        <source>Message type selector</source>
+      </trans-unit>
+      <trans-unit id="3860882842879485037" datatype="html">
+        <source>Open message data</source>
+      </trans-unit>
+      <trans-unit id="4192095172071895326" datatype="html">
+        <source>Mark message as read</source>
+      </trans-unit>
+      <trans-unit id="6257928832200603790" datatype="html">
+        <source>Open message options</source>
+      </trans-unit>
+      <trans-unit id="7054231182944686314" datatype="html">
+        <source>Message options</source>
+      </trans-unit>
+      <trans-unit id="7301382007278668178" datatype="html">
+        <source>Move message type selection up / down</source>
+      </trans-unit>
+      <trans-unit id="5374976605311621535" datatype="html">
+        <source>Focus search</source>
+      </trans-unit>
+      <trans-unit id="5617024237584628219" datatype="html">
+        <source>Focus text message area</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

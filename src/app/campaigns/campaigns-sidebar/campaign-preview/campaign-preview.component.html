@@ -1,0 +1,31 @@
+<a
+    [ngClass]="{
+        'w-full flex items-center px-4 py-4 border-b border-gray-200 dark:border-gray-700': true,
+        'bg-gray-200 dark:bg-gray-600': isSelected,
+        'hover:bg-gray-300 dark:hover:bg-gray-700': !isSelected,
+    }"
+    [routerLink]="[]"
+    [queryParams]="{ 'campaign.id': this.campaign.id }"
+    queryParamsHandling="merge"
+    preserveFragment
+    #rootAnchor
+>
+    <div class="ml-3 flex-1 truncate">
+        <div class="flex justify-between items-center mb-2">
+            <span
+                class="text-gray-800 dark:text-gray-200 font-medium truncate"
+                [textContent]="campaign.name"
+            ></span>
+            <span
+                class="text-gray-500 dark:text-gray-400 text-sm"
+                [textContent]="campaign.created_at | simplifiedDate"
+            ></span>
+        </div>
+        <div class="w-full flex flex-row justify-between items-end">
+            <span
+                class="text-md text-left truncate text-gray-500 dark:text-gray-400"
+                [textContent]="campaign.id"
+            ></span>
+        </div>
+    </div>
+</a>

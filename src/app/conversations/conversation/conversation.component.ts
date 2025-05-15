@@ -1,0 +1,95 @@
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+} from "@angular/core";
+import { ConversationHeaderComponent } from "../conversation-header/conversation-header.component";
+import { ConversationFooterComponent } from "../conversation-footer/conversation-footer.component";
+import { ConversationBodyComponent } from "../conversation-body/conversation-body.component";
+import { CommonModule } from "@angular/common";
+import { ConversationMessagingProductContact } from "../../../core/message/model/conversation.model";
+import { ActivatedRoute } from "@angular/router";
+import { UserConversationsStoreService } from "../../../core/message/store/user-conversations-store.service";
+import { ContactInfoComponent } from "../../contacts/contact-info/contact-info.component";
+import { ContactMediaComponent } from "../../contacts/contact-media/contact-media.component";
+import { NGXLogger } from "ngx-logger";
+
+@Component({
+    selector: "app-conversation",
+    imports: [
+        CommonModule,
+        ConversationHeaderComponent,
+        ConversationFooterComponent,
+        ConversationBodyComponent,
+        ContactInfoComponent,
+        ContactMediaComponent,
+    ],
+    templateUrl: "./conversation.component.html",
+    styleUrl: "./conversation.component.scss",
+    standalone: true,
+})
+export class ConversationComponent implements OnInit {
+    @Input("messagingProductContact")
+    messagingProductContact!: ConversationMessagingProductContact;
+    @Output()
+    searchAtContactId = new EventEmitter<string>();
+    @ViewChild("body") body!: ConversationBodyComponent;
+    @ViewChild("conversationFooter")
+    conversationFooter!: ConversationFooterComponent;
+
+    contactInfoEnabled: boolean = false;
+    contactMediaEnabled: boolean = false;
+
+    constructor(
+        private route: ActivatedRoute,
+        public userConversationStore: UserConversationsStoreService,
+        private logger: NGXLogger,
+    ) {}
+
+    ngOnInit() {
+        this.route.queryParams.subscribe((params) => {
+            const isSelected =
+                params["messaging_product_contact.id"] ===
+                this.messagingProductContact.id;
+            if (!isSelected) {
+                return;
+            }
+            const mode = params["mode"];
+            if (!mode || mode === "chat") {
+                this.closeContactMedia();
+                return this.closeContactInfo();
+            }
+            this.logger.log(mode);
+            if (mode === "contact_info") {
+                this.closeContactMedia();
+                return this.openContactInfo();
+            }
+            if (mode === "contact_media") {
+                this.closeContactInfo();
+                return this.openContactMedia();
+            }
+            return;
+        });
+    }
+
+    ngAfterViewInit(): void {}
+
+    closeContactInfo() {
+        this.contactInfoEnabled = false;
+    }
+
+    openContactInfo() {
+        this.contactInfoEnabled = true;
+    }
+
+    closeContactMedia() {
+        this.contactMediaEnabled = false;
+    }
+
+    openContactMedia() {
+        this.contactMediaEnabled = true;
+    }
+}

@@ -1,0 +1,119 @@
+<div class="w-40 shadow-xl p-2 rounded-lg bg-gray-100 dark:bg-gray-700 z-50">
+    <ul class="space-y-2">
+        <li
+            [ngClass]="{
+                selected: messageType === MessageType.text,
+            }"
+            (click)="selectType(MessageType.text)"
+            #listItem
+        >
+            <mat-icon class="material-icons-outlined">text_fields_alt</mat-icon>
+            <span i18n>Text</span>
+        </li>
+        <li
+            [ngClass]="{
+                selected: messageType === MessageType.image,
+            }"
+            (click)="selectType(MessageType.image)"
+            #listItem
+        >
+            <mat-icon class="material-icons-outlined">image</mat-icon>
+            <span i18n>Image</span>
+        </li>
+        <li
+            [ngClass]="{
+                selected: messageType === MessageType.video,
+            }"
+            (click)="selectType(MessageType.video)"
+            #listItem
+        >
+            <mat-icon class="material-icons-outlined">videocam</mat-icon>
+            <span i18n>Video</span>
+        </li>
+        <li
+            [ngClass]="{
+                selected: messageType === MessageType.audio,
+            }"
+            (click)="selectType(MessageType.audio)"
+            #listItem
+        >
+            <mat-icon class="material-icons-outlined">mic</mat-icon>
+            <span i18n>Audio</span>
+        </li>
+        <li
+            [ngClass]="{
+                selected: messageType === MessageType.sticker,
+            }"
+            (click)="selectType(MessageType.sticker)"
+            #listItem
+        >
+            <mat-icon class="material-symbols-outlined">ar_stickers</mat-icon>
+            <span i18n>Sticker</span>
+        </li>
+        <li
+            [ngClass]="{
+                selected: messageType === MessageType.document,
+            }"
+            (click)="selectType(MessageType.document)"
+            #listItem
+        >
+            <mat-icon class="material-icons-outlined">description</mat-icon>
+            <span i18n>Document</span>
+        </li>
+        <li
+            [ngClass]="{
+                selected: messageType === MessageType.interactive,
+            }"
+            (click)="selectType(MessageType.interactive)"
+            #listItem
+        >
+            <mat-icon class="material-symbols-outlined"
+                >interactive_space</mat-icon
+            >
+            <span i18n>Interactive</span>
+        </li>
+        <li
+            [ngClass]="{
+                selected: messageType === MessageType.location,
+            }"
+            (click)="selectType(MessageType.location)"
+            #listItem
+        >
+            <mat-icon class="material-icons-outlined">pin_drop</mat-icon>
+            <span i18n>Location</span>
+        </li>
+        <li
+            [ngClass]="{
+                selected: messageType === MessageType.contacts,
+            }"
+            (click)="selectType(MessageType.contacts)"
+            #listItem
+        >
+            <mat-icon class="material-icons-outlined">group</mat-icon>
+            <span i18n>Contacts</span>
+        </li>
+        <!-- <li -->
+        <!--     class="flex items-center dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-1 cursor-pointer" -->
+        <!--     [ngClass]="{ -->
+        <!--         selected: messageType === 'reaction', -->
+        <!--     }" -->
+        <!--     (click)="selectType('raw')" -->
+        <!-- > -->
+        <!--     <mat-icon -->
+        <!--         class="material-icons-outlined " -->
+        <!--         >add_reaction</mat-icon -->
+        <!--     > -->
+        <!--     <span i18n>Reaction</span> -->
+        <!-- </li> -->
+        <li
+            [ngClass]="{
+                selected: messageType === 'raw',
+            }"
+            (click)="selectType('raw')"
+            #listItem
+        >
+            <mat-icon class="material-icons-outlined">raw_on</mat-icon>
+            <span i18n>Raw</span>
+        </li>
+    </ul>
+</div>

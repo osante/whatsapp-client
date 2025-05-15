@@ -1,0 +1,150 @@
+<div
+    class="h-full mx-auto p-6 dark:bg-gray-900 dark:text-gray-100 scrollable overflow-y-scroll"
+>
+    <h3
+        class="text-gray-600 dark:text-gray-200 text-xl font-semibold mb-4"
+        i18n
+    >
+        User settings
+    </h3>
+
+    <div
+        *ngIf="user"
+        class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg mb-6 grid grid-cols-12 gap-4"
+    >
+        <!-- URL Field with Copy Button -->
+        <div
+            class="col-span-10 relative"
+            [ngClass]="{ 'md:col-span-5': !userId, 'md:col-span-10': userId }"
+        >
+            <label class="block text-sm font-medium mb-2" i18n>Name</label>
+            <div class="relative">
+                <input
+                    type="url"
+                    [(ngModel)]="user.name"
+                    [disabled]="!isEditing"
+                    class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10"
+                />
+                <button
+                    class="absolute right-2 top-2"
+                    (click)="copyToClipboard(user.name)"
+                >
+                    <mat-icon class="material-icons-outlined brightness-50"
+                        >copy</mat-icon
+                    >
+                </button>
+            </div>
+        </div>
+
+        <!-- URL Field with Copy Button -->
+        <div
+            class="col-span-12 md:col-span-5 relative"
+            *ngIf="isEditing && !userId"
+        >
+            <label class="block text-sm font-medium mb-2" i18n>Password</label>
+            <div class="relative">
+                <input
+                    type="password"
+                    [(ngModel)]="user.password"
+                    [disabled]="!isEditing"
+                    class="bg-gray-200 text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10"
+                />
+            </div>
+        </div>
+
+        <div class="col-span-12 md:col-span-2 relative">
+            <label class="block text-sm font-medium mb-2" i18n>Role</label>
+            <div class="relative">
+                <select
+                    class="bg-gray-50 border text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500 outline-none font-semibold"
+                    [disabled]="!isEditing"
+                    [(ngModel)]="user.role"
+                    [ngClass]="{
+                        'text-green-600 border-green-600':
+                            user.role === Role.user,
+                        'text-blue-600 border-blue-600':
+                            user.role === Role.admin,
+                        'text-yellow-600 border-yellow-600':
+                            user.role === Role.automation,
+                        'text-cyan-600 border-cyan-600':
+                            user.role === Role.developer,
+                    }"
+                >
+                    <option [value]="Role.user">{{ Role.user }}</option>
+                    <option [value]="Role.admin">{{ Role.admin }}</option>
+                    <option [value]="Role.automation">
+                        {{ Role.automation }}
+                    </option>
+                    <option [value]="Role.developer">
+                        {{ Role.developer }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Authorization Field with Copy Button -->
+        <div class="col-span-12 relative">
+            <label class="block text-sm font-medium mb-2">Email</label>
+            <div class="relative">
+                <input
+                    [(ngModel)]="user.email"
+                    [disabled]="!isEditing"
+                    class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10"
+                />
+                <button
+                    class="absolute right-2 top-2"
+                    (click)="copyToClipboard(user.email)"
+                >
+                    <mat-icon class="material-icons-outlined brightness-50"
+                        >copy</mat-icon
+                    >
+                </button>
+            </div>
+        </div>
+
+        <!-- Button section -->
+        <div class="col-span-6 flex flex-col items-center" *ngIf="!isEditing">
+            <button
+                (click)="toggleEdit()"
+                class="w-full py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded dark:bg-green-500 dark:hover:bg-green-600"
+                i18n
+            >
+                Edit
+            </button>
+        </div>
+
+        <div
+            class="col-span-6 flex flex-col items-center"
+            *ngIf="!isEditing && userId"
+        >
+            <button
+                (click)="delete()"
+                class="w-full py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded dark:bg-red-500 dark:hover:bg-red-600"
+                i18n
+            >
+                Delete
+            </button>
+        </div>
+
+        <!-- When editing, show Cancel and Save buttons -->
+        <div class="col-span-6 flex flex-col items-center" *ngIf="isEditing">
+            <button
+                (click)="cancelEdit()"
+                class="w-full py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded dark:bg-red-500 dark:hover:bg-red-600"
+                i18n
+            >
+                Cancel
+            </button>
+        </div>
+
+        <div class="col-span-6 flex flex-col items-center" *ngIf="isEditing">
+            <button
+                (click)="saveChanges()"
+                class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded dark:bg-blue-500 dark:hover:bg-blue-600"
+                i18n
+            >
+                Save
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+/* Tiny utilities reused in the template */
+.heading {
+    @apply mb-2 text-sm font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400;
+}
+
+.list {
+    @apply divide-y divide-gray-200 dark:divide-gray-700;
+}
+
+.item {
+    @apply flex items-center justify-between py-2;
+}
+
+.kbd {
+    @apply inline-flex items-center px-2 py-1 mr-2 text-xs font-mono font-semibold
+          bg-gray-100 dark:bg-gray-700
+          text-gray-800 dark:text-gray-200
+          border border-gray-300 dark:border-gray-600 rounded;
+}
+
+#content {
+    @apply w-[500px] lg:w-[1000px] xl:w-[1500px] 2xl:w-[2000px];
+}
+
+#shortcuts-container {
+    @apply grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4;
+}
+
+section {
+    @apply col-span-1;
+}

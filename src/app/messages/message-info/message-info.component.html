@@ -1,0 +1,45 @@
+<div
+    class="flex justify-between items-center text-xs text-gray-600 dark:text-gray-300 w-full px-1"
+    [ngClass]="{
+        'text-left': message.sender_data,
+        'text-right': !message.sender_data,
+    }"
+>
+    <p>{{ message.created_at | date: "yyyy/MM/dd HH:mm" }}</p>
+
+    <div class="ml-2 flex flex-row items-center justify-center">
+        <div
+            *ngIf="sent && message.statuses && message.statuses.length"
+            class="brightness-50 dark:brightness-100 flex items-center justify-center"
+        >
+            <img
+                width="10px"
+                src="assets/icons/flaticon/check-mark.png"
+                *ngIf="message.statuses[0].product_data.status === 'sent'"
+            />
+            <img
+                width="15px"
+                src="assets/icons/flaticon/double-check-mark.png"
+                *ngIf="message.statuses[0].product_data.status === 'delivered'"
+            />
+            <img
+                width="15px"
+                src="assets/icons/flaticon/double-green-check-mark.png"
+                *ngIf="message.statuses[0].product_data.status === 'read'"
+            />
+
+            <i
+                class="fa fa-exclamation-circle text-red-600"
+                height="15px"
+                width="15px"
+                aria-hidden="true"
+                *ngIf="message.statuses[0].product_data.status === 'failed'"
+            ></i>
+        </div>
+        <mat-icon
+            *ngIf="!sent"
+            class="material-icons-outlined text-sm !flex !items-center !justify-center !w-4 !h-4"
+            >schedule</mat-icon
+        >
+    </div>
+</div>

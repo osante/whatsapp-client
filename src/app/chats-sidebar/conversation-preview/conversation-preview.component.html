@@ -1,0 +1,98 @@
+<a
+    class="w-full flex items-center px-4 py-4 border-b border-gray-200 dark:border-gray-700"
+    [ngClass]="{
+        'bg-gray-200 dark:bg-gray-600': isSelected,
+        'hover:bg-gray-300 dark:hover:bg-gray-700': !isSelected,
+    }"
+    [routerLink]="[]"
+    [queryParams]="queryParams"
+    queryParamsHandling="replace"
+    #rootAnchor
+>
+    <!-- Show image if profilePictureSrcInput is provided -->
+    <div>
+        <img
+            [src]="messagingProductContact.contact.photo_path"
+            alt="Profile Picture"
+            class="rounded-full w-12 h-12"
+            *ngIf="messagingProductContact.contact.photo_path"
+        />
+
+        <!-- Show Font Awesome icon if profilePictureSrcInput is not provided -->
+        <i
+            class="fas fa-user-circle text-gray-500 dark:text-gray-400 text-5xl"
+            *ngIf="!messagingProductContact.contact.photo_path"
+        ></i>
+    </div>
+
+    <div class="ml-3 flex-1 truncate">
+        <div class="flex justify-between items-center">
+            <span
+                class="text-gray-800 dark:text-gray-200 font-medium truncate"
+                [textContent]="
+                    messagingProductContact.contact.name ||
+                    messagingProductContact.product_details.phone_number
+                "
+            ></span>
+            <span
+                class="text-gray-500 dark:text-gray-400 text-sm"
+                [textContent]="date | simplifiedDate"
+            ></span>
+        </div>
+        <div class="w-full flex items-center justify-between gap-2">
+            <!-- Ícone de status + texto da mensagem -->
+            <div class="flex items-center min-w-0">
+                <div
+                    *ngIf="lastMessage.statuses && lastMessage.statuses.length"
+                    class="brightness-50 dark:brightness-100 flex items-center justify-center mr-1 flex-shrink-0"
+                >
+                    <img
+                        width="10px"
+                        src="assets/icons/flaticon/check-mark.png"
+                        *ngIf="
+                            lastMessage.statuses[0].product_data.status ===
+                            'sent'
+                        "
+                    />
+                    <img
+                        width="15px"
+                        src="assets/icons/flaticon/double-check-mark.png"
+                        *ngIf="
+                            lastMessage.statuses[0].product_data.status ===
+                            'delivered'
+                        "
+                    />
+                    <img
+                        width="15px"
+                        src="assets/icons/flaticon/double-green-check-mark.png"
+                        *ngIf="
+                            lastMessage.statuses[0].product_data.status ===
+                            'read'
+                        "
+                    />
+                    <i
+                        class="fa fa-exclamation-circle text-red-600 text-xm"
+                        *ngIf="
+                            lastMessage.statuses[0].product_data.status ===
+                            'failed'
+                        "
+                    ></i>
+                </div>
+
+                <!-- Preview da mensagem -->
+                <app-message-content-preview
+                    [message]="lastMessage | messageData"
+                    class="truncate text-left"
+                ></app-message-content-preview>
+            </div>
+
+            <!-- Contador à direita -->
+            <span
+                class="flex-shrink-0 min-w-[1.25rem] h-5 px-1 text-xs text-white dark:text-gray-300 font-semibold flex items-center justify-center bg-blue-500 rounded-full"
+                *ngIf="unread > 0"
+            >
+                {{ unread }}
+            </span>
+        </div>
+    </div>
+</a>

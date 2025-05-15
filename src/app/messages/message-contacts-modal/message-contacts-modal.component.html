@@ -1,0 +1,129 @@
+<div
+    class="py-8 fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-gray-800 bg-opacity-70 z-10"
+    (click)="closeModal()"
+>
+    <div
+        class="w-[500px] max-w-full h-[500px] max-h-full flex flex-col rounded-sm overflow-hidden"
+        id="content"
+        (click)="$event.stopPropagation()"
+    >
+        <!-- Header -->
+        <div
+            class="px-6 py-2 w-full bg-blue-600 dark:bg-gray-700 text-white flex items-center"
+            id="header"
+        >
+            <button
+                class="w-10 aspect-square flex items-center justify-center rounded-full mr-2"
+                (click)="closeModal()"
+            >
+                <mat-icon fontIcon="close"></mat-icon>
+            </button>
+
+            <span class="text-lg font-normal" i18n
+                >{{ contacts.length }} contacts</span
+            >
+        </div>
+
+        <!-- Body -->
+        <div
+            class="h-full w-full bg-white dark:bg-gray-900 overflow-y-auto scrollable"
+            id="body"
+        >
+            <div *ngFor="let contact of contacts" class="px-4 py-2">
+                <!-- Contact header -->
+                <div class="flex justify-between items-center py-4">
+                    <div>
+                        <p
+                            class="text-base font-medium text-gray-800 dark:text-white"
+                            [textContent]="contact.name.formatted_name"
+                        ></p>
+                        <span
+                            *ngIf="
+                                contact.org?.title ||
+                                contact.org?.department ||
+                                contact.org?.company
+                            "
+                            class="text-sm text-gray-500"
+                            >{{ contact.org?.title
+                            }}<span *ngIf="contact.org?.title"> - </span
+                            >{{ contact.org?.department
+                            }}<span *ngIf="contact.org?.department">, </span
+                            >{{ contact.org?.company }}</span
+                        >
+                    </div>
+
+                    <a
+                        [routerLink]="[]"
+                        [queryParams]="addChatQueryParams"
+                        queryParamsHandling="replace"
+                        [preserveFragment]="true"
+                        class="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-full"
+                        i18n
+                        >Save</a
+                    >
+                </div>
+
+                <div class="space-y-3">
+                    <!-- Phones -->
+                    <div class="space-y-2">
+                        <div
+                            *ngFor="let phone of contact.phones"
+                            class="text-sm"
+                        >
+                            <a
+                                class="text-gray-800 dark:text-white"
+                                [textContent]="phone.phone"
+                                [href]="'tel:' + phone.phone"
+                            ></a>
+                            <p
+                                class="text-blue-500 uppercase text-xs"
+                                [textContent]="phone.type"
+                            ></p>
+                        </div>
+                    </div>
+
+                    <!-- Emails -->
+                    <div
+                        *ngIf="contact.emails?.length"
+                        class="pt-3 border-t border-gray-300 dark:border-gray-700 space-y-2"
+                    >
+                        <div
+                            *ngFor="let email of contact.emails"
+                            class="text-sm"
+                        >
+                            <a
+                                class="text-gray-800 dark:text-white"
+                                [textContent]="email.email"
+                                [href]="'mailto:' + email.email"
+                            ></a>
+                            <p
+                                class="text-blue-500 text-xs"
+                                [textContent]="email.type"
+                            ></p>
+                        </div>
+                    </div>
+
+                    <!-- URLs -->
+                    <div
+                        *ngIf="contact.urls?.length"
+                        class="pt-3 border-t border-gray-300 dark:border-gray-700 space-y-2"
+                    >
+                        <div *ngFor="let url of contact.urls" class="text-sm">
+                            <a
+                                [href]="
+                                    url.url.startsWith('http')
+                                        ? url.url
+                                        : 'https://' + url.url
+                                "
+                                target="_blank"
+                                class="text-sm"
+                                [textContent]="url.url"
+                            ></a>
+                            <p class="text-xs text-blue-500">{{ url.type }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

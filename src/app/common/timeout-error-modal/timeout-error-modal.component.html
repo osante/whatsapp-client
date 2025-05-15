@@ -1,0 +1,30 @@
+<div
+    *ngIf="isVisible"
+    class="max-h-full bg-opacity-30 bg-red-900 fixed top-4 left-1/2 transform -translate-x-1/2 w-full max-w-md p-4 border-red-900 text-gray-400 rounded-lg shadow-lg transition-opacity duration-300 border backdrop-blur-md"
+>
+    <div class="flex items-center justify-between">
+        <div>
+            <p class="text-lg font-medium">{{ headerMessage }}</p>
+        </div>
+        <button (click)="toggleData()" class="rounded" *ngIf="data">
+            <i class="fas fa-chevron-down" *ngIf="!showData"></i>
+            <i class="fas fa-chevron-up" *ngIf="showData"></i>
+        </button>
+    </div>
+
+    <p class="text-sm" [textContent]="message"></p>
+
+    <div
+        class="max-h-full bg-opacity-40 mt-2 mb-2 p-2 bg-red-900 text-gray-200 rounded overflow-y-scroll scrollable"
+        *ngIf="data && showData"
+    >
+        <pre class="scrollable whitespace-pre-wrap">{{ data | json }}</pre>
+    </div>
+
+    <div class="relative mt-2 w-full h-1 bg-red-900 dark:bg-red-900 rounded">
+        <div
+            class="absolute left-0 top-0 h-1 bg-red-800 dark:bg-red-700 rounded"
+            [style.width.%]="progress"
+        ></div>
+    </div>
+</div>

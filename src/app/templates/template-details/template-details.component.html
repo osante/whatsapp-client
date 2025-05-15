@@ -1,0 +1,135 @@
+<div
+    class="h-full mx-auto p-6 dark:bg-gray-900 dark:text-gray-100 scrollable overflow-y-scroll"
+>
+    <div *ngIf="template">
+        <h3
+            class="text-gray-600 dark:text-gray-200 text-xl font-semibold mb-4"
+            i18n
+        >
+            Template details
+        </h3>
+
+        <div
+            class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg mb-6 grid grid-cols-12 gap-4"
+        >
+            <div class="col-span-6 relative">
+                <label class="block text-sm font-medium mb-2" i18n>Name</label>
+                <div class="relative">
+                    <div
+                        type="url"
+                        class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10"
+                    >
+                        {{ template.name }}
+                    </div>
+                    <button
+                        class="absolute right-2 top-2"
+                        (click)="copyToClipboard(template.name)"
+                    >
+                        <mat-icon class="material-icons-outlined brightness-50"
+                            >copy</mat-icon
+                        >
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-span-6 relative">
+                <label class="block text-sm font-medium mb-2" i18n
+                    >Language</label
+                >
+                <div class="relative">
+                    <div
+                        class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10"
+                    >
+                        {{ template.language }}
+                    </div>
+                    <button
+                        class="absolute right-2 top-2"
+                        (click)="copyToClipboard(template.language)"
+                    >
+                        <mat-icon class="material-icons-outlined brightness-50"
+                            >copy</mat-icon
+                        >
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-span-12 sm:col-span-4 relative">
+                <label class="block text-sm font-medium mb-2">ID</label>
+                <div class="relative">
+                    <div
+                        class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10"
+                    >
+                        {{ template.id }}
+                    </div>
+                    <button
+                        class="absolute right-2 top-2"
+                        (click)="copyToClipboard(template.id)"
+                    >
+                        <mat-icon class="material-icons-outlined brightness-50"
+                            >copy</mat-icon
+                        >
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-span-12 sm:col-span-4 relative">
+                <label class="block text-sm font-medium mb-2" i18n
+                    >Category</label
+                >
+                <div class="relative">
+                    <div
+                        class="bg-gray-50 border text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500 outline-none"
+                        [ngClass]="{
+                            'text-yellow-600 border-yellow-600':
+                                template.category === 'MARKETING',
+                            'text-blue-600 border-blue-600':
+                                template.category === 'UTILITY',
+                            'text-white':
+                                template.category !== 'UTILITY' &&
+                                template.category !== 'MARKETING',
+                        }"
+                    >
+                        {{ template.category }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 sm:col-span-4 relative">
+                <label class="block text-sm font-medium mb-2" i18n
+                    >Status</label
+                >
+                <div class="relative">
+                    <div
+                        class="bg-gray-50 border text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500 outline-none"
+                        [ngClass]="{
+                            'text-red-600 border-red-600':
+                                template.status === 'REJECTED',
+                            'text-yellow-600 border-yellow-600':
+                                template.status === 'PENDING',
+                            'text-green-600 border-green-600':
+                                template.status === 'APPROVED',
+                            'text-gray-500 dark:text-gray-400 border-gray-500 dark:border-gray-400':
+                                template.status !== 'APPROVED' &&
+                                template.status !== 'PENDING',
+                        }"
+                    >
+                        {{ template.status }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3
+                class="text-gray-600 dark:text-gray-200 text-xl font-semibold mb-4"
+                i18n
+            >
+                Message builder
+            </h3>
+
+            <app-template-message-builder
+                [template]="template"
+            ></app-template-message-builder>
+        </div>
+    </div>
+</div>

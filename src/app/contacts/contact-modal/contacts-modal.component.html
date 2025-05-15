@@ -1,0 +1,172 @@
+<div
+    class="py-8 fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-gray-800 bg-opacity-70 z-10"
+    (click)="closeModal()"
+>
+    <div
+        class="max-w-md max-h-full h-full flex flex-col"
+        id="content"
+        (click)="$event.stopPropagation()"
+    >
+        <!-- Header -->
+        <div
+            class="px-6 py-2 w-full bg-blue-800 dark:bg-gray-700 text-white flex justify-start items-center flex-grow-0"
+            id="header"
+        >
+            <button
+                [ngClass]="{
+                    'w-10 aspect-square flex items-center justify-center rounded-full mr-2': true,
+                }"
+                (click)="closeModal()"
+            >
+                <mat-icon fontIcon="close"></mat-icon>
+            </button>
+
+            <p>
+                <span class="text-lg font-normal">{{ headerText }}</span>
+
+                <span
+                    class="ml-2 px-2 py-1 rounded-md bg-white dark:bg-gray-900 font-normal text-sm"
+                    *ngIf="
+                        !conversationStore.searchValue &&
+                        !messagingProductContactIdFilter
+                            ? conversationStore.count
+                            : conversationStore.searchCount
+                    "
+                    >{{
+                        !conversationStore.searchValue &&
+                        !messagingProductContactIdFilter
+                            ? conversationStore.count
+                            : conversationStore.searchCount
+                    }}</span
+                >
+            </p>
+        </div>
+
+        <!-- Body -->
+        <div
+            class="h-full w-full bg-white dark:bg-gray-900 by-2 overflow-y-auto flex flex-col flex-grow-1"
+            id="body"
+        >
+            <div
+                class="flex-grow-0 flex flex-row gap-2 relative w-full mt-4 px-2 mb-4"
+            >
+                <i
+                    class="fas fa-search absolute left-3 top-3 text-gray-500 dark:text-gray-400"
+                ></i>
+                <textarea
+                    class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 w-full p-2 pl-10 rounded-md resize-none outline-none hide-scrollbar"
+                    rows="1"
+                    (input)="adjustHeight($event)"
+                    [(ngModel)]="conversationStore.searchValue"
+                    (keydown.control.enter)="
+                        conversationStore.getInitialSearchConcurrent()
+                    "
+                    (ngModelChange)="
+                        conversationStore.getInitialSearchConcurrent()
+                    "
+                    placeholder="Search"
+                    i18n-placeholder
+                >
+                </textarea>
+
+                <select
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 outline-none"
+                    [(ngModel)]="conversationStore.searchMode"
+                    (ngModelChange)="
+                        conversationStore.getInitialSearchConcurrent()
+                    "
+                >
+                    <option [value]="'contact'" i18n>Contact</option>
+                    <option [value]="'message'" i18n>Message</option>
+                </select>
+            </div>
+
+            <div
+                class="flex-grow h-full w-full max-h-full overflow-auto scrollable"
+                (scroll)="onScroll($event)"
+            >
+                <ul
+                    *ngIf="
+                        !conversationStore.searchValue &&
+                        !messagingProductContactIdFilter
+                    "
+                >
+                    <li
+                        *ngFor="
+                            let conversation of conversationStore.conversations
+                        "
+                    >
+                        <app-conversation-preview
+                            selectMode="multiple"
+                            [lastMessage]="conversation.message"
+                            [messagingProductContact]="
+                                conversation.message
+                                    | messagingProductContactFromMessage
+                            "
+                            [date]="conversation.message.created_at"
+                            [unread]="conversation.unread"
+                            (select)="selectConversation($event)"
+                            (unSelect)="unselectConversation($event)"
+                            [selected]="
+                                isConversationSelected(
+                                    conversation.message
+                                        | messagingProductContactFromMessage
+                                )
+                            "
+                        ></app-conversation-preview>
+                    </li>
+                </ul>
+
+                <ul
+                    *ngIf="
+                        conversationStore.searchValue ||
+                        messagingProductContactIdFilter
+                    "
+                >
+                    <li
+                        *ngFor="
+                            let conversation of conversationStore.searchConversations
+                        "
+                    >
+                        <app-conversation-preview
+                            [lastMessage]="conversation"
+                            [messagingProductContact]="
+                                conversation
+                                    | messagingProductContactFromMessage
+                            "
+                            [date]="conversation.created_at"
+                            [messageId]="conversation.id"
+                            (select)="selectConversation($event)"
+                            (unSelect)="unselectConversation($event)"
+                            [selected]="
+                                isConversationSelected(
+                                    conversation
+                                        | messagingProductContactFromMessage
+                                )
+                            "
+                        ></app-conversation-preview>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div
+            class="px-6 py-5 w-full bg-blue-800 dark:bg-gray-700 flex justify-start items-center relative"
+            id="footer"
+            *ngIf="selectedConversations.length"
+        >
+            <!-- *ngIf="selectedRow" -->
+            <span class="text-sm font-normal text-white"
+                >{{ bottomText }} {{ selectedConversations.length }}</span
+            >
+
+            <button
+                type=""
+                class="w-16 aspect-square bg-blue-700 dark:bg-blue-800 absolute right-6 bottom-8 rounded-full flex items-center justify-center"
+                (click)="sendToContacts()"
+            >
+                <mat-icon class="">send</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>

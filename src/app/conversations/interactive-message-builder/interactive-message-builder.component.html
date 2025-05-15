@@ -1,0 +1,354 @@
+<div>
+    <div class="space-y-4">
+        <!-- Interactive Type Selection -->
+        <div>
+            <label class="block dark:text-gray-300" i18n
+                >Interactive Type</label
+            >
+            <select
+                class="w-full p-2 rounded-lg bg-gray-300 dark:bg-gray-600 dark:text-white border"
+                [(ngModel)]="interactiveType"
+                (ngModelChange)="selectInteractive()"
+                name="interactiveType"
+            >
+                <option value="button" i18n>Button</option>
+                <option value="list" i18n>List</option>
+            </select>
+        </div>
+
+        <!-- Header (optional) -->
+        <div>
+            <label class="block dark:text-gray-300" i18n>Header Type</label>
+            <select
+                class="w-full p-2 rounded-lg bg-gray-300 dark:bg-gray-600 dark:text-white border"
+                [(ngModel)]="interactiveHeaderType"
+                name="interactiveHeaderType"
+            >
+                <option [value]="HeaderType.text" i18n>Text</option>
+                <option
+                    [value]="HeaderType.image"
+                    *ngIf="interactiveType === InteractiveType.button"
+                    i18n
+                >
+                    Image
+                </option>
+                <option
+                    [value]="HeaderType.video"
+                    *ngIf="interactiveType === InteractiveType.button"
+                    i18n
+                >
+                    Video
+                </option>
+                <option
+                    [value]="HeaderType.audio"
+                    *ngIf="interactiveType === InteractiveType.button"
+                    i18n
+                >
+                    Audio
+                </option>
+                <option
+                    [value]="HeaderType.document"
+                    *ngIf="interactiveType === InteractiveType.button"
+                    i18n
+                >
+                    Document
+                </option>
+            </select>
+        </div>
+
+        <div *ngIf="interactiveHeaderType == HeaderType.text">
+            <label class="block dark:text-gray-300" i18n>Header</label>
+            <textarea
+                class="w-full p-2 rounded-lg bg-gray-300 dark:bg-gray-600 dark:text-white resize-none outline-none"
+                placeholder="Interactive message header..."
+                i18n-placeholder
+                rows="1"
+                maxlength="60"
+                [(ngModel)]="interactiveHeaderString"
+                required
+            ></textarea>
+            <div
+                *ngIf="errors['interactiveHeaderString']"
+                class="text-red-500 text-sm mt-1"
+            >
+                <!-- prettier-ignore -->
+                {{ errors['interactiveHeaderString'] }}
+            </div>
+        </div>
+
+        <div
+            class="ml-2 w-full"
+            *ngIf="interactiveHeaderType != HeaderType.text"
+        >
+            <label class="block dark:text-gray-300">Header</label>
+            <div class="grid grid-cols-12 gap-2">
+                <select
+                    id="media-mode"
+                    class="col-span-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 outline-none"
+                    [(ngModel)]="mediaByUrl"
+                    name="mediaMode"
+                    (ngModelChange)="onMediaModeChange($event)"
+                >
+                    <option [value]="false" i18n>Upload file</option>
+                    <option [value]="true" i18n>Send link</option>
+                </select>
+
+                <!-- Media Link -->
+                <textarea
+                    class="col-span-8 min-h-10 w-full py-2 px-3 rounded-lg bg-gray-300 dark:bg-gray-600 dark:text-white resize-none outline-none"
+                    placeholder="Media link"
+                    i18n-placeholder
+                    rows="1"
+                    [(ngModel)]="link"
+                    (input)="adjustHeight(headerMediaLinkArea)"
+                    name="mediaLink"
+                    *ngIf="mediaByUrl"
+                    #headerMediaLinkArea
+                ></textarea>
+
+                <!-- File Upload -->
+                <app-file-upload
+                    name="fileInput"
+                    id="file-input"
+                    class="col-span-8"
+                    (change)="onFileSelected($event)"
+                    *ngIf="!mediaByUrl"
+                ></app-file-upload>
+
+                <!-- Caption -->
+                <textarea
+                    class="col-span-12 min-h-10 w-full py-2 px-3 rounded-lg bg-gray-300 dark:bg-gray-600 dark:text-white resize-none outline-none"
+                    placeholder="Caption (optional)"
+                    rows="1"
+                    [(ngModel)]="caption"
+                    [ngClass]="{
+                        'border-red-500 border': errors['headerMedia'],
+                    }"
+                    (input)="adjustHeight(headerMediaCaptionArea)"
+                    name="mediaCaption"
+                    #headerMediaCaptionArea
+                ></textarea>
+            </div>
+            <div
+                *ngIf="errors['headerMedia']"
+                class="text-red-500 text-sm mt-1"
+            >
+                <!-- prettier-ignore -->
+                {{ errors['headerMedia'] }}
+                jflkda
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div>
+            <label class="block dark:text-gray-300" i18n>Body</label>
+            <textarea
+                class="w-full p-2 rounded-lg bg-gray-300 dark:bg-gray-600 dark:text-white resize-none outline-none"
+                [ngClass]="{
+                    'border-red-500 border': !interactiveBody,
+                }"
+                placeholder="Interactive message body..."
+                i18n-placeholder
+                rows="2"
+                [(ngModel)]="interactiveBody"
+                (input)="adjustHeight(interactiveBodyArea)"
+                name="interactiveBody"
+                maxlength="1024"
+                required
+                #interactiveBodyArea
+            ></textarea>
+        </div>
+
+        <!-- Footer (optional) -->
+        <div>
+            <label class="block dark:text-gray-300" i18n>Footer</label>
+            <textarea
+                class="w-full p-2 rounded-lg bg-gray-300 dark:bg-gray-600 dark:text-white resize-none outline-none"
+                placeholder="Footer text..."
+                i18n-placeholder
+                rows="1"
+                maxlength="60"
+                [(ngModel)]="interactiveFooter"
+                name="interactiveFooter"
+            ></textarea>
+        </div>
+
+        <div *ngIf="interactiveType == InteractiveType.list">
+            <label class="block dark:text-gray-300" i18n>Button</label>
+            <div class="space-y-2">
+                <div class="space-y-2">
+                    <div class="w-full flex items-center">
+                        <input
+                            type="text"
+                            [ngClass]="{
+                                'border-red-500 border': !singleButtonText,
+                            }"
+                            class="flex-1 p-2 rounded-lg bg-gray-300 dark:bg-gray-600 dark:text-white"
+                            placeholder="Button"
+                            i18n-placeholder
+                            maxlength="20"
+                            [(ngModel)]="singleButtonText"
+                            required
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <label class="block dark:text-gray-300 mt-4" i18n
+                >List sections</label
+            >
+            <div class="space-y-2">
+                <div
+                    *ngFor="let section of interactiveSections; let i = index"
+                    class="space-y-2"
+                >
+                    <div class="w-full flex items-center">
+                        <input
+                            type="text"
+                            class="flex-1 p-2 rounded-lg bg-gray-300 dark:bg-gray-600 dark:text-white"
+                            placeholder="Section {{ i }}"
+                            [ngClass]="{
+                                'border-red-500 border':
+                                    interactiveSections.length > 1 &&
+                                    !section.title,
+                            }"
+                            [(ngModel)]="section.title"
+                            maxlength="24"
+                            name="buttonText{{ i }}"
+                            required
+                        />
+                        <button
+                            type="button"
+                            class="text-red-500"
+                            *ngIf="i !== 0"
+                            (click)="removeSection(i)"
+                        >
+                            <mat-icon
+                                class="material-icons-outlined brightness-50 dark:brightness-100"
+                                >delete</mat-icon
+                            >
+                        </button>
+                    </div>
+                    <div
+                        class="pl-10 w-full flex items-center"
+                        *ngFor="let row of section.rows; let j = index"
+                    >
+                        <div class="flex flex-col w-full">
+                            <input
+                                type="text"
+                                class="p-2 rounded-t-lg bg-gray-300 dark:bg-gray-600 dark:text-white w-full"
+                                [ngClass]="{
+                                    'border-red-500 border':
+                                        !section.rows[j].title,
+                                }"
+                                placeholder="Row {{ j }} title"
+                                maxlength="24"
+                                [(ngModel)]="section.rows[j].title"
+                                required
+                            />
+                            <input
+                                type="text"
+                                class="p-2 rounded-b-lg bg-gray-300 dark:bg-gray-600 dark:text-white w-full"
+                                placeholder="Row {{ j }} description"
+                                maxlength="72"
+                                [(ngModel)]="section.rows[j].description"
+                                required
+                            />
+                        </div>
+                        <button
+                            type="button"
+                            class="text-red-500"
+                            (click)="removeRow(i, j)"
+                        >
+                            <mat-icon
+                                class="material-icons-outlined brightness-50 dark:brightness-100"
+                                >delete</mat-icon
+                            >
+                        </button>
+                    </div>
+                    <button
+                        type="button"
+                        class="flex items-center text-blue-500 pl-10"
+                        *ngIf="totalRows < 10"
+                        (click)="addRow(i)"
+                    >
+                        <mat-icon
+                            class="material-icons-outlined brightness-50 dark:brightness-100"
+                            >add</mat-icon
+                        >
+                        <span i18n>Add row</span>
+                    </button>
+                </div>
+                <button
+                    type="button"
+                    class="flex items-center text-blue-500 mb-4"
+                    *ngIf="interactiveSections.length < 10"
+                    (click)="addSection()"
+                >
+                    <mat-icon
+                        class="material-icons-outlined brightness-50 dark:brightness-100"
+                        >add</mat-icon
+                    >
+                    <span i18n>Add section</span>
+                </button>
+            </div>
+            <div
+                *ngIf="errors['interactiveSections']"
+                class="text-red-500 text-sm mt-1"
+            >
+                {{ errors["interactiveSections"] }}
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div *ngIf="interactiveType == InteractiveType.button">
+            <label class="block dark:text-gray-300" i18n>Buttons</label>
+            <div class="space-y-2">
+                <div
+                    *ngFor="let button of interactiveButtons; let i = index"
+                    class="space-y-2"
+                >
+                    <div class="w-full flex items-center">
+                        <input
+                            type="text"
+                            class="flex-1 p-2 rounded-lg bg-gray-300 dark:bg-gray-600 dark:text-white"
+                            placeholder="Button {{ i }}"
+                            i18n-placeholder
+                            [(ngModel)]="interactiveButtons[i].title"
+                            [ngClass]="{
+                                'border-red-500 border':
+                                    !interactiveButtons[i].title,
+                            }"
+                            name="buttonText{{ i }}"
+                            maxlength="20"
+                            required
+                        />
+                        <button
+                            type="button"
+                            class="text-red-500"
+                            *ngIf="i !== 0"
+                            (click)="removeButton(i)"
+                        >
+                            <mat-icon
+                                class="material-icons-outlined brightness-50 dark:brightness-100"
+                                >delete</mat-icon
+                            >
+                        </button>
+                    </div>
+                </div>
+                <button
+                    type="button"
+                    class="flex items-center text-blue-500 mb-4"
+                    *ngIf="interactiveButtons.length < 3"
+                    (click)="addButton()"
+                >
+                    <mat-icon
+                        class="material-icons-outlined brightness-50 dark:brightness-100"
+                        >add</mat-icon
+                    >
+                    <span i18n>Add option</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

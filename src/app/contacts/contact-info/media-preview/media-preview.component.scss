@@ -1,0 +1,13 @@
+button.options,
+a.options {
+    @apply inline-flex items-center justify-center w-6 aspect-square rounded-l-full rounded-r-full hover:bg-gray-800/50;
+    pointer-events: auto;
+}
+
+img.options {
+    @apply w-5 aspect-square;
+}
+
+mat-icon {
+    @apply text-sm flex items-center justify-center;
+}

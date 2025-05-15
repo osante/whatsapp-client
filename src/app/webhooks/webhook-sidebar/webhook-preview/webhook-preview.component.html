@@ -1,0 +1,41 @@
+<a
+    [ngClass]="{
+        'w-full flex items-center px-4 py-4 border-b border-gray-200 dark:border-gray-700': true,
+        'bg-gray-200 dark:bg-gray-600': isSelected,
+        'hover:bg-gray-300 dark:hover:bg-gray-700': !isSelected,
+    }"
+    [routerLink]="[]"
+    [queryParams]="{ 'webhook.id': webhook.id }"
+    preserveFragment
+    #rootAnchor
+>
+    <div class="ml-3 flex-1 truncate">
+        <div class="flex justify-between items-center mb-2">
+            <span
+                class="text-gray-800 dark:text-gray-200 font-medium truncate"
+                [textContent]="webhook.url"
+            ></span>
+            <span
+                class="text-gray-500 dark:text-gray-400 text-sm"
+                [textContent]="webhook.created_at | simplifiedDate"
+            ></span>
+        </div>
+        <div class="w-full flex flex-row justify-between items-end">
+            <span
+                [ngClass]="{
+                    'text-green-600': webhook.http_method === 'GET',
+                    'text-blue-600': webhook.http_method === 'POST',
+                    'text-yellow-600': webhook.http_method === 'PUT',
+                    'text-red-600': webhook.http_method === 'DELETE',
+                    'text-orange-600': webhook.http_method === 'PATCH',
+                }"
+                class="text-md font-semibold text-left truncate"
+                [textContent]="webhook.http_method"
+            ></span>
+            <code
+                class="flex-shrink-0 dark:text-gray-500 text-sm"
+                [textContent]="webhook.event"
+            ></code>
+        </div>
+    </div>
+</a>

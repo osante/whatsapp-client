@@ -1,0 +1,61 @@
+<div class="">
+    <div
+        class="bg-white dark:bg-gray-800 p-6 rounded-xl mb-6 flex items-center gap-6 shadow-lg"
+    >
+        <div class="w-full flex flex-col space-y-4">
+            <div class="flex items-center">
+                <span class="text-gray-700 dark:text-gray-200 font-medium" i18n
+                    >Total messages to be processed:</span
+                >
+                <span
+                    class="ml-2 text-gray-900 dark:text-white font-semibold"
+                    >{{ total }}</span
+                >
+            </div>
+
+            <apx-chart
+                [series]="chartOptions.series"
+                [chart]="chartOptions.chart"
+                [xaxis]="chartOptions.xaxis"
+                [fill]="chartOptions.fill"
+                [theme]="chartOptions.theme"
+                [legend]="chartOptions.legend"
+                [title]="chartOptions.title"
+                *ngIf="sent"
+            ></apx-chart>
+            <!-- class="text-gray-700" -->
+        </div>
+
+        <div class="flex items-center justify-center">
+            <button
+                (click)="sending ? cancel() : send()"
+                [ngClass]="{
+                    'w-16 h-16 text-white rounded-full flex items-center justify-center shadow-md transition duration-300': true,
+                    'bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800':
+                        !loading,
+                    'bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-800':
+                        sending,
+                }"
+                [disabled]="loading || !total"
+            >
+                <!-- Replace with an inline SVG for better scalability -->
+                <svg
+                    class="w-8 h-8"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    *ngIf="!loading && !sending"
+                >
+                    <!-- SVG path data for the send icon -->
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                </svg>
+
+                <i
+                    class="fa-solid fa-stop text-lg text-white"
+                    *ngIf="sending"
+                ></i>
+
+                <mat-spinner [diameter]="32" *ngIf="loading"></mat-spinner>
+            </button>
+        </div>
+    </div>
+</div>
