@@ -17,7 +17,7 @@
             ></span>
             <span
                 class="text-gray-500 dark:text-gray-400 text-sm"
-                [textContent]="user.created_at | simplifiedDate"
+                [textContent]="user.created_at | date: 'short'"
             ></span>
         </div>
         <div class="w-full flex flex-row justify-between items-end">

@@ -1,7 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { SimplifiedDatePipe } from "../../../../core/common/pipe/simplified-date.pipe";
 import {
     Conversation,
     ConversationMessagingProductContact,
@@ -12,12 +11,7 @@ import { MessageContentPreviewComponent } from "../../../messages/message-conten
 
 @Component({
     selector: "app-conversation-preview",
-    imports: [
-        CommonModule,
-        SimplifiedDatePipe,
-        MessageContentPreviewComponent,
-        MessageDataPipe,
-    ],
+    imports: [CommonModule, MessageContentPreviewComponent, MessageDataPipe],
     templateUrl: "./conversation-preview.component.html",
     styleUrl: "./conversation-preview.component.scss",
     standalone: true,

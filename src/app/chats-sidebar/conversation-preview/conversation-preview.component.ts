@@ -11,7 +11,6 @@ import {
     ViewChild,
 } from "@angular/core";
 import { ActivatedRoute, RouterModule } from "@angular/router";
-import { SimplifiedDatePipe } from "../../../core/common/pipe/simplified-date.pipe";
 import {
     Conversation,
     ConversationMessagingProductContact,
@@ -25,7 +24,6 @@ import { QueryParamsService } from "../../../core/navigation/service/query-param
     standalone: true,
     imports: [
         CommonModule,
-        SimplifiedDatePipe,
         MessageContentPreviewComponent,
         MessageDataPipe,
         RouterModule,

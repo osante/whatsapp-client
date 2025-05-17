@@ -8,13 +8,12 @@ import {
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ActivatedRoute, RouterModule } from "@angular/router";
-import { SimplifiedDatePipe } from "../../../core/common/pipe/simplified-date.pipe";
 import { Role } from "../../../core/user/model/role.model";
 import { User } from "../../../core/user/entity/user.entity";
 
 @Component({
     selector: "app-user-preview",
-    imports: [SimplifiedDatePipe, CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule],
     templateUrl: "./user-preview.component.html",
     styleUrl: "./user-preview.component.scss",
     standalone: true,

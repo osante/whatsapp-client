@@ -13,6 +13,7 @@ import { CampaignMessageControllerService } from "../../../core/campaign/control
 import { MessagingProductControllerService } from "../../../core/messaging-product/controller/messaging-product-controller.service";
 import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
 import { NGXLogger } from "ngx-logger";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
     selector: "app-campaign-details",
@@ -23,6 +24,7 @@ import { NGXLogger } from "ngx-logger";
         CampaignMessageBuilderComponent,
         SendCampaignComponent,
         MatIconModule,
+        MatTooltipModule,
     ],
     templateUrl: "./campaign-details.component.html",
     styleUrl: "./campaign-details.component.scss",

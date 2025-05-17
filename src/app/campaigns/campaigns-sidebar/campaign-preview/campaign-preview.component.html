@@ -18,7 +18,7 @@
             ></span>
             <span
                 class="text-gray-500 dark:text-gray-400 text-sm"
-                [textContent]="campaign.created_at | simplifiedDate"
+                [textContent]="campaign.created_at | date: 'short'"
             ></span>
         </div>
         <div class="w-full flex flex-row justify-between items-end">

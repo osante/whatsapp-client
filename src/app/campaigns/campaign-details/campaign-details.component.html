@@ -26,16 +26,8 @@
                     type="url"
                     [(ngModel)]="campaign.name"
                     [disabled]="!isEditing"
-                    class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10"
+                    class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none"
                 />
-                <button
-                    class="absolute right-2 top-2"
-                    (click)="copyToClipboard(campaign.name)"
-                >
-                    <mat-icon class="material-icons-outlined brightness-50"
-                        >copy</mat-icon
-                    >
-                </button>
             </div>
         </div>
 
@@ -47,13 +39,14 @@
                     [disabled]="!isEditing"
                     class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10"
                 />
+
                 <button
-                    class="absolute right-2 top-2"
+                    mat-icon-button
+                    class="absolute right-2 top-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition"
                     (click)="copyToClipboard(campaign.id)"
+                    matTooltip="Copy campaign ID"
                 >
-                    <mat-icon class="material-icons-outlined brightness-50"
-                        >copy</mat-icon
-                    >
+                    <mat-icon class="material-icons-outlined">copy</mat-icon>
                 </button>
             </div>
         </div>
@@ -64,18 +57,10 @@
             >
             <div class="relative">
                 <div
-                    class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10"
+                    class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none"
                 >
                     {{ totalMessages }}
                 </div>
-                <button
-                    class="absolute right-2 top-2"
-                    (click)="copyToClipboard(totalMessages.toString())"
-                >
-                    <mat-icon class="material-icons-outlined brightness-50"
-                        >copy</mat-icon
-                    >
-                </button>
             </div>
         </div>
 
@@ -85,18 +70,10 @@
             >
             <div class="relative">
                 <div
-                    class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10"
+                    class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none"
                 >
                     {{ messagesSent }}
                 </div>
-                <button
-                    class="absolute right-2 top-2"
-                    (click)="copyToClipboard(messagesSent.toString())"
-                >
-                    <mat-icon class="material-icons-outlined brightness-50"
-                        >copy</mat-icon
-                    >
-                </button>
             </div>
         </div>
 
@@ -110,14 +87,6 @@
                 >
                     {{ unsentMessages }}
                 </div>
-                <button
-                    class="absolute right-2 top-2"
-                    (click)="copyToClipboard(unsentMessages.toString())"
-                >
-                    <mat-icon class="material-icons-outlined brightness-50"
-                        >copy</mat-icon
-                    >
-                </button>
             </div>
         </div>
 

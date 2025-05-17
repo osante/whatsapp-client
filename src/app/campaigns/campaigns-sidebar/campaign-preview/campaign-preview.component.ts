@@ -8,12 +8,11 @@ import {
 } from "@angular/core";
 import { CampaignFields } from "../../../../core/campaign/entity/campaign.entity";
 import { ActivatedRoute, RouterModule } from "@angular/router";
-import { SimplifiedDatePipe } from "../../../../core/common/pipe/simplified-date.pipe";
 import { CommonModule } from "@angular/common";
 
 @Component({
     selector: "app-campaign-preview",
-    imports: [SimplifiedDatePipe, CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule],
     templateUrl: "./campaign-preview.component.html",
     styleUrl: "./campaign-preview.component.scss",
     standalone: true,
