@@ -12,6 +12,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { NgxLoggerLevel, LoggerModule } from "ngx-logger";
 import { environment } from "../environments/environment";
+import { provideHttpClient } from "@angular/common/http";
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -27,6 +28,7 @@ export const appConfig: ApplicationConfig = {
         // provideRouter(routes),
         provideAnimationsAsync(),
         provideAnimations(),
+        provideHttpClient(),
         importProvidersFrom(MatDialogModule),
         importProvidersFrom(
             LoggerModule.forRoot({
