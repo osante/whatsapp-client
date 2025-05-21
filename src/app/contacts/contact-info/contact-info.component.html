@@ -105,39 +105,50 @@
             </div>
 
             <!-- Editable Phone Number -->
-            <div>
-                <input
-                    [(ngModel)]="
-                        messagingProductContact.product_details.phone_number
+            <div class="max-h-96">
+                <!-- [(ngModel)]=" -->
+                <!--     messagingProductContact.product_details.phone_number -->
+                <!-- " -->
+                <ngx-intl-tel-input
+                    [separateDialCode]="true"
+                    [cssClass]="
+                        'max-h-96 dark:bg-gray-700 dark:text-white rounded w-full py-1'
                     "
-                    name="phoneNumber"
-                    class="bg-gray-200 dark:bg-gray-700 dark:text-white rounded px-2 py-1 w-full text-center"
-                    placeholder="Phone number"
-                    i18n-placeholder
-                    type="tel"
-                    [required]="isEditing"
-                    pattern="^[0-9]{10,15}$"
-                    #phoneNumber="ngModel"
-                    aria-describedby="phoneNumberError"
-                    [disabled]="isLoading"
-                />
-                <!-- Phone Number Validation Errors -->
-                <div
-                    *ngIf="
-                        phoneNumber.invalid &&
-                        (phoneNumber.dirty || phoneNumber.touched)
-                    "
-                    id="phoneNumberError"
-                    class="text-red-500 text-sm mt-1"
+                    [enableAutoCountrySelect]="true"
+                    [enablePlaceholder]="true"
+                    [searchCountryFlag]="true"
+                    [selectFirstCountry]="false"
+                    [phoneValidation]="true"
+                    [maxLength]="15"
+                    name="phone"
+                    [formControl]="phoneControl"
                 >
-                    <span *ngIf="phoneNumber.errors?.['required']">
-                        Phone number is required.
-                    </span>
-                    <span *ngIf="phoneNumber.errors?.['pattern']">
-                        Phone number must be between 10 to 15 digits.
-                    </span>
-                </div>
+                </ngx-intl-tel-input>
+
+                <!-- <ngx-material-intl-tel-input -->
+                <!--     class="custom-phone-input dark:text-white" -->
+                <!--     [fieldControl]="phoneControl" -->
+                <!--     [required]="isEditing" -->
+                <!--     [autoIpLookup]="true" -->
+                <!--     [autoSelectCountry]="true" -->
+                <!--     [numberValidation]="false" -->
+                <!--     [enableSearch]="true" -->
+                <!--     [includeDialCode]="false" -->
+                <!--     [textLabels]="{ -->
+                <!--         mainLabel: '', -->
+                <!--         codePlaceholder: 'Code', -->
+                <!--         searchPlaceholderLabel: 'Search', -->
+                <!--         noEntriesFoundLabel: 'No countries found', -->
+                <!--         nationalNumberLabel: '', -->
+                <!--         hintLabel: 'Select country and type your phone number', -->
+                <!--         invalidNumberError: 'Number is not valid', -->
+                <!--         requiredError: 'This field is required', -->
+                <!--     }" -->
+                <!--     aria-describedby="phoneNumberError" -->
+                <!-- ></ngx-material-intl-tel-input> -->
             </div>
+            <!-- [disabled]="isLoading" -->
+            <!-- class="bg-gray-200 dark:bg-gray-700 dark:text-white rounded px-2 py-1 w-full text-center" -->
 
             <!-- Edit Control Buttons -->
             <div class="mt-2 flex space-x-4">
