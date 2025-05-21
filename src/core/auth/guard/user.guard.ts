@@ -2,24 +2,39 @@ import { inject } from "@angular/core";
 import { CanActivateFn, Router } from "@angular/router";
 import { AuthService } from "../service/auth.service";
 import { UserStoreService } from "../../user/store/user-store.service";
+import { RoutePath } from "../../../app/app.routes";
 
-export const userGuard: CanActivateFn = (route, state) => {
+export const userGuard: CanActivateFn = async (route, state) => {
     const authService = inject(AuthService);
     const userStore = inject(UserStoreService);
     const router = inject(Router);
 
-    return authService
-        .checkAndRefreshToken()
-        .then(() => {
-            if (!authService.getToken())
-                return router.createUrlTree(["/auth/login"]);
+    const queryParams = new URLSearchParams(state.url.split("?")[1]);
+    const token = queryParams.get("access_token");
 
-            const me = userStore
-                .getCurrent()
-                .then((_) => true)
-                .catch(() => router.createUrlTree(["/auth/login"]));
+    if (token) {
+        authService.setToken(token);
+        authService.loginTime = new Date();
+    }
 
-            return me;
-        })
-        .catch(() => router.createUrlTree(["/auth/login"]));
+    try {
+        await authService.checkAndRefreshToken();
+
+        if (!authService.getToken()) {
+            return router.createUrlTree([
+                `/${RoutePath.auth}/${RoutePath.login}`,
+            ]);
+        }
+
+        const me = await userStore
+            .getCurrent()
+            .then(() => true)
+            .catch(() =>
+                router.createUrlTree([`/${RoutePath.auth}/${RoutePath.login}`]),
+            );
+
+        return me;
+    } catch {
+        return router.createUrlTree([`/${RoutePath.auth}/${RoutePath.login}`]);
+    }
 };
