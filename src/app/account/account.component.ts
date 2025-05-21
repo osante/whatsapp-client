@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from "@angular/core";
+import { Component, OnInit, Renderer2, ViewChild } from "@angular/core";
 import { UserControllerService } from "../../core/user/controller/user-controller.service";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
@@ -13,6 +13,7 @@ import { ThemeMode } from "../../core/common/model/theme-modes.model";
 import { SidebarComponent } from "../common/sidebar/sidebar.component";
 import { RoutePath } from "../app.routes";
 import { NGXLogger } from "ngx-logger";
+import { TimeoutErrorModalComponent } from "../common/timeout-error-modal/timeout-error-modal.component";
 
 @Component({
     selector: "app-account",
@@ -23,6 +24,7 @@ import { NGXLogger } from "ngx-logger";
         MatTooltipModule,
         MatIconModule,
         SidebarComponent,
+        TimeoutErrorModalComponent,
     ],
     templateUrl: "./account.component.html",
     styleUrl: "./account.component.scss",
@@ -36,6 +38,8 @@ export class AccountComponent implements OnInit {
 
     isEditing: boolean = false;
     isDropdownOpen: boolean = false;
+
+    @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
 
     constructor(
         private userController: UserControllerService,
@@ -54,23 +58,37 @@ export class AccountComponent implements OnInit {
         this.isEditing = !this.isEditing;
     }
 
+    loading: boolean = false;
     async saveChanges() {
-        if (this.userStore.currentUser) {
-            try {
-                await this.userController.updateCurrentUser(
-                    this.userStore.currentUser,
-                );
-                this.isEditing = false;
-                this.userStore.currentUser.password = ""; // Clear password
-            } catch (error) {
-                this.logger.error("Error updating user", error);
-            }
+        if (!this.userStore.currentUser) return;
+        this.loading = true;
+        try {
+            await this.userController.updateCurrentUser(
+                this.userStore.currentUser,
+            );
+            this.isEditing = false;
+            this.userStore.currentUser.password = ""; // Clear password
+        } catch (error) {
+            this.logger.error("Error updating user", error);
+            this.handleErr("Error updating user.", error);
+            return;
+        } finally {
+            this.loading = false;
         }
     }
 
-    cancelEdit() {
+    async cancelEdit() {
+        this.loading = true;
         this.isEditing = false;
-        this.userStore.getCurrent(); // Revert changes
+        try {
+            await this.userStore.getCurrent(); // Revert changes
+        } catch (error) {
+            this.logger.error("Error reverting user changes", error);
+            this.handleErr("Error getting current user.", error);
+            return;
+        } finally {
+            this.loading = false;
+        }
     }
 
     // Method to toggle the theme
@@ -81,5 +99,14 @@ export class AccountComponent implements OnInit {
 
     toggleMarkAsRead(autoMarkAsRead: boolean) {
         this.localSettings.setAutoMarkAsRead(autoMarkAsRead);
+    }
+
+    errorStr: string = "";
+    errorData: any;
+    handleErr(message: string, err: any) {
+        this.errorData = err?.response?.data;
+        this.errorStr = err?.response?.data?.description || message;
+        this.logger.error("Async error", err);
+        this.errorModal.openModal();
     }
 }
