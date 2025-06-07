@@ -131,6 +131,18 @@ export class AuthService {
         await this.http.post(`${ServerEndpoints.resetPassword}`, { username });
     }
 
+    setAuthCookie(): void {
+        this.cookieService.set(
+            "authToken",
+            this.getToken(),
+            7,
+            "/",
+            this.getParentTransform(environment.nodeRedServerUrl),
+            true,
+            "None",
+        );
+    }
+
     getParentTransform(subdomainUrl: string): string {
         try {
             // Prepend protocol if missing to create a valid URL
