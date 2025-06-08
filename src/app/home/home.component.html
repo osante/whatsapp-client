@@ -37,7 +37,9 @@
             queryParamIs('mode', 'new_contact')
         "
     >
-        <app-new-contact></app-new-contact>
+        <app-new-contact
+            (select)="conversations.getCurrentMessagingProductContactId($event)"
+        ></app-new-contact>
     </div>
 
     <app-template-sidebar

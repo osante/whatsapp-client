@@ -11,10 +11,17 @@ import { WebhookControllerService } from "../../../core/webhook/controller/webho
 import { WebhookStoreService } from "../../../core/webhook/store/webhook-store.service";
 import { Event } from "../../../core/webhook/model/event.model";
 import { NGXLogger } from "ngx-logger";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
     selector: "app-webhook-details",
-    imports: [CommonModule, FormsModule, WebhookLogsComponent, MatIconModule],
+    imports: [
+        CommonModule,
+        FormsModule,
+        WebhookLogsComponent,
+        MatIconModule,
+        MatTooltipModule,
+    ],
     templateUrl: "./webhook-details.component.html",
     styleUrl: "./webhook-details.component.scss",
     standalone: true,

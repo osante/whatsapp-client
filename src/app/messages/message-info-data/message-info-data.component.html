@@ -9,8 +9,9 @@
         >
             <h2 class="text-xl font-medium" i18n>Message details</h2>
             <div class="flex gap-2">
-                <button
+                <div
                     class="w-10 aspect-square flex items-center justify-center rounded-full active:bg-gray-200 dark:active:bg-gray-600 outline-none"
+                    role="button"
                     [ngClass]="{
                         'bg-gray-300 dark:bg-gray-500': copied,
                         'hover:bg-gray-400 dark:hover:bg-gray-600': !copied,
@@ -22,13 +23,12 @@
                         class="aspect-square text-white material-icons-outlined"
                         >content_copy</mat-icon
                     >
-                </button>
+                </div>
 
                 <button
                     class="w-10 aspect-square flex items-center justify-center rounded-full active:bg-gray-200 dark:active:bg-gray-600 outline-none"
                     [ngClass]="{
-                        'bg-gray-300 dark:bg-gray-500': copied,
-                        'hover:bg-gray-400 dark:hover:bg-gray-600': !copied,
+                        'hover:bg-gray-400 dark:hover:bg-gray-600': true,
                     }"
                     (click)="close()"
                 >

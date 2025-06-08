@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 import { ContactInfoComponent } from "../contact-info/contact-info.component";
+import { ConversationMessagingProductContact } from "../../../core/message/model/conversation.model";
 
 @Component({
     selector: "app-new-contact",
@@ -8,4 +9,6 @@ import { ContactInfoComponent } from "../contact-info/contact-info.component";
     styleUrl: "./new-contact.component.scss",
     standalone: true,
 })
-export class NewContactComponent {}
+export class NewContactComponent {
+    @Output() select = new EventEmitter<ConversationMessagingProductContact>();
+}

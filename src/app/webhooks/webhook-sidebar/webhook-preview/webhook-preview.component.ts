@@ -9,12 +9,11 @@ import {
 } from "@angular/core";
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
-import { SimplifiedDatePipe } from "../../../../core/common/pipe/simplified-date.pipe";
 import { Webhook } from "../../../../core/webhook/entity/webhook.entity";
 
 @Component({
     selector: "app-webhook-preview",
-    imports: [CommonModule, SimplifiedDatePipe, RouterModule],
+    imports: [CommonModule, RouterModule],
     templateUrl: "./webhook-preview.component.html",
     styleUrl: "./webhook-preview.component.scss",
     standalone: true,

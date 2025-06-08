@@ -9,10 +9,12 @@ import { QueryParamsService } from "../../../core/navigation/service/query-param
 import { UserControllerService } from "../../../core/user/controller/user-controller.service";
 import { UserStoreService } from "../../../core/user/store/user-store.service";
 import { NGXLogger } from "ngx-logger";
+import { MatButtonModule } from "@angular/material/button";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
     selector: "app-user-details",
-    imports: [FormsModule, CommonModule, MatIconModule],
+    imports: [FormsModule, CommonModule, MatIconModule, MatTooltipModule],
     templateUrl: "./user-details.component.html",
     styleUrl: "./user-details.component.scss",
     preserveWhitespaces: false,

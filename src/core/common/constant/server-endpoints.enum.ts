@@ -23,6 +23,7 @@ export enum ServerEndpoints {
     oauth = "oauth",
     token = "token",
     me = "me",
+    resetPassword = "reset-password",
     content = "content",
     like = "like",
     count = "count",

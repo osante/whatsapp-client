@@ -108,7 +108,6 @@ export class ConversationBodyComponent
     }
 
     scrollToBottom(): void {
-        this.logger.debug("Scrolling to bottom!");
         // Scroll to the bottom of the chatFeed element
         this.mainList.nativeElement.scroll({
             top: this.mainList.nativeElement.scrollHeight,
@@ -146,8 +145,6 @@ export class ConversationBodyComponent
 
     watchQueryParams() {
         this.route.queryParams.subscribe(async (params) => {
-            this.logger.debug("Query params changed", params);
-
             // Getting parameters
             const messagingProductContactId =
                 params["messaging_product_contact.id"];

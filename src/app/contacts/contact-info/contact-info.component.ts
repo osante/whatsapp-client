@@ -1,10 +1,23 @@
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+} from "@angular/core";
 import {
     Conversation,
     ConversationMessagingProductContact,
 } from "../../../core/message/model/conversation.model";
 import { CommonModule } from "@angular/common";
-import { FormsModule, NgForm } from "@angular/forms";
+import {
+    FormControl,
+    FormsModule,
+    NgForm,
+    ReactiveFormsModule,
+    Validators,
+} from "@angular/forms";
 import { ContactControllerService } from "../../../core/contact/controller/contact-controller.service";
 import { MessagingProductContactControllerService } from "../../../core/messaging-product/controller/messaging-product-contact-controller.service";
 import { SmallButtonComponent } from "../../common/small-button/small-button.component";
@@ -15,7 +28,12 @@ import { Router, RouterModule } from "@angular/router";
 import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
 import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
 import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
 import { NGXLogger } from "ngx-logger";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { NgxIntlTelInputModule } from "ngx-intl-tel-input";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { MessagingProductControllerService } from "../../../core/messaging-product/controller/messaging-product-controller.service";
 
 @Component({
     selector: "app-contact-info",
@@ -27,9 +45,14 @@ import { NGXLogger } from "ngx-logger";
         TimeoutErrorModalComponent,
         MatIconModule,
         RouterModule,
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        NgxIntlTelInputModule,
     ],
     templateUrl: "./contact-info.component.html",
     styleUrls: ["./contact-info.component.scss"],
+    // encapsulation: ViewEncapsulation.None,
     standalone: true,
 })
 export class ContactInfoComponent implements OnInit {
@@ -52,6 +75,8 @@ export class ContactInfoComponent implements OnInit {
     errorStr: string = "";
     errorData: any;
 
+    phoneControl = new FormControl<any>(null, [Validators.required]);
+
     constructor(
         private contactControllerService: ContactControllerService,
         private messagingProductContactController: MessagingProductContactControllerService,
@@ -66,11 +91,60 @@ export class ContactInfoComponent implements OnInit {
         // Reset all error messages
         this.errorStr = "";
         try {
+            // this.phoneControl.valueChanges.subscribe((value) => {
+            //     this.logger.debug("Phone number changed:", value);
+            //     this.messagingProductContact.product_details.phone_number =
+            //         value || "";
+            // });
+
+            this.phoneControl.valueChanges.subscribe((value) => {
+                if (!value?.e164Number) return;
+                this.messagingProductContact.product_details.phone_number =
+                    value?.e164Number || "";
+            });
+
             if (this.messagingProductContact?.id) {
-                await this.countMediaLinksAndDocs();
-                await this.getInitialMedia();
+                const rawPhone =
+                    this.messagingProductContact?.product_details?.phone_number;
+
+                if (rawPhone) {
+                    const phoneNumber = parsePhoneNumberFromString(
+                        rawPhone.startsWith("+") ? rawPhone : `+${rawPhone}`,
+                    );
+                    const phoneValueToSet = {
+                        number: phoneNumber?.nationalNumber || "",
+                        countryCode: phoneNumber?.country || "",
+                        e164Number: phoneNumber?.number,
+                    };
+                    this.phoneControl.setValue(phoneValueToSet);
+                }
+
+                // if (rawPhone) {
+                //     this.logger.debug("Raw phone number:", rawPhone);
+                //     const phoneNumber = parsePhoneNumberFromString(
+                //         "+" + rawPhone,
+                //     );
+                //     this.logger.debug("Phone number:", phoneNumber);
+                //     const intlPhoneNumber =
+                //         phoneNumber?.formatInternational() || "";
+                //     this.logger.debug(
+                //         "International phone number:",
+                //         intlPhoneNumber,
+                //     );
+                //     this.phoneControl.setValue(intlPhoneNumber);
+                // }
+
+                await Promise.all([
+                    this.countMediaLinksAndDocs(),
+                    this.getInitialMedia(),
+                ]);
+
+                this.phoneControl.disable();
+
                 return;
             }
+
+            this.phoneControl.enable();
 
             // Initialize a new messaging product contact if not present
             this.messagingProductContact = {
@@ -105,6 +179,7 @@ export class ContactInfoComponent implements OnInit {
     toggleEdit() {
         if (!this.messagingProductContact?.id) {
             this.isEditing = true;
+            this.phoneControl.enable();
             return;
         }
         this.isEditing = !this.isEditing;
@@ -116,6 +191,7 @@ export class ContactInfoComponent implements OnInit {
         }
     }
 
+    @Output() select = new EventEmitter<ConversationMessagingProductContact>();
     async submitChanges(form: NgForm) {
         // Reset general error message
         this.errorStr = "";
@@ -132,21 +208,43 @@ export class ContactInfoComponent implements OnInit {
                 const contact = await this.contactControllerService.create(
                     this.messagingProductContact.contact,
                 );
+                const phoneNumber =
+                    this.messagingProductContact.product_details.phone_number.replace(
+                        /\D/g,
+                        "",
+                    );
                 const messagingProductContact =
                     await this.messagingProductContactController.createWhatsAppContact(
                         {
                             contact_id: contact.id,
                             product_details: {
-                                phone_number:
-                                    this.messagingProductContact.product_details
-                                        .phone_number,
-                                wa_id: this.messagingProductContact
-                                    .product_details.phone_number,
+                                phone_number: phoneNumber,
+                                wa_id: phoneNumber,
                             },
                         },
                     );
 
-                await this.router.navigate([], {
+                const mpc = (
+                    await this.messagingProductContactController.getWhatsAppContacts(
+                        { id: messagingProductContact.id },
+                        { limit: 1, offset: 0 },
+                    )
+                )[0];
+                if (!mpc)
+                    return await this.router.navigate([], {
+                        queryParams: {
+                            "messaging_product_contact.id":
+                                messagingProductContact.id,
+                            mode: "contact_info",
+                            ...this.queryParamsService.globalQueryParams,
+                        },
+                        queryParamsHandling: "replace",
+                        preserveFragment: true,
+                    });
+
+                this.select.emit(mpc);
+
+                return await this.router.navigate([], {
                     queryParams: {
                         "messaging_product_contact.id":
                             messagingProductContact.id,
@@ -156,27 +254,26 @@ export class ContactInfoComponent implements OnInit {
                     queryParamsHandling: "replace",
                     preserveFragment: true,
                 });
-                return;
             }
-            if (this.messagingProductContact.contact.id) {
-                const updateData = {
-                    id: this.messagingProductContact.contact.id,
-                    name: this.messagingProductContact.contact.name,
-                    email: this.messagingProductContact.contact.email,
-                    photo_path: this.messagingProductContact.contact.photo_path,
-                };
 
-                await this.contactControllerService.update(updateData);
-                this.isEditing = false; // Exit edit mode on success
-            }
+            const updateData = {
+                id: this.messagingProductContact.contact.id,
+                name: this.messagingProductContact.contact.name,
+                email: this.messagingProductContact.contact.email,
+                photo_path: this.messagingProductContact.contact.photo_path,
+            };
+
+            await this.contactControllerService.update(updateData);
+
+            this.isLoading = false; // End general loading
         } catch (error) {
             this.handleErr(
                 "Failed to submit changes. Please try again.",
                 error,
             );
-        } finally {
-            this.isLoading = false; // End general loading
         }
+
+        return;
     }
 
     cancelEdit() {
