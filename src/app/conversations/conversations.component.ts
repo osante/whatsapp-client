@@ -29,7 +29,6 @@ export class ConversationsComponent implements OnInit {
         private route: ActivatedRoute,
         private messagingProductController: MessagingProductContactControllerService,
         private router: Router,
-        // private logger: NGXLogger,
     ) {}
 
     async ngOnInit() {

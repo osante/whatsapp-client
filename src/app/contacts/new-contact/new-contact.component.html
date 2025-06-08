@@ -3,6 +3,6 @@
 
     <!-- Right side: User Information (25% width) -->
     <div class="col-span-5 row-span-12">
-        <app-contact-info></app-contact-info>
+        <app-contact-info (select)="select.emit($event)"></app-contact-info>
     </div>
 </div>

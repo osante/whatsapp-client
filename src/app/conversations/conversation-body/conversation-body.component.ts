@@ -145,8 +145,6 @@ export class ConversationBodyComponent
 
     watchQueryParams() {
         this.route.queryParams.subscribe(async (params) => {
-            this.logger.debug("Query params changed", params);
-
             // Getting parameters
             const messagingProductContactId =
                 params["messaging_product_contact.id"];

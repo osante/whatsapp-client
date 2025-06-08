@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+} from "@angular/core";
 import {
     Conversation,
     ConversationMessagingProductContact,
@@ -26,6 +33,7 @@ import { NGXLogger } from "ngx-logger";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgxIntlTelInputModule } from "ngx-intl-tel-input";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { MessagingProductControllerService } from "../../../core/messaging-product/controller/messaging-product-controller.service";
 
 @Component({
     selector: "app-contact-info",
@@ -183,6 +191,7 @@ export class ContactInfoComponent implements OnInit {
         }
     }
 
+    @Output() select = new EventEmitter<ConversationMessagingProductContact>();
     async submitChanges(form: NgForm) {
         // Reset general error message
         this.errorStr = "";
@@ -215,7 +224,27 @@ export class ContactInfoComponent implements OnInit {
                         },
                     );
 
-                await this.router.navigate([], {
+                const mpc = (
+                    await this.messagingProductContactController.getWhatsAppContacts(
+                        { id: messagingProductContact.id },
+                        { limit: 1, offset: 0 },
+                    )
+                )[0];
+                if (!mpc)
+                    return await this.router.navigate([], {
+                        queryParams: {
+                            "messaging_product_contact.id":
+                                messagingProductContact.id,
+                            mode: "contact_info",
+                            ...this.queryParamsService.globalQueryParams,
+                        },
+                        queryParamsHandling: "replace",
+                        preserveFragment: true,
+                    });
+
+                this.select.emit(mpc);
+
+                return await this.router.navigate([], {
                     queryParams: {
                         "messaging_product_contact.id":
                             messagingProductContact.id,
@@ -225,26 +254,26 @@ export class ContactInfoComponent implements OnInit {
                     queryParamsHandling: "replace",
                     preserveFragment: true,
                 });
-                return;
             }
-            if (this.messagingProductContact.contact.id) {
-                const updateData = {
-                    id: this.messagingProductContact.contact.id,
-                    name: this.messagingProductContact.contact.name,
-                    email: this.messagingProductContact.contact.email,
-                    photo_path: this.messagingProductContact.contact.photo_path,
-                };
 
-                await this.contactControllerService.update(updateData);
-            }
+            const updateData = {
+                id: this.messagingProductContact.contact.id,
+                name: this.messagingProductContact.contact.name,
+                email: this.messagingProductContact.contact.email,
+                photo_path: this.messagingProductContact.contact.photo_path,
+            };
+
+            await this.contactControllerService.update(updateData);
+
+            this.isLoading = false; // End general loading
         } catch (error) {
             this.handleErr(
                 "Failed to submit changes. Please try again.",
                 error,
             );
-        } finally {
-            this.isLoading = false; // End general loading
         }
+
+        return;
     }
 
     cancelEdit() {
