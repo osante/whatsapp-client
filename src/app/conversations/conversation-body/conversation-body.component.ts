@@ -108,7 +108,6 @@ export class ConversationBodyComponent
     }
 
     scrollToBottom(): void {
-        this.logger.debug("Scrolling to bottom!");
         // Scroll to the bottom of the chatFeed element
         this.mainList.nativeElement.scroll({
             top: this.mainList.nativeElement.scrollHeight,

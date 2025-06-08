@@ -66,14 +66,9 @@ ngx-intl-tel-input.ng-invalid.ng-touched input {
     border: 1px solid #c0392b;
 }
 
-ngx-intl-tel-input input:hover {
-    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.24);
-}
-
 ngx-intl-tel-input input:focus {
     outline: none !important;
     border-color: #3498db;
-    box-shadow: 0 0 0 0 #000;
 }
 
 ngx-intl-tel-input input::-webkit-input-placeholder {
@@ -92,6 +87,12 @@ ngx-intl-tel-input input::placeholder {
     color: #bac2c7;
 }
 
-ngx-intl-tel-input input[disabled] {
+ngx-intl-tel-input input {
+    @apply dark:text-white;
+}
+
+ngx-intl-tel-input input[disabled],
+ngx-intl-tel-input .iti__flag-container.disabled {
     // background-color: #e5eaf1;
+    @apply bg-transparent text-gray-600;
 }

@@ -49,7 +49,7 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 })
 export class ContactInfoComponent implements OnInit {
     // Existing properties
-    isEditing: boolean = true; // false;
+    isEditing: boolean = false;
     isLoading: boolean = false; // General loading state
     originalContact: ConversationMessagingProductContact | null = null;
     quantityOfMediaLinksAndDocs: number = 0;
@@ -90,7 +90,7 @@ export class ContactInfoComponent implements OnInit {
             // });
 
             this.phoneControl.valueChanges.subscribe((value) => {
-                this.logger.debug("Phone number changed:", value);
+                if (!value?.e164Number) return;
                 this.messagingProductContact.product_details.phone_number =
                     value?.e164Number || "";
             });
@@ -101,14 +101,13 @@ export class ContactInfoComponent implements OnInit {
 
                 if (rawPhone) {
                     const phoneNumber = parsePhoneNumberFromString(
-                        "+" + rawPhone,
+                        rawPhone.startsWith("+") ? rawPhone : `+${rawPhone}`,
                     );
-                    this.logger.debug("Phone number:", phoneNumber);
                     const phoneValueToSet = {
                         number: phoneNumber?.nationalNumber || "",
                         countryCode: phoneNumber?.country || "",
+                        e164Number: phoneNumber?.number,
                     };
-                    console.debug("Phone value to set:", phoneValueToSet);
                     this.phoneControl.setValue(phoneValueToSet);
                 }
 
@@ -127,10 +126,17 @@ export class ContactInfoComponent implements OnInit {
                 //     this.phoneControl.setValue(intlPhoneNumber);
                 // }
 
-                await this.countMediaLinksAndDocs();
-                await this.getInitialMedia();
+                await Promise.all([
+                    this.countMediaLinksAndDocs(),
+                    this.getInitialMedia(),
+                ]);
+
+                this.phoneControl.disable();
+
                 return;
             }
+
+            this.phoneControl.enable();
 
             // Initialize a new messaging product contact if not present
             this.messagingProductContact = {
@@ -165,6 +171,7 @@ export class ContactInfoComponent implements OnInit {
     toggleEdit() {
         if (!this.messagingProductContact?.id) {
             this.isEditing = true;
+            this.phoneControl.enable();
             return;
         }
         this.isEditing = !this.isEditing;
@@ -192,18 +199,18 @@ export class ContactInfoComponent implements OnInit {
                 const contact = await this.contactControllerService.create(
                     this.messagingProductContact.contact,
                 );
+                const phoneNumber =
+                    this.messagingProductContact.product_details.phone_number.replace(
+                        /\D/g,
+                        "",
+                    );
                 const messagingProductContact =
                     await this.messagingProductContactController.createWhatsAppContact(
                         {
                             contact_id: contact.id,
                             product_details: {
-                                phone_number:
-                                    this.messagingProductContact.product_details.phone_number.replace(
-                                        /\D/g,
-                                        "",
-                                    ),
-                                wa_id: this.messagingProductContact
-                                    .product_details.phone_number,
+                                phone_number: phoneNumber,
+                                wa_id: phoneNumber,
                             },
                         },
                     );
@@ -229,7 +236,6 @@ export class ContactInfoComponent implements OnInit {
                 };
 
                 await this.contactControllerService.update(updateData);
-                this.isEditing = false; // Exit edit mode on success
             }
         } catch (error) {
             this.handleErr(
@@ -386,27 +392,5 @@ export class ContactInfoComponent implements OnInit {
         this.errorStr = err?.response?.data?.description || message;
         this.logger.error("Async error", err);
         this.errorModal.openModal();
-    }
-
-    validatePhoneNo(value: string): string {
-        var phoneNumDigits = value.replace(/\D/g, "");
-
-        var formattedNumber = phoneNumDigits;
-        if (phoneNumDigits.length >= 6)
-            formattedNumber =
-                "(" +
-                phoneNumDigits.substring(0, 3) +
-                ") " +
-                phoneNumDigits.substring(3, 6) +
-                "-" +
-                phoneNumDigits.substring(6);
-        else if (phoneNumDigits.length >= 3)
-            formattedNumber =
-                "(" +
-                phoneNumDigits.substring(0, 3) +
-                ") " +
-                phoneNumDigits.substring(3);
-
-        return formattedNumber;
     }
 }
