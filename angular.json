@@ -44,10 +44,12 @@
                             "src/assets"
                         ],
                         "styles": [
+                            "node_modules/intl-tel-input/build/css/intlTelInput.css",
                             "@angular/material/prebuilt-themes/azure-blue.css",
                             "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
                             "node_modules/@ctrl/ngx-emoji-mart/picker.css",
-                            "src/styles.scss"
+                            "src/styles.scss",
+                            "src/phone-number.scss"
                         ],
                         "scripts": [
                             "node_modules/apexcharts/dist/apexcharts.min.js"
@@ -62,8 +64,8 @@
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "2MB",
-                                    "maximumError": "2.5MB"
+                                    "maximumWarning": "3.5MB",
+                                    "maximumError": "4MB"
                                 },
                                 {
                                     "type": "anyComponentStyle",
@@ -130,10 +132,12 @@
                             "src/assets"
                         ],
                         "styles": [
+                            "node_modules/intl-tel-input/build/css/intlTelInput.css",
                             "@angular/material/prebuilt-themes/azure-blue.css",
                             "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
                             "node_modules/@ctrl/ngx-emoji-mart/picker.css",
-                            "src/styles.scss"
+                            "src/styles.scss",
+                            "src/phone-number.scss"
                         ],
                         "scripts": [
                             "node_modules/apexcharts/dist/apexcharts.min.js"

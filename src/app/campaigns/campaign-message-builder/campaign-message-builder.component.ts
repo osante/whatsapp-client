@@ -30,9 +30,6 @@ export class CampaignMessageBuilderComponent {
     errors: number = 0;
     uploadFileType: "json" | "csv" = "csv";
 
-    errorStr: string = "";
-    errorData: any;
-
     @Output("messagesAdded") messagesAdded = new EventEmitter();
     @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
 
@@ -251,6 +248,8 @@ export class CampaignMessageBuilderComponent {
         });
     }
 
+    errorStr: string = "";
+    errorData: any;
     handleErr(message: string, err: any) {
         this.errorData = err?.response?.data;
         this.errorStr = err?.response?.data?.description || message;

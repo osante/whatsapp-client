@@ -47,7 +47,7 @@
             class="w-full flex flex-col items-center space-y-2 text-center relative"
         >
             <!-- Photo URL -->
-            <div>
+            <div class="w-80">
                 <input
                     [(ngModel)]="messagingProductContact.contact.photo_path"
                     name="photoPath"
@@ -60,7 +60,7 @@
             </div>
 
             <!-- Editable Name -->
-            <div>
+            <div class="w-80">
                 <input
                     [(ngModel)]="messagingProductContact.contact.name"
                     name="name"
@@ -81,7 +81,7 @@
             </div>
 
             <!-- Editable Email -->
-            <div>
+            <div class="w-80">
                 <input
                     [(ngModel)]="messagingProductContact.contact.email"
                     name="email"
@@ -105,42 +105,58 @@
             </div>
 
             <!-- Editable Phone Number -->
-            <div>
-                <input
-                    [(ngModel)]="
-                        messagingProductContact.product_details.phone_number
+            <div class="w-80">
+                <!-- *ngIf="!messagingProductContact?.id" -->
+
+                <!-- [(ngModel)]=" -->
+                <!--     messagingProductContact.product_details.phone_number -->
+                <!-- " -->
+                <ngx-intl-tel-input
+                    [separateDialCode]="true"
+                    [cssClass]="
+                        'h-8 rounded w-80 py-1 ' +
+                        (phoneControl.disabled
+                            ? ''
+                            : 'dark:bg-gray-700 dark:text-white')
                     "
-                    name="phoneNumber"
-                    class="bg-gray-200 dark:bg-gray-700 dark:text-white rounded px-2 py-1 w-full text-center"
-                    placeholder="Phone number"
-                    i18n-placeholder
-                    type="tel"
-                    [required]="isEditing"
-                    pattern="^[0-9]{10,15}$"
-                    #phoneNumber="ngModel"
-                    aria-describedby="phoneNumberError"
-                    [disabled]="isLoading"
-                />
-                <!-- Phone Number Validation Errors -->
-                <div
-                    *ngIf="
-                        phoneNumber.invalid &&
-                        (phoneNumber.dirty || phoneNumber.touched)
-                    "
-                    id="phoneNumberError"
-                    class="text-red-500 text-sm mt-1"
-                >
-                    <span *ngIf="phoneNumber.errors?.['required']">
-                        Phone number is required.
-                    </span>
-                    <span *ngIf="phoneNumber.errors?.['pattern']">
-                        Phone number must be between 10 to 15 digits.
-                    </span>
-                </div>
+                    [enableAutoCountrySelect]="true"
+                    [enablePlaceholder]="true"
+                    [searchCountryFlag]="true"
+                    [selectFirstCountry]="false"
+                    [phoneValidation]="false"
+                    [maxLength]="15"
+                    name="phone"
+                    [formControl]="phoneControl"
+                    [disabled]="true"
+                ></ngx-intl-tel-input>
+
+                <!-- <ngx-material-intl-tel-input -->
+                <!--     class="custom-phone-input dark:text-white" -->
+                <!--     [fieldControl]="phoneControl" -->
+                <!--     [required]="isEditing" -->
+                <!--     [autoIpLookup]="true" -->
+                <!--     [autoSelectCountry]="true" -->
+                <!--     [numberValidation]="false" -->
+                <!--     [enableSearch]="true" -->
+                <!--     [includeDialCode]="false" -->
+                <!--     [textLabels]="{ -->
+                <!--         mainLabel: '', -->
+                <!--         codePlaceholder: 'Code', -->
+                <!--         searchPlaceholderLabel: 'Search', -->
+                <!--         noEntriesFoundLabel: 'No countries found', -->
+                <!--         nationalNumberLabel: '', -->
+                <!--         hintLabel: 'Select country and type your phone number', -->
+                <!--         invalidNumberError: 'Number is not valid', -->
+                <!--         requiredError: 'This field is required', -->
+                <!--     }" -->
+                <!--     aria-describedby="phoneNumberError" -->
+                <!-- ></ngx-material-intl-tel-input> -->
             </div>
+            <!-- [disabled]="isLoading" -->
+            <!-- class="bg-gray-200 dark:bg-gray-700 dark:text-white rounded px-2 py-1 w-full text-center" -->
 
             <!-- Edit Control Buttons -->
-            <div class="mt-2 flex space-x-4">
+            <div class="mt-2 flex justify-center space-x-4 w-80">
                 <button
                     type="button"
                     class="bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 transition flex items-center justify-center"

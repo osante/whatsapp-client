@@ -47,8 +47,7 @@ export class AuthService {
         localStorage.setItem("refreshToken", response.data.refresh_token);
 
         // Store the login time
-        const loginTime = new Date().getTime();
-        localStorage.setItem("loginTime", loginTime.toString());
+        this.loginTime = new Date();
 
         // Schedule the token refresh
         this.scheduleTokenRefresh();
@@ -77,12 +76,8 @@ export class AuthService {
     }
 
     async checkAndRefreshToken(): Promise<void> {
-        const loginTime = parseInt(
-            localStorage.getItem("loginTime") || "0",
-            10,
-        );
         const currentTime = new Date().getTime();
-        const timeElapsed = currentTime - loginTime;
+        const timeElapsed = currentTime - this.loginTime;
 
         const oneHourMinus10Sec = 3600 * 1000 - 10000; // 1 hour in milliseconds
 
@@ -124,10 +119,16 @@ export class AuthService {
     logout(): void {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
-        localStorage.removeItem("loginTime");
+        this.loginTime = undefined;
         clearTimeout(this.refreshTokenTimeout);
         this.token.next(""); // Clear the token
         this.router.navigate(["/auth/login"]);
+    }
+
+    async resetPassword(
+        username: string, // Email
+    ): Promise<void> {
+        await this.http.post(`${ServerEndpoints.resetPassword}`, { username });
     }
 
     setAuthCookie(): void {
@@ -160,5 +161,20 @@ export class AuthService {
             // Fallback to using the full nodeRedServerUrl
             return subdomainUrl;
         }
+    }
+
+    _loginTime?: number;
+    set loginTime(loginTime: Date | undefined) {
+        if (!loginTime) {
+            this._loginTime = undefined;
+            localStorage.removeItem("loginTime");
+            return;
+        }
+        this._loginTime = loginTime.getTime();
+        localStorage.setItem("loginTime", this._loginTime.toString());
+    }
+    get loginTime(): number {
+        if (this._loginTime) return this._loginTime;
+        return parseInt(localStorage.getItem("loginTime") || "0", 10);
     }
 }

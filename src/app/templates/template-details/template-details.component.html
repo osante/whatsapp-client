@@ -21,11 +21,14 @@
                     >
                         {{ template.name }}
                     </div>
+
                     <button
-                        class="absolute right-2 top-2"
+                        mat-icon-button
+                        class="absolute right-2 top-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition"
                         (click)="copyToClipboard(template.name)"
+                        matTooltip="Copy template name"
                     >
-                        <mat-icon class="material-icons-outlined brightness-50"
+                        <mat-icon class="material-icons-outlined"
                             >copy</mat-icon
                         >
                     </button>
@@ -38,18 +41,10 @@
                 >
                 <div class="relative">
                     <div
-                        class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10"
+                        class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none"
                     >
                         {{ template.language }}
                     </div>
-                    <button
-                        class="absolute right-2 top-2"
-                        (click)="copyToClipboard(template.language)"
-                    >
-                        <mat-icon class="material-icons-outlined brightness-50"
-                            >copy</mat-icon
-                        >
-                    </button>
                 </div>
             </div>
 
@@ -61,11 +56,14 @@
                     >
                         {{ template.id }}
                     </div>
+
                     <button
-                        class="absolute right-2 top-2"
+                        mat-icon-button
+                        class="absolute right-2 top-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition"
                         (click)="copyToClipboard(template.id)"
+                        matTooltip="Copy template id"
                     >
-                        <mat-icon class="material-icons-outlined brightness-50"
+                        <mat-icon class="material-icons-outlined"
                             >copy</mat-icon
                         >
                     </button>

@@ -93,7 +93,8 @@ $checkered-bg-dark-base: #111827;
 
     .checkered-background {
         @apply bg-gray-300;
-        background-image: linear-gradient(
+        background-image:
+            linear-gradient(
                 $checkered-bg-light $checkered-space-large,
                 transparent $checkered-space-large
             ),
@@ -115,7 +116,8 @@ $checkered-bg-dark-base: #111827;
 
     .dark .checkered-background {
         @apply bg-gray-900;
-        background-image: linear-gradient(
+        background-image:
+            linear-gradient(
                 $checkered-bg-dark $checkered-space-large,
                 transparent $checkered-space-large
             ),

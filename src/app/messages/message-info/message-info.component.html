@@ -1,11 +1,11 @@
 <div
-    class="flex justify-between items-center text-xs text-gray-600 dark:text-gray-300 w-full px-1"
+    class="flex justify-between items-center text-xs text-gray-600 dark:text-gray-400 w-full px-1"
     [ngClass]="{
         'text-left': message.sender_data,
         'text-right': !message.sender_data,
     }"
 >
-    <p>{{ message.created_at | date: "yyyy/MM/dd HH:mm" }}</p>
+    <p>{{ message.created_at | date: "short" }}</p>
 
     <div class="ml-2 flex flex-row items-center justify-center">
         <div
