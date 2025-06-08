@@ -46,7 +46,10 @@
             <div class="px-1 pt-1 pb-1">
                 <!-- Header -->
                 <div
-                    class="text-base mb-2"
+                    [class]="
+                        'text-base' +
+                        (messageSent.interactive.header?.text && 'mb-2')
+                    "
                     id="header"
                     *ngIf="
                         messageSent.interactive?.header &&
