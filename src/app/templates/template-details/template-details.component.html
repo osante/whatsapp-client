@@ -8,7 +8,7 @@
                 <div class="relative">
                     <div
                         type="url"
-                        class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10"
+                        class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10 truncate"
                     >
                         {{ template.name }}
                     </div>
@@ -27,7 +27,7 @@
             <div class="col-span-6 relative">
                 <label class="block text-sm font-medium mb-2" i18n>Language</label>
                 <div class="relative">
-                    <div class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none">
+                    <div class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none truncate">
                         {{ template.language }}
                     </div>
                 </div>
@@ -36,7 +36,7 @@
             <div class="col-span-12 sm:col-span-4 relative">
                 <label class="block text-sm font-medium mb-2">ID</label>
                 <div class="relative">
-                    <div class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10">
+                    <div class="bg-gray-200 dark:text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10 truncate" >
                         {{ template.id }}
                     </div>
 
@@ -55,7 +55,7 @@
                 <label class="block text-sm font-medium mb-2" i18n>Category</label>
                 <div class="relative">
                     <div
-                        class="bg-gray-50 border text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500 outline-none"
+                        class="bg-gray-50 border text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500 outline-none truncate"
                         [ngClass]="{
                             'text-yellow-600 border-yellow-600': template.category === 'MARKETING',
                             'text-blue-600 border-blue-600': template.category === 'UTILITY',
@@ -71,7 +71,7 @@
                 <label class="block text-sm font-medium mb-2" i18n>Status</label>
                 <div class="relative">
                     <div
-                        class="bg-gray-50 border text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500 outline-none"
+                        class="bg-gray-50 border text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:focus:ring-blue-500 outline-none truncate"
                         [ngClass]="{
                             'text-red-600 border-red-600': template.status === 'REJECTED',
                             'text-yellow-600 border-yellow-600': template.status === 'PENDING',
