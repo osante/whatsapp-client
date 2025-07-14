@@ -13,6 +13,8 @@ import { UserModule } from "../../core/user/user.module";
     standalone: true,
 })
 export class LoginComponent {
+    isLoading: boolean = false;
+
     @ViewChild("username") username!: ElementRef;
     @ViewChild("password") password!: ElementRef;
 
@@ -24,15 +26,17 @@ export class LoginComponent {
     ) {}
 
     async login(): Promise<void> {
+        this.isLoading = true;
+
         const email = this.username.nativeElement.value;
         const password = this.password.nativeElement.value;
         try {
             await this.authService.login(email, password);
             this.router.navigate([""]);
         } catch (error: any) {
-            this.errorMessage =
-                error?.response?.data?.description ||
-                "Some error occurred login in"; // Assuming customMessage is a property in MainServerError
+            this.errorMessage = error?.response?.data?.description || "Some error occurred login in"; // Assuming customMessage is a property in MainServerError
+        } finally {
+            this.isLoading = false;
         }
     }
 }

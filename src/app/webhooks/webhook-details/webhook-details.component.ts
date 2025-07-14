@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -12,6 +12,7 @@ import { WebhookStoreService } from "../../../core/webhook/store/webhook-store.s
 import { Event } from "../../../core/webhook/model/event.model";
 import { NGXLogger } from "ngx-logger";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
 
 @Component({
     selector: "app-webhook-details",
@@ -21,6 +22,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
         WebhookLogsComponent,
         MatIconModule,
         MatTooltipModule,
+        TimeoutErrorModalComponent,
     ],
     templateUrl: "./webhook-details.component.html",
     styleUrl: "./webhook-details.component.scss",
@@ -34,6 +36,8 @@ export class WebhookDetailsComponent implements OnInit {
     webhookId?: string;
 
     isEditing = false;
+
+    @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
 
     constructor(
         private queryParamsService: QueryParamsService,
@@ -81,7 +85,7 @@ export class WebhookDetailsComponent implements OnInit {
                 this.isEditing = false;
                 return;
             } catch (error) {
-                this.logger.error("Error updating user", error);
+                this.handleErr("Error saving changes", error);
             }
     }
 
@@ -109,7 +113,11 @@ export class WebhookDetailsComponent implements OnInit {
             return;
         }
         this.isEditing = false;
-        this.webhook = await this.webhookStore.getById(this.webhookId);
+        try {
+            this.webhook = await this.webhookStore.getById(this.webhookId);
+        } catch (error) {
+            this.handleErr("Error loading webhook", error);
+        }
     }
 
     toggleEdit() {
@@ -138,9 +146,7 @@ export class WebhookDetailsComponent implements OnInit {
         if (!this.webhookId) return;
 
         // Show confirmation alert
-        const confirmed = window.confirm(
-            "Are you sure you want to delete this webhook? This action cannot be undone.",
-        );
+        const confirmed = window.confirm("Are you sure you want to delete this webhook? This action cannot be undone.");
 
         // If the user confirms, proceed with the deletion
         if (confirmed) {
@@ -149,7 +155,7 @@ export class WebhookDetailsComponent implements OnInit {
                 await this.resetWebhookId(); // Call to reset or clean up after deletion
                 window.location.reload();
             } catch (error) {
-                this.logger.error("Error deleting webhook:", error);
+                this.handleErr("Error deleting webhook", error);
             }
         }
     }
@@ -166,5 +172,14 @@ export class WebhookDetailsComponent implements OnInit {
     async copyToClipboard(value?: string) {
         if (!value) return;
         await navigator.clipboard.writeText(value);
+    }
+
+    errorStr: string = "";
+    errorData: any;
+    handleErr(message: string, err: any) {
+        this.errorData = err?.response?.data;
+        this.errorStr = err?.response?.data?.description || message;
+        this.logger.error("Async error", err);
+        this.errorModal.openModal();
     }
 }

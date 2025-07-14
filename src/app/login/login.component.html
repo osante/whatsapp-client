@@ -1,8 +1,15 @@
 <div class="h-screen w-full flex justify-center items-center dark:bg-gray-800">
     <div class="bg-white dark:bg-gray-700 p-8 rounded shadow-md w-80">
-        <h2 class="text-2xl font-bold mb-8 text-gray-800 dark:text-white">
-            Login
-        </h2>
+        <div
+            class="w-full flex mb-8 items-center"
+        >
+            <h2 class="w-full text-2xl font-bold text-gray-800 dark:text-white grow-1">
+                Login
+            </h2>
+            <div class="grow-0 w-4 h-4 aspect-square border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+                *ngIf="isLoading"
+            ></div>
+        </div>
         <div class="mb-5">
             <label
                 for="username"
@@ -43,6 +50,7 @@
         <button
             class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded-md text-white text-sm dark:bg-blue-500 dark:hover:bg-blue-400"
             (click)="login()"
+            [disabled]="isLoading"
             i18n
         >
             Submit

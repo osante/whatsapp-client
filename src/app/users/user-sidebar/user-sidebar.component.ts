@@ -1,12 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    HostListener,
-    OnInit,
-    QueryList,
-    ViewChild,
-    ViewChildren,
-} from "@angular/core";
+import { Component, ElementRef, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -16,6 +8,8 @@ import { QueryParamsService } from "../../../core/navigation/service/query-param
 import { UserStoreService } from "../../../core/user/store/user-store.service";
 import { MatIconModule } from "@angular/material/icon";
 import { KeyboardNavigableList } from "../../common/keyboard/keyboard-navigable-list.base";
+import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
+import { NGXLogger } from "ngx-logger";
 
 @Component({
     selector: "app-user-sidebar",
@@ -26,23 +20,24 @@ import { KeyboardNavigableList } from "../../common/keyboard/keyboard-navigable-
         UserPreviewComponent,
         MatIconModule,
         RouterModule,
+        TimeoutErrorModalComponent,
     ],
     templateUrl: "./user-sidebar.component.html",
     styleUrl: "./user-sidebar.component.scss",
     standalone: true,
 })
-export class UserSidebarComponent
-    extends KeyboardNavigableList
-    implements OnInit
-{
+export class UserSidebarComponent extends KeyboardNavigableList implements OnInit {
     private scrolling: boolean = false;
 
     @ViewChild("searchTextarea")
     searchTextarea!: ElementRef<HTMLTextAreaElement>;
 
+    @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
+
     constructor(
         public queryParamsService: QueryParamsService,
         public userStore: UserStoreService,
+        private logger: NGXLogger,
     ) {
         super();
     }
@@ -61,9 +56,13 @@ export class UserSidebarComponent
     async getUsers(): Promise<void> {
         this.scrolling = true;
 
-        await this.userStore.get();
-
-        this.scrolling = false;
+        try {
+            await this.userStore.get();
+        } catch (error) {
+            this.handleErr("Error getting users", error);
+        } finally {
+            this.scrolling = false;
+        }
     }
 
     onScroll(event: Event) {
@@ -71,8 +70,7 @@ export class UserSidebarComponent
         if (
             // Check if the user has scrolled to the bottom of the element
             !(
-                element.scrollHeight - element.scrollTop <=
-                    element.clientHeight + 100 &&
+                element.scrollHeight - element.scrollTop <= element.clientHeight + 100 &&
                 // Check if some request is being performed
                 !this.scrolling
             )
@@ -97,15 +95,19 @@ export class UserSidebarComponent
     async getSearchUsers(): Promise<void> {
         this.scrolling = true;
 
-        await this.userStore.getSearch();
-
-        this.scrolling = false;
+        try {
+            await this.userStore.getSearch();
+        } catch (error) {
+            this.handleErr("Error getting search users", error);
+        } finally {
+            this.scrolling = false;
+        }
     }
 
     async getInitialSearchUsers(): Promise<void> {
         this.scrolling = true;
 
-        this.userStore.getInitialSearch();
+        await this.userStore.getInitialSearch();
 
         this.scrolling = false;
     }
@@ -130,11 +132,9 @@ export class UserSidebarComponent
     @HostListener("window:mousemove", ["$event"])
     private onMouseMove(event: MouseEvent) {
         if (!this.isResizing) return;
-        if (!this.queryParamsService.sidebarOpen)
-            this.queryParamsService.openSidebar();
+        if (!this.queryParamsService.sidebarOpen) this.queryParamsService.openSidebar();
 
-        const newWidth =
-            event.clientX - this.draggableContainer.nativeElement.offsetLeft;
+        const newWidth = event.clientX - this.draggableContainer.nativeElement.offsetLeft;
         this.sidebarWidth = newWidth;
 
         if (newWidth <= 10) this.queryParamsService.closeSidebar();
@@ -156,5 +156,14 @@ export class UserSidebarComponent
     startResizing(event: MouseEvent) {
         this.isResizing = true;
         event.preventDefault(); // Prevent text selection
+    }
+
+    errorStr: string = "";
+    errorData: any;
+    handleErr(message: string, err: any) {
+        this.errorData = err?.response?.data;
+        this.errorStr = err?.response?.data?.description || message;
+        this.logger.error("Async error", err);
+        this.errorModal.openModal();
     }
 }

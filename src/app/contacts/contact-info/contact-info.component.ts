@@ -1,23 +1,7 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-    ViewChild,
-} from "@angular/core";
-import {
-    Conversation,
-    ConversationMessagingProductContact,
-} from "../../../core/message/model/conversation.model";
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { Conversation, ConversationMessagingProductContact } from "../../../core/message/model/conversation.model";
 import { CommonModule } from "@angular/common";
-import {
-    FormControl,
-    FormsModule,
-    NgForm,
-    ReactiveFormsModule,
-    Validators,
-} from "@angular/forms";
+import { FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ContactControllerService } from "../../../core/contact/controller/contact-controller.service";
 import { MessagingProductContactControllerService } from "../../../core/messaging-product/controller/messaging-product-contact-controller.service";
 import { SmallButtonComponent } from "../../common/small-button/small-button.component";
@@ -66,14 +50,9 @@ export class ContactInfoComponent implements OnInit {
     @Input() messagingProductContact!: ConversationMessagingProductContact;
     @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
 
-    // New loading flags for specific actions
     isDeleting: boolean = false;
     isBlocking: boolean = false;
     isUnblocking: boolean = false;
-
-    // New error message variables
-    errorStr: string = "";
-    errorData: any;
 
     phoneControl = new FormControl<any>(null, [Validators.required]);
 
@@ -99,13 +78,11 @@ export class ContactInfoComponent implements OnInit {
 
             this.phoneControl.valueChanges.subscribe((value) => {
                 if (!value?.e164Number) return;
-                this.messagingProductContact.product_details.phone_number =
-                    value?.e164Number || "";
+                this.messagingProductContact.product_details.phone_number = value?.e164Number || "";
             });
 
             if (this.messagingProductContact?.id) {
-                const rawPhone =
-                    this.messagingProductContact?.product_details?.phone_number;
+                const rawPhone = this.messagingProductContact?.product_details?.phone_number;
 
                 if (rawPhone) {
                     const phoneNumber = parsePhoneNumberFromString(
@@ -134,10 +111,7 @@ export class ContactInfoComponent implements OnInit {
                 //     this.phoneControl.setValue(intlPhoneNumber);
                 // }
 
-                await Promise.all([
-                    this.countMediaLinksAndDocs(),
-                    this.getInitialMedia(),
-                ]);
+                await Promise.all([this.countMediaLinksAndDocs(), this.getInitialMedia()]);
 
                 this.phoneControl.disable();
 
@@ -185,9 +159,7 @@ export class ContactInfoComponent implements OnInit {
         this.isEditing = !this.isEditing;
         if (this.isEditing) {
             // Deep copy to prevent reference issues
-            this.originalContact = JSON.parse(
-                JSON.stringify(this.messagingProductContact),
-            );
+            this.originalContact = JSON.parse(JSON.stringify(this.messagingProductContact));
         }
     }
 
@@ -205,24 +177,15 @@ export class ContactInfoComponent implements OnInit {
         this.isLoading = true; // Start general loading
         try {
             if (!this.messagingProductContact?.id) {
-                const contact = await this.contactControllerService.create(
-                    this.messagingProductContact.contact,
-                );
-                const phoneNumber =
-                    this.messagingProductContact.product_details.phone_number.replace(
-                        /\D/g,
-                        "",
-                    );
-                const messagingProductContact =
-                    await this.messagingProductContactController.createWhatsAppContact(
-                        {
-                            contact_id: contact.id,
-                            product_details: {
-                                phone_number: phoneNumber,
-                                wa_id: phoneNumber,
-                            },
-                        },
-                    );
+                const contact = await this.contactControllerService.create(this.messagingProductContact.contact);
+                const phoneNumber = this.messagingProductContact.product_details.phone_number.replace(/\D/g, "");
+                const messagingProductContact = await this.messagingProductContactController.createWhatsAppContact({
+                    contact_id: contact.id,
+                    product_details: {
+                        phone_number: phoneNumber,
+                        wa_id: phoneNumber,
+                    },
+                });
 
                 const mpc = (
                     await this.messagingProductContactController.getWhatsAppContacts(
@@ -233,8 +196,7 @@ export class ContactInfoComponent implements OnInit {
                 if (!mpc)
                     return await this.router.navigate([], {
                         queryParams: {
-                            "messaging_product_contact.id":
-                                messagingProductContact.id,
+                            "messaging_product_contact.id": messagingProductContact.id,
                             mode: "contact_info",
                             ...this.queryParamsService.globalQueryParams,
                         },
@@ -246,8 +208,7 @@ export class ContactInfoComponent implements OnInit {
 
                 return await this.router.navigate([], {
                     queryParams: {
-                        "messaging_product_contact.id":
-                            messagingProductContact.id,
+                        "messaging_product_contact.id": messagingProductContact.id,
                         mode: "contact_info",
                         ...this.queryParamsService.globalQueryParams,
                     },
@@ -267,10 +228,7 @@ export class ContactInfoComponent implements OnInit {
 
             this.isLoading = false; // End general loading
         } catch (error) {
-            this.handleErr(
-                "Failed to submit changes. Please try again.",
-                error,
-            );
+            this.handleErr("Failed to submit changes. Please try again.", error);
         }
 
         return;
@@ -294,15 +252,10 @@ export class ContactInfoComponent implements OnInit {
         if (confirmBlock) {
             this.isBlocking = true; // Start blocking loading state
             try {
-                await this.messagingProductContactController.block(
-                    this.messagingProductContact.id,
-                );
+                await this.messagingProductContactController.block(this.messagingProductContact.id);
                 this.messagingProductContact.blocked = true;
             } catch (error) {
-                this.handleErr(
-                    "Failed to block contact. Please try again.",
-                    error,
-                );
+                this.handleErr("Failed to block contact. Please try again.", error);
             } finally {
                 this.isBlocking = false; // End blocking loading state
             }
@@ -319,16 +272,11 @@ export class ContactInfoComponent implements OnInit {
         if (confirmDelete) {
             this.isDeleting = true; // Start deleting loading state
             try {
-                await this.contactControllerService.delete(
-                    this.messagingProductContact.contact_id,
-                );
+                await this.contactControllerService.delete(this.messagingProductContact.contact_id);
                 await this.router.navigate(["/home"], { fragment: "chats" });
                 window.location.reload();
             } catch (error: any) {
-                this.handleErr(
-                    "Failed to delete contact. Please try again.",
-                    error,
-                );
+                this.handleErr("Failed to delete contact. Please try again.", error);
             } finally {
                 this.isDeleting = false; // End deleting loading state
             }
@@ -345,16 +293,11 @@ export class ContactInfoComponent implements OnInit {
         if (confirmDelete) {
             this.isDeleting = true; // Start deleting loading state
             try {
-                await this.messagingProductContactController.delete(
-                    this.messagingProductContact.contact_id,
-                );
+                await this.messagingProductContactController.delete(this.messagingProductContact.contact_id);
                 await this.router.navigate(["/home"], { fragment: "chats" });
                 window.location.reload();
             } catch (error: any) {
-                this.handleErr(
-                    "Failed to delete contact. Please try again.",
-                    error,
-                );
+                this.handleErr("Failed to delete contact. Please try again.", error);
             } finally {
                 this.isDeleting = false; // End deleting loading state
             }
@@ -367,15 +310,10 @@ export class ContactInfoComponent implements OnInit {
 
         this.isUnblocking = true; // Start unblocking loading state
         try {
-            await this.messagingProductContactController.unblock(
-                this.messagingProductContact.id,
-            );
+            await this.messagingProductContactController.unblock(this.messagingProductContact.id);
             this.messagingProductContact.blocked = false;
         } catch (error: any) {
-            this.handleErr(
-                "Failed to unblock contact. Please try again.",
-                error,
-            );
+            this.handleErr("Failed to unblock contact. Please try again.", error);
         } finally {
             this.isUnblocking = false; // End unblocking loading state
         }
@@ -383,11 +321,10 @@ export class ContactInfoComponent implements OnInit {
 
     async countMediaLinksAndDocs() {
         try {
-            this.quantityOfMediaLinksAndDocs =
-                await this.conversationController.countConversationContentLike(
-                    this.messagingProductContact.id,
-                    'type:\\s*"(image|video|document)"',
-                );
+            this.quantityOfMediaLinksAndDocs = await this.conversationController.countConversationContentLike(
+                this.messagingProductContact.id,
+                'type:\\s*"(image|video|document)"',
+            );
         } catch (error: any) {
             this.handleErr("Failed to count media and documents.", error);
         }
@@ -395,14 +332,13 @@ export class ContactInfoComponent implements OnInit {
 
     async getInitialMedia() {
         try {
-            this.media =
-                await this.conversationController.conversationContentLike(
-                    this.messagingProductContact.id,
-                    'type:\\s*"(image|video)"',
-                    undefined,
-                    { limit: 5, offset: 0 },
-                    { created_at: DateOrderEnum.desc },
-                );
+            this.media = await this.conversationController.conversationContentLike(
+                this.messagingProductContact.id,
+                'type:\\s*"(image|video)"',
+                undefined,
+                { limit: 5, offset: 0 },
+                { created_at: DateOrderEnum.desc },
+            );
         } catch (error: any) {
             this.handleErr("Failed to load media and documents.", error);
         }
@@ -416,6 +352,8 @@ export class ContactInfoComponent implements OnInit {
         mode: "contact_media",
     };
 
+    errorStr: string = "";
+    errorData: any;
     handleErr(message: string, err: any) {
         this.errorData = err?.response?.data;
         this.errorStr = err?.response?.data?.description || message;

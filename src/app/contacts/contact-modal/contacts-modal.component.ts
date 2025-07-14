@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { ConversationMessagingProductContact } from "../../../core/message/model/conversation.model";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CommonModule } from "@angular/common";
@@ -8,6 +8,8 @@ import { ConversationPreviewComponent } from "./conversation-preview/conversatio
 import { MatIconModule } from "@angular/material/icon";
 import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
 import { ConversationStoreService } from "../../../core/message/store/conversation-store.service";
+import { NGXLogger } from "ngx-logger";
+import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
 
 @Component({
     selector: "app-contacts-modal",
@@ -17,6 +19,7 @@ import { ConversationStoreService } from "../../../core/message/store/conversati
         ConversationPreviewComponent,
         MessagingProductContactFromMessagePipe,
         MatIconModule,
+        TimeoutErrorModalComponent,
     ],
     templateUrl: "./contacts-modal.component.html",
     styleUrl: "./contacts-modal.component.scss",
@@ -27,19 +30,20 @@ export class ContactsModalComponent implements OnInit {
 
     @Input("headerText") headerText!: string;
     @Input("bottomText") bottomText!: string;
-    @Output("send") send = new EventEmitter<
-        ConversationMessagingProductContact[]
-    >();
+    @Output("send") send = new EventEmitter<ConversationMessagingProductContact[]>();
     @Output("close") close = new EventEmitter();
 
     selectedConversations: ConversationMessagingProductContact[] = [];
     messagingProductContactIdFilter?: string;
+
+    @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
 
     constructor(
         private queryParamsService: QueryParamsService,
         private route: ActivatedRoute,
         private router: Router,
         public conversationStore: ConversationStoreService,
+        private logger: NGXLogger,
     ) {}
 
     adjustHeight(event: Event): void {
@@ -57,9 +61,13 @@ export class ContactsModalComponent implements OnInit {
     async getConversations(): Promise<void> {
         this.scrolling = true;
 
-        await this.conversationStore.get();
-
-        this.scrolling = false;
+        try {
+            await this.conversationStore.get();
+        } catch (error) {
+            this.handleErr("Error getting conversations", error);
+        } finally {
+            this.scrolling = false;
+        }
     }
 
     onScroll(event: Event) {
@@ -67,8 +75,7 @@ export class ContactsModalComponent implements OnInit {
         if (
             // Check if the user has scrolled to the bottom of the element
             !(
-                element.scrollHeight - element.scrollTop <=
-                    element.clientHeight + 100 &&
+                element.scrollHeight - element.scrollTop <= element.clientHeight + 100 &&
                 // Check if some request is being performed
                 !this.scrolling
             )
@@ -83,8 +90,7 @@ export class ContactsModalComponent implements OnInit {
         )
             this.getConversations();
         else if (
-            (this.conversationStore.searchValue ||
-                this.messagingProductContactIdFilter) &&
+            (this.conversationStore.searchValue || this.messagingProductContactIdFilter) &&
             !this.conversationStore.reachedMaxSearchConversationLimit &&
             !this.conversationStore.isExecuting &&
             !this.conversationStore.pendingExecution
@@ -95,32 +101,43 @@ export class ContactsModalComponent implements OnInit {
     async getSearchConversations(): Promise<void> {
         this.scrolling = true;
 
-        await this.conversationStore.getSearchConversations();
-
-        this.scrolling = false;
+        try {
+            await this.conversationStore.getSearchConversations();
+        } catch (error) {
+            this.handleErr("Error getting search conversations", error);
+        } finally {
+            this.scrolling = false;
+        }
     }
 
     async getInitialSearchConversations(): Promise<void> {
         this.scrolling = true;
 
-        await this.conversationStore.getInitialSearch();
-
-        this.scrolling = false;
+        try {
+            await this.conversationStore.getInitialSearch();
+        } catch (error) {
+            this.handleErr("Error getting initial search conversations", error);
+        } finally {
+            this.scrolling = false;
+        }
     }
 
     async addMessagingProductContactIdField(messagingProductContactId: string) {
-        await this.conversationStore.addFilter(
-            {
-                text: `Messaging product contact id ${messagingProductContactId}`,
-            },
-            messagingProductContactId,
-        );
+        try {
+            await this.conversationStore.addFilter(
+                {
+                    text: `Messaging product contact id ${messagingProductContactId}`,
+                },
+                messagingProductContactId,
+            );
+        } catch (error) {
+            this.handleErr("Error adding filter", error);
+        }
     }
 
     watchQueryParams() {
         this.route.queryParams.subscribe(async (params) => {
-            const messagingProductContactId =
-                params["messaging_product_contact.id"];
+            const messagingProductContactId = params["messaging_product_contact.id"];
             if (!messagingProductContactId) return;
             this.conversationStore.read(messagingProductContactId);
         });
@@ -143,16 +160,12 @@ export class ContactsModalComponent implements OnInit {
 
     unselectConversation(conversation: ConversationMessagingProductContact) {
         this.selectedConversations = this.selectedConversations.filter(
-            (selectedConversation) =>
-                selectedConversation.id !== conversation.id,
+            (selectedConversation) => selectedConversation.id !== conversation.id,
         );
     }
 
     isConversationSelected(conversation: ConversationMessagingProductContact) {
-        return this.selectedConversations.some(
-            (selectedConversation) =>
-                selectedConversation.id === conversation.id,
-        );
+        return this.selectedConversations.some((selectedConversation) => selectedConversation.id === conversation.id);
     }
 
     sendToContacts() {
@@ -164,5 +177,14 @@ export class ContactsModalComponent implements OnInit {
     closeModal() {
         this.selectedConversations = [];
         this.close.emit();
+    }
+
+    errorStr: string = "";
+    errorData: any;
+    handleErr(message: string, err: any) {
+        this.errorData = err?.response?.data;
+        this.errorStr = err?.response?.data?.description || message;
+        this.logger.error("Async error", err);
+        this.errorModal.openModal();
     }
 }

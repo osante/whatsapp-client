@@ -3,10 +3,7 @@ import { Component, ElementRef, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { SmallButtonComponent } from "../../common/small-button/small-button.component";
 import { CampaignMessage } from "../../../core/campaign/entity/campaign-message.entity";
-import {
-    DateOrder,
-    DateOrderEnum,
-} from "../../../core/common/model/date-order.model";
+import { DateOrder, DateOrderEnum } from "../../../core/common/model/date-order.model";
 import { CampaignMessageControllerService } from "../../../core/campaign/controller/campaign-message-controller.service";
 import { CampaignMessageSendErrorControllerService } from "../../../core/campaign/controller/campaign-message-send-error-controller.service";
 import { ActivatedRoute } from "@angular/router";
@@ -19,13 +16,7 @@ import { NgxJsonViewerModule } from "ngx-json-viewer";
 
 @Component({
     selector: "app-campaign-messages",
-    imports: [
-        CommonModule,
-        FormsModule,
-        SmallButtonComponent,
-        TimeoutErrorModalComponent,
-        NgxJsonViewerModule,
-    ],
+    imports: [CommonModule, FormsModule, SmallButtonComponent, TimeoutErrorModalComponent, NgxJsonViewerModule],
     templateUrl: "./campaign-messages.component.html",
     styleUrl: "./campaign-messages.component.scss",
     standalone: true,
@@ -52,9 +43,6 @@ export class CampaignMessagesComponent {
     createdAtLte?: string;
     dateOrder: DateOrderEnum = DateOrderEnum.desc;
     messageState: "all" | "sent" | "unsent" = "all";
-
-    errorStr: string = "";
-    errorData: any;
 
     constructor(
         private campaignMessagesController: CampaignMessageControllerService,
@@ -112,40 +100,20 @@ export class CampaignMessagesComponent {
             };
             const order: DateOrder = { created_at: this.dateOrder };
             const whereDate: WhereDate = {
-                created_at_geq: this.createdAtGte
-                    ? new Date(this.createdAtGte)
-                    : undefined,
-                created_at_leq: this.createdAtLte
-                    ? new Date(this.createdAtLte)
-                    : undefined,
+                created_at_geq: this.createdAtGte ? new Date(this.createdAtGte) : undefined,
+                created_at_leq: this.createdAtLte ? new Date(this.createdAtLte) : undefined,
             };
 
             let newMessages: CampaignMessage[] = [];
             switch (this.messageState) {
                 case "all":
-                    newMessages = await this.campaignMessagesController.get(
-                        query,
-                        pagination,
-                        order,
-                        whereDate,
-                    );
+                    newMessages = await this.campaignMessagesController.get(query, pagination, order, whereDate);
                     break;
                 case "sent":
-                    newMessages = await this.campaignMessagesController.getSent(
-                        query,
-                        pagination,
-                        order,
-                        whereDate,
-                    );
+                    newMessages = await this.campaignMessagesController.getSent(query, pagination, order, whereDate);
                     break;
                 case "unsent":
-                    newMessages =
-                        await this.campaignMessagesController.getUnsent(
-                            query,
-                            pagination,
-                            order,
-                            whereDate,
-                        );
+                    newMessages = await this.campaignMessagesController.getUnsent(query, pagination, order, whereDate);
                     break;
             }
             if (newMessages.length < this.limit) {
@@ -191,20 +159,15 @@ export class CampaignMessagesComponent {
 
     onScroll(event: Event): void {
         const element = event.target as HTMLElement;
-        if (
-            !(
-                element.scrollHeight - element.scrollTop <=
-                element.clientHeight + 100
-            ) ||
-            this.isLoading
-        )
-            return;
+        if (!(element.scrollHeight - element.scrollTop <= element.clientHeight + 100) || this.isLoading) return;
 
         this.getPromise.then(() => {
             this.getPromise = this.loadMessages();
         });
     }
 
+    errorStr: string = "";
+    errorData: any;
     handleErr(message: string, err: any) {
         this.errorData = err?.response?.data;
         this.errorStr = err?.response?.data?.description || message;
@@ -213,9 +176,7 @@ export class CampaignMessagesComponent {
     }
 
     async deleteMessage(id: string, index: number): Promise<void> {
-        const confirmed = window.confirm(
-            "Are you sure you want to delete this message?",
-        );
+        const confirmed = window.confirm("Are you sure you want to delete this message?");
         if (!confirmed) return;
 
         try {
