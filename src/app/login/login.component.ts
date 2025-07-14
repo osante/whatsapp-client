@@ -39,4 +39,9 @@ export class LoginComponent {
             this.isLoading = false;
         }
     }
+
+    showPassword: boolean = false;
+    togglePasswordVisibility(): void {
+        this.showPassword = !this.showPassword;
+    }
 }

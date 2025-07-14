@@ -168,6 +168,11 @@ export class UserDetailsComponent implements OnInit {
         }
     }
 
+    showPassword: boolean = false;
+    togglePasswordVisibility(): void {
+        this.showPassword = !this.showPassword;
+    }
+
     errorStr: string = "";
     errorData: any;
     handleErr(message: string, err: any) {
