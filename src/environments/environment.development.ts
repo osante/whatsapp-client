@@ -9,4 +9,6 @@ export const environment = {
     nodeRedServerUrl: "localhost:1880",
     nodeRedServerSecurity: true,
     appTitle: "wacraft",
+
+    webSocketBasePingInterval: 30000,
 };

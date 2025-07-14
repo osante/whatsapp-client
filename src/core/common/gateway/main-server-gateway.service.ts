@@ -44,7 +44,7 @@ export class MainServerGatewayService {
 
     /* ───── Ping / keep-alive knobs ───── */
     sendPing = true; // disable if backend already handles ping/pong
-    pingInterval = 30 * 1000 * 60 * 60; // 30 minutes
+    pingInterval = environment.webSocketBasePingInterval ?? 30 * 1000; // use ping interval from environment variables
     private pingTimer?: ReturnType<typeof setInterval>;
 
     /* ───── ctor ───── */
@@ -122,19 +122,12 @@ export class MainServerGatewayService {
     private scheduleReconnect(): void {
         if (!this.autoReconnect) return;
         if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-            this.logger.error(
-                `[WS] giving up after ${this.maxReconnectAttempts} tries`,
-            );
+            this.logger.error(`[WS] giving up after ${this.maxReconnectAttempts} tries`);
             return;
         }
-        const delay = Math.min(
-            this.baseDelay * 2 ** this.reconnectAttempts,
-            this.maxDelay,
-        );
+        const delay = Math.min(this.baseDelay * 2 ** this.reconnectAttempts, this.maxDelay);
         this.reconnectAttempts += 1;
-        this.logger.info(
-            `[WS] retry ${this.reconnectAttempts}/${this.maxReconnectAttempts} in ${delay / 1000}s`,
-        );
+        this.logger.info(`[WS] retry ${this.reconnectAttempts}/${this.maxReconnectAttempts} in ${delay / 1000}s`);
         this.reconnectTimeout = setTimeout(() => this.setWs(), delay);
     }
 
