@@ -4,24 +4,17 @@ import { ActivatedRoute } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { SmallButtonComponent } from "../../common/small-button/small-button.component";
 import { WebhookLogFields } from "../../../core/webhook/entity/webhook-log.entity";
-import {
-    DateOrder,
-    DateOrderEnum,
-} from "../../../core/common/model/date-order.model";
+import { DateOrder, DateOrderEnum } from "../../../core/common/model/date-order.model";
 import { WebhookLogsControllerService } from "../../../core/webhook/controller/webhook-logs-controller.service";
 import { Paginate } from "../../../core/common/model/paginate.model";
 import { WhereDate } from "../../../core/common/model/where-date.model";
 import { NGXLogger } from "ngx-logger";
 import { NgxJsonViewerModule } from "ngx-json-viewer";
+import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
 
 @Component({
     selector: "app-webhook-logs",
-    imports: [
-        CommonModule,
-        FormsModule,
-        SmallButtonComponent,
-        NgxJsonViewerModule,
-    ],
+    imports: [CommonModule, FormsModule, SmallButtonComponent, NgxJsonViewerModule, TimeoutErrorModalComponent],
     templateUrl: "./webhook-logs.component.html",
     styleUrl: "./webhook-logs.component.scss",
     standalone: true,
@@ -44,6 +37,8 @@ export class WebhookLogsComponent implements OnInit {
     dateOrder: DateOrderEnum = DateOrderEnum.desc;
 
     DateOrderEnum = DateOrderEnum; // For template access
+
+    @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
 
     constructor(
         private whLogsController: WebhookLogsControllerService,
@@ -80,27 +75,19 @@ export class WebhookLogsComponent implements OnInit {
             };
             const order: DateOrder = { created_at: this.dateOrder };
             const whereDate: WhereDate = {
-                created_at_geq: this.createdAtGte
-                    ? new Date(this.createdAtGte)
-                    : undefined,
-                created_at_leq: this.createdAtLte
-                    ? new Date(this.createdAtLte)
-                    : undefined,
+                created_at_geq: this.createdAtGte ? new Date(this.createdAtGte) : undefined,
+                created_at_leq: this.createdAtLte ? new Date(this.createdAtLte) : undefined,
             };
 
-            const newLogs = await this.whLogsController.get(
-                query,
-                pagination,
-                order,
-                whereDate,
-            );
+            const newLogs = await this.whLogsController.get(query, pagination, order, whereDate);
             if (newLogs.length < this.limit) {
                 this.reachedEnd = true; // No more data to load
             }
 
             this.logs = [...this.logs, ...newLogs]; // Append new logs
         } catch (error) {
-            this.logger.error("Error loading webhook logs:", error);
+            this.logger.error("Error loading webhook logs", error);
+            this.handleErr("Error loading webhook logs", error);
         } finally {
             this.isLoading = false;
         }
@@ -144,10 +131,7 @@ export class WebhookLogsComponent implements OnInit {
         if (
             // Check if the user has scrolled to the bottom of the element
             !(
-                (
-                    element.scrollHeight - element.scrollTop <=
-                    element.clientHeight + 100
-                )
+                (element.scrollHeight - element.scrollTop <= element.clientHeight + 100)
                 // Check if some request is being performed
             ) ||
             this.isLoading
@@ -157,5 +141,14 @@ export class WebhookLogsComponent implements OnInit {
         this.getPromise.then(() => {
             this.getPromise = this.loadLogs();
         });
+    }
+
+    errorStr: string = "";
+    errorData: any;
+    handleErr(message: string, err: any) {
+        this.errorData = err?.response?.data;
+        this.errorStr = err?.response?.data?.description || message;
+        this.logger.error("Async error", err);
+        this.errorModal.openModal();
     }
 }
