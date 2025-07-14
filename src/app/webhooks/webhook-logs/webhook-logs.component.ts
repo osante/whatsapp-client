@@ -86,7 +86,6 @@ export class WebhookLogsComponent implements OnInit {
 
             this.logs = [...this.logs, ...newLogs]; // Append new logs
         } catch (error) {
-            this.logger.error("Error loading webhook logs", error);
             this.handleErr("Error loading webhook logs", error);
         } finally {
             this.isLoading = false;

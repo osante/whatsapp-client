@@ -59,7 +59,6 @@ export class WebhookSidebarComponent extends KeyboardNavigableList implements On
         try {
             await this.webhookStore.get();
         } catch (error) {
-            this.logger.error("Error getting webhooks", error);
             this.handleErr("Error getting webhooks", error);
         } finally {
             this.scrolling = false;
@@ -99,7 +98,6 @@ export class WebhookSidebarComponent extends KeyboardNavigableList implements On
         try {
             await this.webhookStore.getSearch();
         } catch (error) {
-            this.logger.error("Error getting search webhooks", error);
             this.handleErr("Error getting search webhooks", error);
         } finally {
             this.scrolling = false;
@@ -112,7 +110,6 @@ export class WebhookSidebarComponent extends KeyboardNavigableList implements On
         try {
             await this.webhookStore.getInitialSearch();
         } catch (error) {
-            this.logger.error("Error getting initial search webhooks", error);
             this.handleErr("Error getting initial search webhooks", error);
         } finally {
             this.scrolling = false;

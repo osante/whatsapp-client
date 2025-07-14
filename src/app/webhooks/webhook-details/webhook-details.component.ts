@@ -85,7 +85,6 @@ export class WebhookDetailsComponent implements OnInit {
                 this.isEditing = false;
                 return;
             } catch (error) {
-                this.logger.error("Error saving changes", error);
                 this.handleErr("Error saving changes", error);
             }
     }
@@ -117,7 +116,6 @@ export class WebhookDetailsComponent implements OnInit {
         try {
             this.webhook = await this.webhookStore.getById(this.webhookId);
         } catch (error) {
-            this.logger.error("Error loading webhook", error);
             this.handleErr("Error loading webhook", error);
         }
     }
@@ -157,7 +155,6 @@ export class WebhookDetailsComponent implements OnInit {
                 await this.resetWebhookId(); // Call to reset or clean up after deletion
                 window.location.reload();
             } catch (error) {
-                this.logger.error("Error deleting webhook", error);
                 this.handleErr("Error deleting webhook", error);
             }
         }

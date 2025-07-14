@@ -75,7 +75,6 @@ export class UserDetailsComponent implements OnInit {
                 this.isEditing = false;
                 return;
             } catch (error) {
-                this.logger.error("Error saving changes", error);
                 this.handleErr("Error saving changes", error);
             }
     }
@@ -107,7 +106,6 @@ export class UserDetailsComponent implements OnInit {
         try {
             this.user = await this.userStore.getById(this.userId);
         } catch (error) {
-            this.logger.error("Error loading user", error);
             this.handleErr("Error loading user", error);
             return;
         }
@@ -149,7 +147,6 @@ export class UserDetailsComponent implements OnInit {
                 window.location.reload();
                 this.resetUserId(); // Call to reset or clean up after deletion
             } catch (error) {
-                this.logger.error("Error deleting user", error);
                 this.handleErr("Error deleting user", error);
                 return;
             }

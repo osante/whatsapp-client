@@ -46,7 +46,6 @@ export class TemplateDetailsComponent implements OnInit {
         try {
             this.template = await this.templateStore.getByName(this.templateName);
         } catch (error) {
-            this.logger.error("Error loading template", error);
             this.handleErr("Error loading template", error);
             return;
         }

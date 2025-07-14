@@ -59,7 +59,6 @@ export class UserSidebarComponent extends KeyboardNavigableList implements OnIni
         try {
             await this.userStore.get();
         } catch (error) {
-            this.logger.error("Error getting users", error);
             this.handleErr("Error getting users", error);
         } finally {
             this.scrolling = false;
@@ -99,7 +98,6 @@ export class UserSidebarComponent extends KeyboardNavigableList implements OnIni
         try {
             await this.userStore.getSearch();
         } catch (error) {
-            this.logger.error("Error getting search users", error);
             this.handleErr("Error getting search users", error);
         } finally {
             this.scrolling = false;

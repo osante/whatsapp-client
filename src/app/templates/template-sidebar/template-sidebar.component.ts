@@ -51,7 +51,6 @@ export class TemplateSidebarComponent extends KeyboardNavigableList implements O
         try {
             await this.templateStore.get();
         } catch (error) {
-            this.logger.error("Error getting templates", error);
             this.handleErr("Error getting templates", error);
             return;
         } finally {
@@ -90,7 +89,6 @@ export class TemplateSidebarComponent extends KeyboardNavigableList implements O
         try {
             await this.templateStore.getSearchTemplates();
         } catch (error) {
-            this.logger.error("Error getting search templates", error);
             this.handleErr("Error getting search templates", error);
             return;
         } finally {
@@ -104,7 +102,6 @@ export class TemplateSidebarComponent extends KeyboardNavigableList implements O
         try {
             await this.templateStore.getInitialSearchTemplates();
         } catch (error) {
-            this.logger.error("Error getting initial search templates", error);
             this.handleErr("Error getting initial search templates", error);
             return;
         } finally {
@@ -118,7 +115,6 @@ export class TemplateSidebarComponent extends KeyboardNavigableList implements O
                 text: `Messaging product contact id ${messagingProductContactId}`,
             });
         } catch (error) {
-            this.logger.error("Error adding messaging product contact id", error);
             this.handleErr("Error adding messaging product contact id", error);
             return;
         }

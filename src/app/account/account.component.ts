@@ -63,13 +63,10 @@ export class AccountComponent implements OnInit {
         if (!this.userStore.currentUser) return;
         this.loading = true;
         try {
-            await this.userController.updateCurrentUser(
-                this.userStore.currentUser,
-            );
+            await this.userController.updateCurrentUser(this.userStore.currentUser);
             this.isEditing = false;
             this.userStore.currentUser.password = ""; // Clear password
         } catch (error) {
-            this.logger.error("Error updating user", error);
             this.handleErr("Error updating user.", error);
             return;
         } finally {
@@ -83,7 +80,6 @@ export class AccountComponent implements OnInit {
         try {
             await this.userStore.getCurrent(); // Revert changes
         } catch (error) {
-            this.logger.error("Error reverting user changes", error);
             this.handleErr("Error getting current user.", error);
             return;
         } finally {
