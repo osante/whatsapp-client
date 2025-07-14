@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
@@ -11,10 +11,11 @@ import { UserStoreService } from "../../../core/user/store/user-store.service";
 import { NGXLogger } from "ngx-logger";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
 
 @Component({
     selector: "app-user-details",
-    imports: [FormsModule, CommonModule, MatIconModule, MatTooltipModule],
+    imports: [FormsModule, CommonModule, MatIconModule, MatTooltipModule, TimeoutErrorModalComponent],
     templateUrl: "./user-details.component.html",
     styleUrl: "./user-details.component.scss",
     preserveWhitespaces: false,
@@ -28,6 +29,8 @@ export class UserDetailsComponent implements OnInit {
     userId?: string;
 
     isEditing = false;
+
+    @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
 
     constructor(
         private queryParamsService: QueryParamsService,
@@ -72,7 +75,8 @@ export class UserDetailsComponent implements OnInit {
                 this.isEditing = false;
                 return;
             } catch (error) {
-                this.logger.error("Error updating user", error);
+                this.logger.error("Error saving changes", error);
+                this.handleErr("Error saving changes", error);
             }
     }
 
@@ -100,7 +104,13 @@ export class UserDetailsComponent implements OnInit {
             return;
         }
         this.isEditing = false;
-        this.user = await this.userStore.getById(this.userId);
+        try {
+            this.user = await this.userStore.getById(this.userId);
+        } catch (error) {
+            this.logger.error("Error loading user", error);
+            this.handleErr("Error loading user", error);
+            return;
+        }
     }
 
     toggleEdit() {
@@ -129,9 +139,7 @@ export class UserDetailsComponent implements OnInit {
         if (!this.userId) return;
 
         // Show confirmation alert
-        const confirmed = window.confirm(
-            "Are you sure you want to delete this user? This action cannot be undone.",
-        );
+        const confirmed = window.confirm("Are you sure you want to delete this user? This action cannot be undone.");
 
         // If the user confirms, proceed with the deletion
         if (confirmed) {
@@ -141,7 +149,9 @@ export class UserDetailsComponent implements OnInit {
                 window.location.reload();
                 this.resetUserId(); // Call to reset or clean up after deletion
             } catch (error) {
-                this.logger.error("Error deleting user:", error);
+                this.logger.error("Error deleting user", error);
+                this.handleErr("Error deleting user", error);
+                return;
             }
         }
     }
@@ -159,5 +169,14 @@ export class UserDetailsComponent implements OnInit {
         if (value) {
             await navigator.clipboard.writeText(value);
         }
+    }
+
+    errorStr: string = "";
+    errorData: any;
+    handleErr(message: string, err: any) {
+        this.errorData = err?.response?.data;
+        this.errorStr = err?.response?.data?.description || message;
+        this.logger.error("Async error", err);
+        this.errorModal.openModal();
     }
 }

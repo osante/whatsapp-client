@@ -1,11 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    HostBinding,
-    HostListener,
-    Input,
-    ViewChild,
-} from "@angular/core";
+import { Component, ElementRef, HostBinding, HostListener, Input, ViewChild } from "@angular/core";
 import { Template } from "../../../core/template/model/template.model";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";

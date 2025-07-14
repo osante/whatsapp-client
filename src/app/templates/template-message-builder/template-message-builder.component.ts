@@ -2,20 +2,11 @@ import { Component, Input, ViewChild } from "@angular/core";
 import { Template } from "../../../core/template/model/template.model";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import {
-    ParameterType,
-    UseTemplateComponent,
-} from "../../../core/message/model/use-template-component.model";
-import {
-    ComponentExample,
-    TemplateComponent,
-} from "../../../core/template/model/template-component.model";
+import { ParameterType, UseTemplateComponent } from "../../../core/message/model/use-template-component.model";
+import { ComponentExample, TemplateComponent } from "../../../core/template/model/template-component.model";
 import { TemplateComponentType } from "../../../core/template/model/template-component-type.model";
 import { TemplateComponentFormat } from "../../../core/template/model/template-component-format.model";
-import {
-    Conversation,
-    ConversationMessagingProductContact,
-} from "../../../core/message/model/conversation.model";
+import { Conversation, ConversationMessagingProductContact } from "../../../core/message/model/conversation.model";
 import { NIL as NilUUID } from "uuid";
 import { MessageType } from "../../../core/message/model/message-type.model";
 import { MediaControllerService } from "../../../core/media/controller/media-controller.service";
@@ -85,8 +76,6 @@ export class TemplateMessageBuilderComponent {
         text: "",
         type: ParameterType.text,
     };
-    errorStr: string = "";
-    errorData: any;
 
     constructor(
         private mediaController: MediaControllerService,
@@ -102,16 +91,12 @@ export class TemplateMessageBuilderComponent {
 
     async onFileSelected(event: Event) {
         const target = event.target as HTMLInputElement;
-        if (!target.files || target.files.length <= 0)
-            return (this.selectedFile = undefined);
+        if (!target.files || target.files.length <= 0) return (this.selectedFile = undefined);
 
         this.selectedFile = target.files[0];
         const mimeType = this.selectedFile.type;
         try {
-            const uploadResponse = await this.mediaController.uploadMedia(
-                this.selectedFile,
-                mimeType,
-            );
+            const uploadResponse = await this.mediaController.uploadMedia(this.selectedFile, mimeType);
             this.headerUseMedia.id = uploadResponse.id;
         } catch (error) {
             this.handleErr("Failed to upload media", error);
@@ -122,10 +107,7 @@ export class TemplateMessageBuilderComponent {
     generateComponents() {
         this.components = this.template.components
             .map((component) => this.generateComponent(component))
-            .filter(
-                (generatedComponent) =>
-                    generatedComponent.parameters.length !== 0,
-            );
+            .filter((generatedComponent) => generatedComponent.parameters.length !== 0);
     }
 
     generateComponent(component: TemplateComponent): UseTemplateComponent {
@@ -155,20 +137,14 @@ export class TemplateMessageBuilderComponent {
         return useComponent;
     }
 
-    handleHeaderComponent(
-        component: TemplateComponent,
-        useComponent: UseTemplateComponent,
-        example: ComponentExample,
-    ) {
+    handleHeaderComponent(component: TemplateComponent, useComponent: UseTemplateComponent, example: ComponentExample) {
         if (
-            component.format?.toLowerCase() !=
-                TemplateComponentFormat.Text.toLowerCase() &&
+            component.format?.toLowerCase() != TemplateComponentFormat.Text.toLowerCase() &&
             example.header_handle?.length
         ) {
             useComponent.parameters.push({
                 type: component.format?.toLowerCase() as ParameterType,
-                [component.format?.toLowerCase() as ParameterType]:
-                    this.headerUseMedia,
+                [component.format?.toLowerCase() as ParameterType]: this.headerUseMedia,
             });
         } else if (example.header_text)
             useComponent.parameters.push({
@@ -177,11 +153,7 @@ export class TemplateMessageBuilderComponent {
             });
     }
 
-    handleBodyComponent(
-        component: TemplateComponent,
-        useComponent: UseTemplateComponent,
-        example: ComponentExample,
-    ) {
+    handleBodyComponent(component: TemplateComponent, useComponent: UseTemplateComponent, example: ComponentExample) {
         if (!example.body_text) return;
         example.body_text.forEach((text) => {
             useComponent.parameters.push({
@@ -191,11 +163,7 @@ export class TemplateMessageBuilderComponent {
         });
     }
 
-    handleFooterComponent(
-        component: TemplateComponent,
-        useComponent: UseTemplateComponent,
-        example: ComponentExample,
-    ) {
+    handleFooterComponent(component: TemplateComponent, useComponent: UseTemplateComponent, example: ComponentExample) {
         return;
     }
 
@@ -208,8 +176,7 @@ export class TemplateMessageBuilderComponent {
     }
 
     setMessage() {
-        if (!this.template || !this.template.name || !this.template.language)
-            return;
+        if (!this.template || !this.template.name || !this.template.language) return;
         const message = {
             from_id: NilUUID,
             messaging_product_id: NilUUID,
@@ -242,9 +209,7 @@ export class TemplateMessageBuilderComponent {
     }
 
     copySenderData() {
-        navigator.clipboard.writeText(
-            JSON.stringify(this.message?.sender_data, null, 4),
-        );
+        navigator.clipboard.writeText(JSON.stringify(this.message?.sender_data, null, 4));
     }
 
     // Helper function to flatten nested objects, handling arrays as JSON strings
@@ -254,11 +219,7 @@ export class TemplateMessageBuilderComponent {
                 const newKey = parentKey ? `${parentKey}.${key}` : key;
                 const value = obj[key];
 
-                if (
-                    value &&
-                    typeof value === "object" &&
-                    !Array.isArray(value)
-                ) {
+                if (value && typeof value === "object" && !Array.isArray(value)) {
                     // Recursively flatten nested objects
                     this.flattenObject(value, newKey, result);
                 } else if (Array.isArray(value)) {
@@ -281,9 +242,7 @@ export class TemplateMessageBuilderComponent {
         }
 
         // Flatten each object in sender_data
-        const flattenedData = [this.message.sender_data].map((item) =>
-            this.flattenObject(item),
-        );
+        const flattenedData = [this.message.sender_data].map((item) => this.flattenObject(item));
 
         // Convert flattened data to CSV using PapaParse
         const csv = Papa.unparse(flattenedData);
@@ -318,16 +277,13 @@ export class TemplateMessageBuilderComponent {
                         to: contact.product_details.phone_number,
                     },
                 })
-                .catch((err) =>
-                    this.handleErr(
-                        `Failed to send message to ${contact.id}`,
-                        err,
-                    ),
-                ),
+                .catch((err) => this.handleErr(`Failed to send message to ${contact.id}`, err)),
         );
         await Promise.all(sendPromises);
     }
 
+    errorStr: string = "";
+    errorData: any;
     handleErr(message: string, err: any) {
         this.errorData = err?.response?.data;
         this.errorStr = err?.response?.data?.description || message;
