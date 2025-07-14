@@ -20,6 +20,8 @@ export const environment = {
     nodeRedServerSecurity: ${process.env.NODE_RED_SERVER_SECURITY == "true"},
     googleMapsApiKey: "${process.env.GOOGLE_MAPS_API_KEY}",
     appTitle: "${process.env.APP_TITLE || "wacraft"}",
+
+    webSocketBasePingInterval: ${process.env.WEBSOCKET_BASE_PING_INTERVAL || 30000},
 };
 `;
 
