@@ -21,6 +21,8 @@ import { QueryParamsService } from "../../core/navigation/service/query-params.s
 import { ConversationStoreService } from "../../core/message/store/conversation-store.service";
 import { MatIconModule } from "@angular/material/icon";
 import { KeyboardNavigableList } from "../common/keyboard/keyboard-navigable-list.base";
+import { NGXLogger } from "ngx-logger";
+import { TimeoutErrorModalComponent } from "../common/timeout-error-modal/timeout-error-modal.component";
 
 @Component({
     selector: "app-chats-sidebar",
@@ -39,24 +41,23 @@ import { KeyboardNavigableList } from "../common/keyboard/keyboard-navigable-lis
     styleUrl: "./chats-sidebar.component.scss",
     standalone: true,
 })
-export class ChatsSidebarComponent
-    extends KeyboardNavigableList
-    implements OnInit
-{
+export class ChatsSidebarComponent extends KeyboardNavigableList implements OnInit {
     private scrolling: boolean = false;
 
     @ViewChild("searchTextarea")
     searchTextarea!: ElementRef<HTMLTextAreaElement>;
 
-    @Output("select") select =
-        new EventEmitter<ConversationMessagingProductContact>();
+    @Output("select") select = new EventEmitter<ConversationMessagingProductContact>();
 
     messagingProductContactIdFilter?: string;
+
+    @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
 
     constructor(
         private route: ActivatedRoute,
         public queryParamsService: QueryParamsService,
         public conversationStore: ConversationStoreService,
+        private logger: NGXLogger,
     ) {
         super();
     }
@@ -76,9 +77,13 @@ export class ChatsSidebarComponent
     async getConversations(): Promise<void> {
         this.scrolling = true;
 
-        await this.conversationStore.get();
-
-        this.scrolling = false;
+        try {
+            await this.conversationStore.get();
+        } catch (error) {
+            this.handleErr("Error getting conversations", error);
+        } finally {
+            this.scrolling = false;
+        }
     }
 
     onScroll(event: Event) {
@@ -86,8 +91,7 @@ export class ChatsSidebarComponent
         if (
             // Check if the user has scrolled to the bottom of the element
             !(
-                element.scrollHeight - element.scrollTop <=
-                    element.clientHeight + 100 &&
+                element.scrollHeight - element.scrollTop <= element.clientHeight + 100 &&
                 // Check if some request is being performed
                 !this.scrolling
             )
@@ -102,8 +106,7 @@ export class ChatsSidebarComponent
         )
             this.getConversations();
         else if (
-            (this.conversationStore.searchValue ||
-                this.messagingProductContactIdFilter) &&
+            (this.conversationStore.searchValue || this.messagingProductContactIdFilter) &&
             !this.conversationStore.reachedMaxSearchConversationLimit &&
             !this.conversationStore.isExecuting &&
             !this.conversationStore.pendingExecution
@@ -114,33 +117,44 @@ export class ChatsSidebarComponent
     async getSearchConversations(): Promise<void> {
         this.scrolling = true;
 
-        await this.conversationStore.getSearchConversations();
-
-        this.scrolling = false;
+        try {
+            await this.conversationStore.getSearchConversations();
+        } catch (error) {
+            this.handleErr("Error getting search convversations", error);
+        } finally {
+            this.scrolling = false;
+        }
     }
 
     async getInitialSearchConversations(): Promise<void> {
         this.scrolling = true;
 
-        await this.conversationStore.getInitialSearch();
-
-        this.scrolling = false;
+        try {
+            await this.conversationStore.getInitialSearch();
+        } catch (error) {
+            this.handleErr("Error getting initial search conversations", error);
+        } finally {
+            this.scrolling = false;
+        }
     }
 
     async addMessagingProductContactIdField(messagingProductContactId: string) {
-        await this.conversationStore.addFilter(
-            {
-                text: `Messaging product contact id ${messagingProductContactId}`,
-            },
-            messagingProductContactId,
-        );
+        try {
+            await this.conversationStore.addFilter(
+                {
+                    text: `Messaging product contact id ${messagingProductContactId}`,
+                },
+                messagingProductContactId,
+            );
+        } catch (error) {
+            this.handleErr("Error adding filter", error);
+        }
     }
 
     // Handle message read.
     watchQueryParams() {
         this.route.queryParams.subscribe(async (params) => {
-            const messagingProductContactId =
-                params["messaging_product_contact.id"];
+            const messagingProductContactId = params["messaging_product_contact.id"];
             if (!messagingProductContactId) return;
             this.conversationStore.read(messagingProductContactId);
         });
@@ -167,11 +181,9 @@ export class ChatsSidebarComponent
     @HostListener("window:mousemove", ["$event"])
     private onMouseMove(event: MouseEvent) {
         if (!this.isResizing) return;
-        if (!this.queryParamsService.sidebarOpen)
-            this.queryParamsService.openSidebar();
+        if (!this.queryParamsService.sidebarOpen) this.queryParamsService.openSidebar();
 
-        const newWidth =
-            event.clientX - this.draggableContainer.nativeElement.offsetLeft;
+        const newWidth = event.clientX - this.draggableContainer.nativeElement.offsetLeft;
         this.sidebarWidth = newWidth;
 
         if (newWidth <= 10) this.queryParamsService.closeSidebar();
@@ -193,5 +205,14 @@ export class ChatsSidebarComponent
     startResizing(event: MouseEvent) {
         this.isResizing = true;
         event.preventDefault(); // Prevent text selection
+    }
+
+    errorStr: string = "";
+    errorData: any;
+    handleErr(message: string, err: any) {
+        this.errorData = err?.response?.data;
+        this.errorStr = err?.response?.data?.description || message;
+        this.logger.error("Async error", err);
+        this.errorModal.openModal();
     }
 }
