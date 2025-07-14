@@ -26,7 +26,7 @@
                 #username
             />
         </div>
-        <div class="mb-5">
+        <div class="mb-5 relative">
             <label
                 for="password"
                 class="block mb-2 text-sm text-gray-600 dark:text-gray-300"
@@ -34,13 +34,24 @@
                 >Password</label
             >
             <input
-                type="password"
+                [type]="showPassword ? 'text' : 'password'"
                 name="password"
-                class="w-full px-3 py-2 border rounded-md text-gray-600 dark:bg-gray-600 dark:border-gray-600 dark:text-gray-300"
+                class="w-full px-3 py-2 border rounded-md text-gray-600 dark:bg-gray-600 dark:border-gray-600 dark:text-gray-300 pr-10"
                 required
                 (keydown.enter)="login()"
                 #password
             />
+            <!-- Toggle Button with Material Icon -->
+            <button
+                type="button"
+                class="absolute right-2 top-9 text-gray-600 dark:text-gray-300 focus:outline-none"
+                (click)="togglePasswordVisibility()"
+                aria-label="Toggle password visibility"
+            >
+                <span class="material-icons-outlined text-xl">
+                    {{ showPassword ? 'visibility_off' : 'visibility' }}
+                </span>
+            </button>
         </div>
 
         <div class="mb-5" *ngIf="errorMessage">

@@ -36,12 +36,23 @@
             <label class="block text-sm font-medium mb-2" i18n>Password</label>
             <div class="relative">
                 <input
-                    type="password"
+                    [type]="showPassword ? 'text' : 'password'"
                     [(ngModel)]="user.password"
                     [disabled]="!isEditing"
                     class="bg-gray-200 text-white p-2 rounded w-full dark:bg-gray-600 outline-none pr-10"
                 />
             </div>
+            <!-- Toggle Button with Material Icon -->
+            <button
+                type="button"
+                class="absolute right-2 top-9 text-gray-600 dark:text-gray-300 focus:outline-none"
+                (click)="togglePasswordVisibility()"
+                aria-label="Toggle password visibility"
+            >
+                <span class="material-icons-outlined text-xl">
+                    {{ showPassword ? 'visibility_off' : 'visibility' }}
+                </span>
+            </button>
         </div>
 
         <div class="col-span-12 md:col-span-2 relative">
