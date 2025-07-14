@@ -1,12 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    HostListener,
-    OnInit,
-    QueryList,
-    ViewChild,
-    ViewChildren,
-} from "@angular/core";
+import { Component, ElementRef, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { TemplatePreviewComponent } from "../template-preview/template-preview.component";
@@ -15,32 +7,29 @@ import { QueryParamsService } from "../../../core/navigation/service/query-param
 import { TemplateStoreService } from "../../../core/template/store/template-store.service";
 import { MatIconModule } from "@angular/material/icon";
 import { KeyboardNavigableList } from "../../common/keyboard/keyboard-navigable-list.base";
+import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/timeout-error-modal.component";
+import { NGXLogger } from "ngx-logger";
 
 @Component({
     selector: "app-template-sidebar",
-    imports: [
-        FormsModule,
-        TemplatePreviewComponent,
-        CommonModule,
-        MatIconModule,
-    ],
+    imports: [FormsModule, TemplatePreviewComponent, CommonModule, MatIconModule, TimeoutErrorModalComponent],
     templateUrl: "./template-sidebar.component.html",
     styleUrl: "./template-sidebar.component.scss",
     standalone: true,
 })
-export class TemplateSidebarComponent
-    extends KeyboardNavigableList
-    implements OnInit
-{
+export class TemplateSidebarComponent extends KeyboardNavigableList implements OnInit {
     private scrolling: boolean = false;
 
     @ViewChild("searchTextarea")
     searchTextarea!: ElementRef<HTMLTextAreaElement>;
 
+    @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
+
     constructor(
         private router: Router,
         public templateStore: TemplateStoreService,
         public queryParamsService: QueryParamsService,
+        private logger: NGXLogger,
     ) {
         super();
     }
@@ -59,9 +48,15 @@ export class TemplateSidebarComponent
     async getTemplates(): Promise<void> {
         this.scrolling = true;
 
-        await this.templateStore.get();
-
-        this.scrolling = false;
+        try {
+            await this.templateStore.get();
+        } catch (error) {
+            this.logger.error("Error getting templates", error);
+            this.handleErr("Error getting templates", error);
+            return;
+        } finally {
+            this.scrolling = false;
+        }
     }
 
     onScroll(event: Event) {
@@ -69,8 +64,7 @@ export class TemplateSidebarComponent
         if (
             // Check if the template has scrolled to the bottom of the element
             !(
-                element.scrollHeight - element.scrollTop <=
-                    element.clientHeight + 100 &&
+                element.scrollHeight - element.scrollTop <= element.clientHeight + 100 &&
                 // Check if some request is being performed
                 !this.scrolling
             )
@@ -93,23 +87,41 @@ export class TemplateSidebarComponent
     async getSearchTemplates(): Promise<void> {
         this.scrolling = true;
 
-        await this.templateStore.getSearchTemplates();
-
-        this.scrolling = false;
+        try {
+            await this.templateStore.getSearchTemplates();
+        } catch (error) {
+            this.logger.error("Error getting search templates", error);
+            this.handleErr("Error getting search templates", error);
+            return;
+        } finally {
+            this.scrolling = false;
+        }
     }
 
     async getInitialSearchTemplates(): Promise<void> {
         this.scrolling = true;
 
-        await this.templateStore.getInitialSearchTemplates();
-
-        this.scrolling = false;
+        try {
+            await this.templateStore.getInitialSearchTemplates();
+        } catch (error) {
+            this.logger.error("Error getting initial search templates", error);
+            this.handleErr("Error getting initial search templates", error);
+            return;
+        } finally {
+            this.scrolling = false;
+        }
     }
 
     async addMessagingProductContactIdField(messagingProductContactId: string) {
-        await this.templateStore.addFilter({
-            text: `Messaging product contact id ${messagingProductContactId}`,
-        });
+        try {
+            await this.templateStore.addFilter({
+                text: `Messaging product contact id ${messagingProductContactId}`,
+            });
+        } catch (error) {
+            this.logger.error("Error adding messaging product contact id", error);
+            this.handleErr("Error adding messaging product contact id", error);
+            return;
+        }
     }
 
     resetTemplateId() {
@@ -134,11 +146,9 @@ export class TemplateSidebarComponent
     @HostListener("window:mousemove", ["$event"])
     private onMouseMove(event: MouseEvent) {
         if (!this.isResizing) return;
-        if (!this.queryParamsService.sidebarOpen)
-            this.queryParamsService.openSidebar();
+        if (!this.queryParamsService.sidebarOpen) this.queryParamsService.openSidebar();
 
-        const newWidth =
-            event.clientX - this.draggableContainer.nativeElement.offsetLeft;
+        const newWidth = event.clientX - this.draggableContainer.nativeElement.offsetLeft;
         this.sidebarWidth = newWidth;
 
         if (newWidth <= 10) this.queryParamsService.closeSidebar();
@@ -160,5 +170,14 @@ export class TemplateSidebarComponent
     startResizing(event: MouseEvent) {
         this.isResizing = true;
         event.preventDefault(); // Prevent text selection
+    }
+
+    errorStr: string = "";
+    errorData: any;
+    handleErr(message: string, err: any) {
+        this.errorData = err?.response?.data;
+        this.errorStr = err?.response?.data?.description || message;
+        this.logger.error("Async error", err);
+        this.errorModal.openModal();
     }
 }
