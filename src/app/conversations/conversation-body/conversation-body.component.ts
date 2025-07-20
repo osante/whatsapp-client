@@ -209,6 +209,9 @@ export class ConversationBodyComponent extends KeyboardNavigableList implements 
         if (!this.selectedMessages.length) return;
         this.toggleSelection(message);
     }
+    public clearSelectedMessages() {
+        this.selectedMessages = [];
+    }
 
     // Flag to prevent multiple adjustments
     onAsyncContentLoaded(): void {}

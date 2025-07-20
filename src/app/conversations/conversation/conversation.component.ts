@@ -1,11 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-    ViewChild,
-} from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { ConversationHeaderComponent } from "../conversation-header/conversation-header.component";
 import { ConversationFooterComponent } from "../conversation-footer/conversation-footer.component";
 import { ConversationBodyComponent } from "../conversation-body/conversation-body.component";
@@ -16,6 +9,7 @@ import { UserConversationsStoreService } from "../../../core/message/store/user-
 import { ContactInfoComponent } from "../../contacts/contact-info/contact-info.component";
 import { ContactMediaComponent } from "../../contacts/contact-media/contact-media.component";
 import { NGXLogger } from "ngx-logger";
+import { MessageActionsFooterComponent } from "../message-actions-footer/message-actions-footer.component";
 
 @Component({
     selector: "app-conversation",
@@ -23,6 +17,7 @@ import { NGXLogger } from "ngx-logger";
         CommonModule,
         ConversationHeaderComponent,
         ConversationFooterComponent,
+        MessageActionsFooterComponent,
         ConversationBodyComponent,
         ContactInfoComponent,
         ContactMediaComponent,
@@ -50,10 +45,9 @@ export class ConversationComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.route.queryParams.subscribe((params) => {
+        this.route.queryParams.subscribe(params => {
             const isSelected =
-                params["messaging_product_contact.id"] ===
-                this.messagingProductContact.id;
+                params["messaging_product_contact.id"] === this.messagingProductContact.id;
             if (!isSelected) {
                 return;
             }
