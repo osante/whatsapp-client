@@ -1,0 +1,47 @@
+li {
+    @apply flex items-center;
+}
+
+div.message-container {
+    /* Size */
+    @apply w-full;
+
+    /* Paddings */
+    @apply sm:px-4 md:px-10 lg:px-14 xl:px-16;
+}
+
+.selected {
+    @apply bg-white bg-opacity-5;
+}
+
+.selectable {
+    @apply hover:bg-white hover:bg-opacity-5;
+}
+
+input.message-selector {
+    @apply relative ml-4 h-5 w-5 cursor-pointer appearance-none rounded border-2 border-gray-400;
+    @apply transition duration-150 ease-in-out;
+}
+
+/* Transparent background when not checked */
+input.message-selector:not(:checked) {
+    background-color: transparent;
+}
+
+/* Blue background and gray border when checked */
+input.message-selector:checked {
+    @apply border-blue-500 bg-blue-500;
+}
+
+/* Custom checkmark */
+input.message-selector:checked::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    width: 4px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}

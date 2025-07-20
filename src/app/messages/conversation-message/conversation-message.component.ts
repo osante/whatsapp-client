@@ -67,6 +67,7 @@ export class ConversationMessageComponent {
     @Output("reply") reply = new EventEmitter();
     @Output("asyncContentLoaded") asyncContentLoaded = new EventEmitter();
     @Output("reactionSent") reactionSent = new EventEmitter<SenderData>();
+    @Output("selectMessage") selectMessage = new EventEmitter();
 
     @ViewChild("templateMessage")
     templateMessage!: MessageTemplateContentComponent;
@@ -87,16 +88,17 @@ export class ConversationMessageComponent {
     }
 
     get buttonData() {
-        const data = (this.message.sender_data ||
-            this.message.receiver_data) as SenderData | ReceiverData;
-        if (data.type != ReceivedMessageType.button)
-            throw new Error("Message type is not button");
+        const data = (this.message.sender_data || this.message.receiver_data) as
+            | SenderData
+            | ReceiverData;
+        if (data.type != ReceivedMessageType.button) throw new Error("Message type is not button");
         return data[data.type] as ButtonData;
     }
 
     get useMediaData() {
-        const data = (this.message.sender_data ||
-            this.message.receiver_data) as SenderData | ReceiverData;
+        const data = (this.message.sender_data || this.message.receiver_data) as
+            | SenderData
+            | ReceiverData;
         if (data.type == ReceivedMessageType.button)
             throw new Error("Button message type is not supported as media");
         return data[data.type] as UseMedia;

@@ -48,6 +48,7 @@ export class MessageOptionsComponent {
     @Output("reactionSent") reactionSent = new EventEmitter<SenderData>();
     @Input("toPhoneNumber") toPhoneNumberInput!: string;
     @Input("toId") toIdInput!: string;
+    @Output("selectMessage") selectMessage = new EventEmitter();
 
     reaction: string = "";
 
@@ -87,6 +88,12 @@ export class MessageOptionsComponent {
 
     closeMessageInfo(): void {
         this.showMessageInfo = false;
+        this.close.emit();
+    }
+
+    onSelectMessage(event: MouseEvent) {
+        event.stopPropagation(); // ✅ Prevents click from reaching <li>
+        this.selectMessage.emit(this.message);
         this.close.emit();
     }
 
@@ -159,8 +166,7 @@ export class MessageOptionsComponent {
     // Close shortcuts
     @HostListener("document:click", ["$event"])
     private onDocumentClick(event: MouseEvent): void {
-        if (!this.elementRef.nativeElement.contains(event.target))
-            this.close.emit();
+        if (!this.elementRef.nativeElement.contains(event.target)) this.close.emit();
     }
     @HostListener("window:keydown.shift.escape", ["$event"])
     private onShiftEscape(event: KeyboardEvent) {
