@@ -541,14 +541,14 @@
       <trans-unit id="3797570084942068182" datatype="html">
         <source>Select</source>
       </trans-unit>
-      <trans-unit id="4394677980740492834" datatype="html">
-        <source>Automations is a supporter feature. See the supporter area for more.</source>
-      </trans-unit>
       <trans-unit id="8604695045343743097" datatype="html">
         <source>Forward</source>
       </trans-unit>
-      <trans-unit id="8628220396939522122" datatype="html">
-        <source>Campaigns is a supporter feature. See the supporter area for more.</source>
+      <trans-unit id="3578402141509624800" datatype="html">
+        <source>Campaigns are available to supporters. Visit the supporter area to learn more.</source>
+      </trans-unit>
+      <trans-unit id="7558837930434347172" datatype="html">
+        <source>Automations are available to supporters. Visit the supporter area to learn more.</source>
       </trans-unit>
     </body>
   </file>
