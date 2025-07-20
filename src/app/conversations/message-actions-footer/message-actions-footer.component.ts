@@ -50,9 +50,11 @@ export class MessageActionsFooterComponent {
     ) {}
 
     async sendMessagesToContacts(contacts: ConversationMessagingProductContact[]) {
-        await Promise.all(
+        const sendPromises = Promise.all(
             this.messages.map(message => this.sendMessageToContacts(contacts, message)),
         );
+        this.clear.emit();
+        return await sendPromises;
     }
 
     async sendMessageToContacts(
@@ -76,7 +78,7 @@ export class MessageActionsFooterComponent {
             this.sent.emit([sender_data, to_id]);
             return promise;
         });
-        await Promise.all(sendPromises);
+        return await Promise.all(sendPromises);
     }
 
     isForwardModalOpen: boolean = false;
