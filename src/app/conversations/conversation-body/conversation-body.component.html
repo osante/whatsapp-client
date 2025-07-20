@@ -1,22 +1,35 @@
 <ul
-    class="h-full p-2 space-y-1 space-y-reverse overflow-y-auto scrollable bg-gray-300 dark:bg-gray-900 pb-4 flex flex-col-reverse"
+    class="scrollable flex h-full flex-col-reverse space-y-1 space-y-reverse overflow-y-auto bg-gray-300 pb-4 dark:bg-gray-900"
     (scroll)="onScroll($event)"
     #mainList
 >
     <li
         *ngFor="
-            let message of userConversationStore.unsentMessages.get(
-                messagingProductContact.id
-            ) || []
+            let message of userConversationStore.unsentMessages.get(messagingProductContact.id) ||
+                []
         "
+        class="message-container"
+        [ngClass]="{
+            selected: isMessageSelected(message),
+            selectable: !!selectedMessages.length,
+        }"
     >
-        <div class="sm:px-4 md:px-10 lg:px-14 xl:px-16">
+        <input
+            type="checkbox"
+            class="message-selector"
+            [checked]="isMessageSelected(message)"
+            (click)="toggleSelection(message)"
+            *ngIf="!!selectedMessages.length"
+        />
+
+        <div class="message-container">
             <app-conversation-message
                 [message]="message"
                 [contactName]="contactName"
                 [messagingProductContact]="messagingProductContact"
                 [sent]="false"
                 (reply)="reply.emit(message)"
+                (selectMessage)="appendMessage(message)"
                 (asyncContentLoaded)="onAsyncContentLoaded()"
             ></app-conversation-message>
         </div>
@@ -24,17 +37,33 @@
 
     <li
         *ngFor="
-            let message of userConversationStore.messageHistory.get(
-                messagingProductContact.id
-            ) || []
+            let message of userConversationStore.messageHistory.get(messagingProductContact.id) ||
+                []
         "
+        class="message-container"
+        [ngClass]="{
+            selected: isMessageSelected(message),
+            selectable: !!selectedMessages.length,
+        }"
+        (click)="!!selectedMessages.length && clickMessage(message)"
     >
-        <div class="sm:px-4 md:px-10 lg:px-14 xl:px-16">
+        <!-- (click)="!!selectedMessages.length && toggleSelection(message)" -->
+        <!-- (click)="clickMessage(message)" -->
+        <input
+            type="checkbox"
+            class="message-selector"
+            [checked]="isMessageSelected(message)"
+            (click)="toggleSelection(message)"
+            *ngIf="!!selectedMessages.length"
+        />
+
+        <div class="message-container">
             <app-conversation-message
                 [message]="message"
                 [contactName]="contactName"
                 [messagingProductContact]="messagingProductContact"
                 (reply)="reply.emit(message)"
+                (selectMessage)="appendMessage(message)"
                 (asyncContentLoaded)="onAsyncContentLoaded()"
                 (reactionSent)="reactionSent.emit($event)"
             ></app-conversation-message>

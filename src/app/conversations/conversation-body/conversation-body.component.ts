@@ -1,4 +1,5 @@
 import {
+    ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
@@ -32,10 +33,7 @@ import { KeyboardNavigableList } from "../../common/keyboard/keyboard-navigable-
     styleUrl: "./conversation-body.component.scss",
     standalone: true,
 })
-export class ConversationBodyComponent
-    extends KeyboardNavigableList
-    implements OnInit
-{
+export class ConversationBodyComponent extends KeyboardNavigableList implements OnInit {
     private scrollingUp: boolean = false;
     private scrollingDown: boolean = false;
 
@@ -64,11 +62,10 @@ export class ConversationBodyComponent
             this.messagingProductContact.id,
         );
 
-        const sub =
-            this.userConversationStore.newBottomMessageFromConversations.get(
-                this.messagingProductContact.id,
-            ) as Subject<Conversation>;
-        sub.subscribe((_) => {
+        const sub = this.userConversationStore.newBottomMessageFromConversations.get(
+            this.messagingProductContact.id,
+        ) as Subject<Conversation>;
+        sub.subscribe(_ => {
             this.scrollIfAtBottom();
         });
 
@@ -79,9 +76,7 @@ export class ConversationBodyComponent
         this.logger.debug("Getting top conversations");
         this.scrollingUp = true;
 
-        await this.userConversationStore.getTop(
-            this.messagingProductContact.id,
-        );
+        await this.userConversationStore.getTop(this.messagingProductContact.id);
         // this.restoreScrollPosition();
 
         this.scrollingUp = false;
@@ -91,18 +86,14 @@ export class ConversationBodyComponent
         this.logger.debug("Getting bottom conversations");
         this.scrollingDown = true;
 
-        await this.userConversationStore.getBottom(
-            this.messagingProductContact.id,
-        );
+        await this.userConversationStore.getBottom(this.messagingProductContact.id);
 
         this.scrollingDown = false;
     }
 
     scrollIfAtBottom(): void {
         const element = this.mainList.nativeElement;
-        const isAtBottom =
-            element.offsetHeight + element.scrollTop >=
-            element.scrollHeight - 5;
+        const isAtBottom = element.offsetHeight + element.scrollTop >= element.scrollHeight - 5;
 
         if (isAtBottom) this.scrollToBottom();
     }
@@ -132,9 +123,7 @@ export class ConversationBodyComponent
             return await this.getTopConversations();
 
         if (
-            (await this.userConversationStore.getOffset(
-                this.messagingProductContact.id,
-            )) !== 0 &&
+            (await this.userConversationStore.getOffset(this.messagingProductContact.id)) !== 0 &&
             isNearToVisualBottom &&
             !this.scrollingDown
         )
@@ -144,10 +133,9 @@ export class ConversationBodyComponent
     }
 
     watchQueryParams() {
-        this.route.queryParams.subscribe(async (params) => {
+        this.route.queryParams.subscribe(async params => {
             // Getting parameters
-            const messagingProductContactId =
-                params["messaging_product_contact.id"];
+            const messagingProductContactId = params["messaging_product_contact.id"];
             if (
                 !messagingProductContactId ||
                 messagingProductContactId != this.messagingProductContact.id
@@ -158,33 +146,23 @@ export class ConversationBodyComponent
 
             // Handling mark as read
             if (this.localSettings.autoMarkAsRead)
-                this.userConversationStore.markAsRead(
-                    messagingProductContactId,
-                );
+                this.userConversationStore.markAsRead(messagingProductContactId);
 
             // The case where we are not searching for a specific message
             if (!messageId && !createdAt) {
                 if (
                     // If the history is empty, we need to load the top conversations
-                    (this.userConversationStore.messageHistory.get(
-                        this.messagingProductContact.id,
-                    )?.length || 0) === 0
+                    (this.userConversationStore.messageHistory.get(this.messagingProductContact.id)
+                        ?.length || 0) === 0
                 )
                     return await this.getTopConversations();
                 if (
                     // If we have an offset, we need to clear it, clear the history and load the top conversations
-                    await this.userConversationStore.getOffset(
-                        messagingProductContactId,
-                    )
+                    await this.userConversationStore.getOffset(messagingProductContactId)
                 ) {
                     await Promise.all([
-                        this.userConversationStore.setOffset(
-                            messagingProductContactId,
-                            0,
-                        ),
-                        this.userConversationStore.resetHistory(
-                            this.messagingProductContact.id,
-                        ),
+                        this.userConversationStore.setOffset(messagingProductContactId, 0),
+                        this.userConversationStore.resetHistory(this.messagingProductContact.id),
                     ]);
                     return await this.getTopConversations();
                 }
@@ -204,13 +182,35 @@ export class ConversationBodyComponent
                         this.userConversationStore.paginationLimit -
                         1,
                 ),
-                this.userConversationStore.resetHistory(
-                    this.messagingProductContact.id,
-                ),
+                this.userConversationStore.resetHistory(this.messagingProductContact.id),
             ]);
 
             return await this.getBottomConversations();
         });
+    }
+
+    public selectedMessages: Conversation[] = [];
+    appendMessage(message: Conversation) {
+        this.selectedMessages = [...this.selectedMessages, message];
+    }
+    removeMessage(messageId: string) {
+        this.selectedMessages = this.selectedMessages.filter(m => m.id !== messageId);
+    }
+    toggleSelection(message: Conversation) {
+        const messageId = message.id;
+        const selected = this.selectedMessages.some(m => m.id === messageId);
+        if (!selected) return this.appendMessage(message);
+        this.removeMessage(messageId);
+    }
+    isMessageSelected(message: Conversation): boolean {
+        return this.selectedMessages.some(m => m.id === message.id);
+    }
+    clickMessage(message: Conversation) {
+        if (!this.selectedMessages.length) return;
+        this.toggleSelection(message);
+    }
+    public clearSelectedMessages() {
+        this.selectedMessages = [];
     }
 
     // Flag to prevent multiple adjustments

@@ -1,6 +1,6 @@
 <div
+    class="flex items-start"
     [ngClass]="{
-        'flex items-start': true,
         'flex-row-reverse': message.sender_data,
     }"
 >
@@ -10,7 +10,7 @@
         (mouseleave)="hideOptionsArrow()"
     >
         <div
-            class="break-words dark:text-gray-300 text-sm rounded-md max-w-xs sm:max-w-md lg:max-w-lg xl:max-w-2xl relative"
+            class="relative max-w-xs break-words rounded-md text-sm dark:text-gray-300 sm:max-w-md lg:max-w-lg xl:max-w-2xl"
             [ngClass]="{
                 'bg-blue-300 dark:bg-blue-800':
                     message.sender_data &&
@@ -27,7 +27,7 @@
             }"
         >
             <div
-                class="pt-1 px-1"
+                class="px-1 pt-1"
                 *ngIf="
                     messageType != MessageType.interactive &&
                     messageType != MessageType.template &&
@@ -41,7 +41,7 @@
                 ></app-message-forwarded-header>
             </div>
             <div
-                class="w-full pt-1 px-1"
+                class="w-full px-1 pt-1"
                 *ngIf="
                     messageType != MessageType.interactive &&
                     messageType != MessageType.template &&
@@ -67,13 +67,13 @@
             ></p>
 
             <app-message-contacts-content
-                class="w-80 flex items-center"
+                class="flex w-80 items-center"
                 [contacts]="(message | messageData).contacts || []"
                 *ngIf="messageType == MessageType.contacts"
             ></app-message-contacts-content>
 
             <app-message-media-content
-                class="w-full flex items-center px-1 pt-1"
+                class="flex w-full items-center px-1 pt-1"
                 [messageType]="messageType"
                 [mediaData]="useMediaData"
                 [isSent]="!!message.sender_data"
@@ -82,7 +82,7 @@
             ></app-message-media-content>
 
             <app-message-interactive-content
-                class="w-full flex items-center"
+                class="flex w-full items-center"
                 [message]="message"
                 [sent]="sent"
                 [contactName]="contactName"
@@ -92,7 +92,7 @@
             </app-message-interactive-content>
 
             <app-message-template-content
-                class="w-full flex items-center"
+                class="flex w-full items-center"
                 [message]="message"
                 [sent]="sent"
                 [contactName]="contactName"
@@ -105,7 +105,7 @@
                 [message]="message"
                 [sent]="sent"
                 [isSent]="!!message.sender_data"
-                class="w-full flex items-center px-1 pt-1"
+                class="flex w-full items-center px-1 pt-1"
                 *ngIf="messageType == MessageType.location"
             >
             </app-message-location-content>
@@ -114,7 +114,7 @@
                 [message]="message"
                 [sent]="sent"
                 [isSent]="!!message.sender_data"
-                class="w-full flex items-center px-1 pt-1"
+                class="flex w-full items-center px-1 pt-1"
                 *ngIf="messageType == MessageType.reaction"
             >
             </app-message-reaction-content>
@@ -122,7 +122,7 @@
             <app-message-button-content
                 [buttonData]="buttonData"
                 [sent]="sent"
-                class="w-full flex items-center px-1 pt-1"
+                class="flex w-full items-center px-1 pt-1"
                 *ngIf="messageType == ReceivedMessageType.button"
             ></app-message-button-content>
 
@@ -130,15 +130,14 @@
                 [message]="message"
                 [sent]="sent"
                 *ngIf="
-                    messageType != MessageType.interactive &&
-                    messageType != MessageType.template
+                    messageType != MessageType.interactive && messageType != MessageType.template
                 "
             ></app-message-info>
 
             <!-- Open options modal -->
             <button
                 [ngClass]="{
-                    'absolute top-1 rounded-full flex items-center justify-center aspect-square w-6 backdrop-blur-lg ': true,
+                    'absolute top-1 flex aspect-square w-6 items-center justify-center rounded-full backdrop-blur-lg': true,
                     'left-2': message.sender_data,
                     'right-2': message.receiver_data,
                 }"
@@ -151,14 +150,13 @@
 
             <!-- Options modal -->
             <app-message-options
-                [toPhoneNumber]="
-                    messagingProductContact.product_details.phone_number
-                "
+                [toPhoneNumber]="messagingProductContact.product_details.phone_number"
                 [toId]="messagingProductContact.id"
                 [message]="message"
                 (close)="closeOptions()"
                 (reply)="reply.emit()"
                 (reactionSent)="reactionSent.emit($event)"
+                (selectMessage)="selectMessage.emit()"
                 [ngClass]="{
                     'absolute bottom-full z-10': true,
                     'right-full -mr-8': message.sender_data,

@@ -81,14 +81,14 @@
         </a>
 
         <a
-            href="https://wacraft.astervia.tech"
+            href="https://wacraft.astervia.tech/support/plans/"
             class="navigator unavailable-pro-feature"
             *ngIf="environment.isLite"
         >
             <app-small-button
                 matIcon="campaign"
                 [active]="activePage === HomeFragment.campaigns"
-                matTooltip="Campaigns is a supporter feature. See the supporter area for more."
+                matTooltip="Campaigns are available to supporters. Visit the supporter area to learn more."
                 i18n-matTooltip
             ></app-small-button>
         </a>
@@ -115,13 +115,13 @@
         </a>
 
         <a
-            href="https://wacraft.astervia.tech"
+            href="https://wacraft.astervia.tech/support/plans/"
             class="navigator unavailable-pro-feature"
             *ngIf="environment.isLite"
         >
             <app-small-button
                 [active]="activePage === RoutePath.automation"
-                matTooltip="Automations is a supporter feature. See the supporter area for more."
+                matTooltip="Automations are available to supporters. Visit the supporter area to learn more."
                 matSymbol="automation"
                 i18n-matTooltip
             ></app-small-button>

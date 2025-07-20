@@ -125,9 +125,6 @@
       <trans-unit id="4312076893369530530" datatype="html">
         <source>Photo URL</source>
       </trans-unit>
-      <trans-unit id="8121141462865337916" datatype="html">
-        <source>Phone number</source>
-      </trans-unit>
       <trans-unit id="935187492052582731" datatype="html">
         <source>Submit</source>
       </trans-unit>
@@ -295,8 +292,8 @@
       <trans-unit id="1344813883591844650" datatype="html">
         <source>Account configuration</source>
       </trans-unit>
-      <trans-unit id="9103027846478201610" datatype="html">
-        <source> Template details </source>
+      <trans-unit id="8872967683654128393" datatype="html">
+        <source>Template details</source>
       </trans-unit>
       <trans-unit id="2826581353496868063" datatype="html">
         <source>Language</source>
@@ -307,8 +304,8 @@
       <trans-unit id="5611592591303869712" datatype="html">
         <source>Status</source>
       </trans-unit>
-      <trans-unit id="5229871880268061938" datatype="html">
-        <source> Message builder </source>
+      <trans-unit id="3222304635400239443" datatype="html">
+        <source>Message builder</source>
       </trans-unit>
       <trans-unit id="4313544752013453805" datatype="html">
         <source> Upload file </source>
@@ -540,6 +537,18 @@
       </trans-unit>
       <trans-unit id="5617024237584628219" datatype="html">
         <source>Focus text message area</source>
+      </trans-unit>
+      <trans-unit id="3797570084942068182" datatype="html">
+        <source>Select</source>
+      </trans-unit>
+      <trans-unit id="8604695045343743097" datatype="html">
+        <source>Forward</source>
+      </trans-unit>
+      <trans-unit id="3578402141509624800" datatype="html">
+        <source>Campaigns are available to supporters. Visit the supporter area to learn more.</source>
+      </trans-unit>
+      <trans-unit id="7558837930434347172" datatype="html">
+        <source>Automations are available to supporters. Visit the supporter area to learn more.</source>
       </trans-unit>
     </body>
   </file>

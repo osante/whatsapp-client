@@ -9,10 +9,7 @@ import {
     ViewChild,
 } from "@angular/core";
 import { SenderData } from "../../../core/message/model/sender-data.model";
-import {
-    isMediaType,
-    MessageType,
-} from "../../../core/message/model/message-type.model";
+import { isMediaType, MessageType } from "../../../core/message/model/message-type.model";
 import { MessageControllerService } from "../../../core/message/controller/message-controller.service";
 import { MessageFields } from "../../../core/message/entity/message.entity";
 import { SmallButtonComponent } from "../../common/small-button/small-button.component";
@@ -68,9 +65,6 @@ export class ConversationFooterComponent {
     get messageType(): MessageType | "raw" {
         return this._messageType;
     }
-
-    errorStr: string = "";
-    errorData: any;
 
     @Input("contactName") contactName!: string;
     @Input("toPhoneNumber") toPhoneNumberInput!: string;
@@ -166,8 +160,7 @@ export class ConversationFooterComponent {
                 };
             } else if (this.replyToMessage.product_data?.messages.length) {
                 context = {
-                    message_id:
-                        this.replyToMessage.product_data?.messages[0].id,
+                    message_id: this.replyToMessage.product_data?.messages[0].id,
                 };
             }
         }
@@ -195,20 +188,17 @@ export class ConversationFooterComponent {
                     const sentMedia = await sendMedia;
                     return sentMedia;
                 case MessageType.interactive:
-                    const sendInteractive =
-                        this.interactiveMessageBuilder.sendInteractive(context);
+                    const sendInteractive = this.interactiveMessageBuilder.sendInteractive(context);
                     this.replyToMessage = undefined;
                     const sentInteractive = await sendInteractive;
                     return sentInteractive;
                 case MessageType.location:
-                    const sendLocation =
-                        this.locationMessageBuilder.send(context);
+                    const sendLocation = this.locationMessageBuilder.send(context);
                     this.replyToMessage = undefined;
                     const sentLocation = await sendLocation;
                     return sentLocation;
                 case MessageType.contacts:
-                    const sendContacts =
-                        this.contactsMessageBuilder.send(context);
+                    const sendContacts = this.contactsMessageBuilder.send(context);
                     this.replyToMessage = undefined;
                     const sentContacts = await sendContacts;
                     return sentContacts;
@@ -276,8 +266,7 @@ export class ConversationFooterComponent {
             };
             this.sent.emit(payload.sender_data);
             this.resetForm();
-            const data =
-                await this.messageController.sendWhatsAppMessage(payload);
+            const data = await this.messageController.sendWhatsAppMessage(payload);
             return data;
         } catch (error) {
             this.handleErr("Error processing raw message.", error);
@@ -324,8 +313,7 @@ export class ConversationFooterComponent {
                 caption,
                 id,
                 link,
-                filename:
-                    messageType === MessageType.document ? filename : undefined,
+                filename: messageType === MessageType.document ? filename : undefined,
             },
         };
         Object.assign(this.senderData, senderData);
@@ -350,8 +338,7 @@ export class ConversationFooterComponent {
     private resetForm() {
         if (this.messageType === MessageType.interactive)
             this.interactiveMessageBuilder.resetForm();
-        if (this.messageType === MessageType.location)
-            this.locationMessageBuilder.resetForm();
+        if (this.messageType === MessageType.location) this.locationMessageBuilder.resetForm();
         this.messageType = MessageType.text;
         this.textBody = "";
         this.mediaByUrl = false;
@@ -367,8 +354,7 @@ export class ConversationFooterComponent {
 
     onFileSelected(event: Event) {
         const target = event.target as HTMLInputElement;
-        if (!target.files || target.files.length <= 0)
-            return (this.selectedFile = undefined);
+        if (!target.files || target.files.length <= 0) return (this.selectedFile = undefined);
 
         this.selectedFile = target.files[0];
     }
@@ -377,8 +363,7 @@ export class ConversationFooterComponent {
     private validateForm() {
         switch (this.messageType) {
             case MessageType.text:
-                if (!this.textBody)
-                    this.errors["text"] = "Text message is required.";
+                if (!this.textBody) this.errors["text"] = "Text message is required.";
                 break;
             case MessageType.image:
             case MessageType.video:
@@ -386,8 +371,7 @@ export class ConversationFooterComponent {
             case MessageType.document:
             case MessageType.sticker:
                 if (!this.mediaByUrl && !this.selectedFile)
-                    this.errors["media"] =
-                        "Either upload a file or provide a link.";
+                    this.errors["media"] = "Either upload a file or provide a link.";
                 break;
             case MessageType.interactive:
                 this.interactiveMessageBuilder.validate();
@@ -420,6 +404,8 @@ export class ConversationFooterComponent {
         this.replyToMessage = undefined;
     }
 
+    errorStr: string = "";
+    errorData: any;
     handleErr(message: string, err: any) {
         this.errorData = err?.response?.data;
         this.errorStr = err?.response?.data?.description || message;
@@ -467,24 +453,18 @@ export class ConversationFooterComponent {
                     return;
                 case MessageType.interactive:
                     await this.interactiveMessageBuilder.buildInteractive();
-                    const senderDataInteractive =
-                        this.interactiveMessageBuilder.senderData;
+                    const senderDataInteractive = this.interactiveMessageBuilder.senderData;
                     Object.assign(this.senderData, senderDataInteractive);
                     return;
                 case MessageType.location:
                     await this.locationMessageBuilder.buildLocation();
-                    const senderDataLocation =
-                        this.locationMessageBuilder.senderData;
+                    const senderDataLocation = this.locationMessageBuilder.senderData;
                     Object.assign(this.senderData, senderDataLocation);
                     return;
                 case MessageType.contacts:
                     this.contactsMessageBuilder.buildContacts();
-                    const senderDataContacts =
-                        this.contactsMessageBuilder.senderData;
-                    this.logger.debug(
-                        "Sender data from contacts builder:",
-                        senderDataContacts,
-                    );
+                    const senderDataContacts = this.contactsMessageBuilder.senderData;
+                    this.logger.debug("Sender data from contacts builder:", senderDataContacts);
                     Object.assign(this.senderData, senderDataContacts);
                     return;
                 default:
