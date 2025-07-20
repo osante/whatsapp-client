@@ -238,9 +238,9 @@
         <source>Account configuration</source>
         <target>Configuração da conta</target>
       </trans-unit>
-      <trans-unit id="9103027846478201610" datatype="html">
-        <source> Template details </source>
-        <target> Detalhes do template </target>
+      <trans-unit id="8872967683654128393" datatype="html">
+        <source>Template details</source>
+        <target>Detalhes do template</target>
       </trans-unit>
       <trans-unit id="2826581353496868063" datatype="html">
         <source>Language</source>
@@ -254,9 +254,9 @@
         <source>Status</source>
         <target>Status</target>
       </trans-unit>
-      <trans-unit id="5229871880268061938" datatype="html">
-        <source> Message builder </source>
-        <target> Construtor de mensagem </target>
+      <trans-unit id="3222304635400239443" datatype="html">
+        <source>Message builder</source>
+        <target>Construtor de mensagem</target>
       </trans-unit>
       <trans-unit id="4313544752013453805" datatype="html">
         <source> Upload file </source>
@@ -297,10 +297,6 @@
       <trans-unit id="4312076893369530530" datatype="html">
         <source>Photo URL</source>
         <target state="new">URL da foto</target>
-      </trans-unit>
-      <trans-unit id="8121141462865337916" datatype="html">
-        <source>Phone number</source>
-        <target state="new">Número de telefone</target>
       </trans-unit>
       <trans-unit id="935187492052582731" datatype="html">
         <source>Submit</source>
@@ -721,6 +717,22 @@
       <trans-unit id="5617024237584628219" datatype="html">
         <source>Focus text message area</source>
         <target state="new">Focar em área de mensagem de texto</target>
+      </trans-unit>
+      <trans-unit id="8628220396939522122" datatype="html">
+        <source>Campaigns is a supporter feature. See the supporter area for more.</source>
+        <target state="new">Campanhas são funcionalidades de apoiador. Veja a área de apoiador para mais detalhes.</target>
+      </trans-unit>
+      <trans-unit id="4394677980740492834" datatype="html">
+        <source>Automations is a supporter feature. See the supporter area for more.</source>
+        <target state="new">Automações são funcionalidades de apoiador. Veja a área de apoiador para mais detalhes.</target>
+      </trans-unit>
+      <trans-unit id="8604695045343743097" datatype="html">
+        <source>Forward</source>
+        <target state="new">Encaminhar</target>
+      </trans-unit>
+      <trans-unit id="3797570084942068182" datatype="html">
+        <source>Select</source>
+        <target state="new">Selecionar</target>
       </trans-unit>
     </body>
   </file>
