@@ -1,0 +1,9 @@
+#auto-preview-multi-select,
+#unread-mode-selector {
+    @apply col-span-12 lg:col-span-4;
+}
+
+#theme-mode-selector,
+#auto-read-selector {
+    @apply col-span-12 md:col-span-6 lg:col-span-2;
+}

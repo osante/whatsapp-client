@@ -4,7 +4,6 @@ import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { UnreadMode } from "../../core/local-config/model/unread-mode.model";
 import { LocalSettingsService } from "../local-settings.service";
-import { SmallButtonComponent } from "../common/small-button/small-button.component";
 import { AuthService } from "../../core/auth/service/auth.service";
 import { UserStoreService } from "../../core/user/store/user-store.service";
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -20,7 +19,6 @@ import { TimeoutErrorModalComponent } from "../common/timeout-error-modal/timeou
     imports: [
         CommonModule,
         FormsModule,
-        SmallButtonComponent,
         MatTooltipModule,
         MatIconModule,
         SidebarComponent,
