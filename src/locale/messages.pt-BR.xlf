@@ -734,6 +734,22 @@
         <source>Automations are available to supporters. Visit the supporter area to learn more.</source>
         <target state="new">Automações estão disponíveis para apoiadores. Visite a área do apoiador para saber mais.</target>
       </trans-unit>
+      <trans-unit id="5378103679051455581" datatype="html">
+        <source>Click to view error details</source>
+        <target state="new">Clique para ver detalhes do erro</target>
+      </trans-unit>
+      <trans-unit id="4793952596010266372" datatype="html">
+        <source>Code:</source>
+        <target state="new">Código:</target>
+      </trans-unit>
+      <trans-unit id="7858060057068625943" datatype="html">
+        <source>Message:</source>
+        <target state="new">Mensagem:</target>
+      </trans-unit>
+      <trans-unit id="4361568045684156139" datatype="html">
+        <source>Details:</source>
+        <target state="new">Detalhes:</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

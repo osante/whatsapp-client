@@ -550,6 +550,18 @@
       <trans-unit id="7558837930434347172" datatype="html">
         <source>Automations are available to supporters. Visit the supporter area to learn more.</source>
       </trans-unit>
+      <trans-unit id="4361568045684156139" datatype="html">
+        <source>Details:</source>
+      </trans-unit>
+      <trans-unit id="4793952596010266372" datatype="html">
+        <source>Code:</source>
+      </trans-unit>
+      <trans-unit id="5378103679051455581" datatype="html">
+        <source>Click to view error details</source>
+      </trans-unit>
+      <trans-unit id="7858060057068625943" datatype="html">
+        <source>Message:</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
