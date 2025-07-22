@@ -774,6 +774,10 @@
         <source>Edit</source>
         <target state="new">Editar</target>
       </trans-unit>
+      <trans-unit id="6562715443570244595" datatype="html">
+        <source>Message delivery failed</source>
+        <target state="new">Falha no envio da mensagem</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

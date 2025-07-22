@@ -579,6 +579,9 @@
       <trans-unit id="7585826646011739428" datatype="html">
         <source>Edit</source>
       </trans-unit>
+      <trans-unit id="6562715443570244595" datatype="html">
+        <source>Message delivery failed</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

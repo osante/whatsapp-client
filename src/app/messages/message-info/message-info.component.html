@@ -65,16 +65,15 @@
     >
         <!-- Header -->
         <div class="mb-5 flex items-center justify-between border-b pb-3">
-            <h2
-                class="text-xl font-bold leading-tight tracking-wide"
-                i18n-textContent
-                [textContent]="'Message Delivery Failed'"
-            ></h2>
+            <h2 class="text-xl font-bold leading-tight tracking-wide">
+                <span i18n>Message delivery failed</span>
+            </h2>
 
             <button
                 class="ml-4 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-black dark:hover:bg-gray-800 dark:hover:text-white"
                 (click)="closeErrorModal()"
                 aria-label="Close"
+                i18n-aria-label
             >
                 <mat-icon>close</mat-icon>
             </button>
