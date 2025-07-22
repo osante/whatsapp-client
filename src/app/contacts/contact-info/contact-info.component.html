@@ -7,6 +7,7 @@
                 class="absolute right-2 top-2"
                 matIcon="close"
                 aria-label="Close"
+                i18n-aria-label
             ></app-small-button>
         </a>
 
@@ -15,6 +16,7 @@
                 *ngIf="messagingProductContact.contact.photo_path"
                 [src]="messagingProductContact.contact.photo_path"
                 alt="Profile Picture"
+                i18n-aria-label
                 class="mb-2 aspect-square w-48 rounded-full"
             />
             <i
@@ -26,6 +28,7 @@
                 class="absolute bottom-0 right-0 flex aspect-square items-center justify-center rounded-full bg-gray-300 p-2 dark:bg-gray-800 dark:text-white"
                 (click)="toggleEdit()"
                 aria-label="Edit"
+                i18n-aria-label
                 [disabled]="isLoading"
             >
                 <mat-icon class="material-icons-outlined brightness-50">edit_square</mat-icon>
@@ -67,6 +70,7 @@
                 <div
                     *ngIf="name.invalid && (name.dirty || name.touched)"
                     class="mt-1 text-sm text-red-500"
+                    i18n
                 >
                     Name is required.
                 </div>
@@ -91,6 +95,7 @@
                         (email.dirty || email.touched)
                     "
                     class="mt-1 text-sm text-red-500"
+                    i18n
                 >
                     A valid email is required.
                 </div>
@@ -156,21 +161,21 @@
                     (click)="cancelEdit()"
                     *ngIf="messagingProductContact.id"
                     [disabled]="isLoading"
-                    [textContent]="'Cancel'"
-                ></button>
+                    i18n
+                >Cancel</button>
             </div>
         </form>
 
         <!-- Display Mode -->
         <div *ngIf="!isEditing" class="space-y-2 text-center">
             <h2 class="text-xl font-medium">
-                <span>{{ messagingProductContact.contact.name || "Unknown" }}</span>
+                <span i18n>{{ messagingProductContact.contact.name || "Unknown" }}</span>
             </h2>
             <p class="text-thin text-sm text-gray-600" i18n>
                 {{ messagingProductContact.contact.email || "Email not available" }}
             </p>
             <p class="text-thin text-sm text-gray-600">
-                <span>
+                <span i18n>
                     {{
                         messagingProductContact.product_details.phone_number ||
                             "Phone number not available"

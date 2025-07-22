@@ -562,6 +562,23 @@
       <trans-unit id="7858060057068625943" datatype="html">
         <source>Message:</source>
       </trans-unit>
+      <trans-unit id="187187500641108332" datatype="html">
+        <source>
+          <x id="INTERPOLATION" equiv-text="{{ messagingProductContact.contact.name || &quot;Unknown&quot; }}"/>
+        </source>
+      </trans-unit>
+      <trans-unit id="214161068628107607" datatype="html">
+        <source> A valid email is required. </source>
+      </trans-unit>
+      <trans-unit id="2159130950882492111" datatype="html">
+        <source>Cancel</source>
+      </trans-unit>
+      <trans-unit id="3323415564519831786" datatype="html">
+        <source> Name is required. </source>
+      </trans-unit>
+      <trans-unit id="7585826646011739428" datatype="html">
+        <source>Edit</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
