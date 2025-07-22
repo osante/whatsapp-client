@@ -2,11 +2,20 @@ import { Component, Input, ViewChild } from "@angular/core";
 import { Template } from "../../../core/template/model/template.model";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { ParameterType, UseTemplateComponent } from "../../../core/message/model/use-template-component.model";
-import { ComponentExample, TemplateComponent } from "../../../core/template/model/template-component.model";
+import {
+    ParameterType,
+    UseTemplateComponent,
+} from "../../../core/message/model/use-template-component.model";
+import {
+    ComponentExample,
+    TemplateComponent,
+} from "../../../core/template/model/template-component.model";
 import { TemplateComponentType } from "../../../core/template/model/template-component-type.model";
 import { TemplateComponentFormat } from "../../../core/template/model/template-component-format.model";
-import { Conversation, ConversationMessagingProductContact } from "../../../core/message/model/conversation.model";
+import {
+    Conversation,
+    ConversationMessagingProductContact,
+} from "../../../core/message/model/conversation.model";
 import { NIL as NilUUID } from "uuid";
 import { MessageType } from "../../../core/message/model/message-type.model";
 import { MediaControllerService } from "../../../core/media/controller/media-controller.service";
@@ -20,6 +29,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MediaMessageFileUploadComponent } from "../../messages/media-message-file-upload/media-message-file-upload.component";
 import { ContactsModalComponent } from "../../contacts/contact-modal/contacts-modal.component";
 import { NGXLogger } from "ngx-logger";
+import { UserConversationsStoreService } from "../../../core/message/store/user-conversations-store.service";
 
 @Component({
     selector: "app-template-message-builder",
@@ -81,6 +91,7 @@ export class TemplateMessageBuilderComponent {
         private mediaController: MediaControllerService,
         private messageController: MessageControllerService,
         private logger: NGXLogger,
+        private userConversationStore: UserConversationsStoreService,
     ) {}
 
     adjustHeight(area: HTMLTextAreaElement): void {
@@ -96,7 +107,10 @@ export class TemplateMessageBuilderComponent {
         this.selectedFile = target.files[0];
         const mimeType = this.selectedFile.type;
         try {
-            const uploadResponse = await this.mediaController.uploadMedia(this.selectedFile, mimeType);
+            const uploadResponse = await this.mediaController.uploadMedia(
+                this.selectedFile,
+                mimeType,
+            );
             this.headerUseMedia.id = uploadResponse.id;
         } catch (error) {
             this.handleErr("Failed to upload media", error);
@@ -106,8 +120,8 @@ export class TemplateMessageBuilderComponent {
 
     generateComponents() {
         this.components = this.template.components
-            .map((component) => this.generateComponent(component))
-            .filter((generatedComponent) => generatedComponent.parameters.length !== 0);
+            .map(component => this.generateComponent(component))
+            .filter(generatedComponent => generatedComponent.parameters.length !== 0);
     }
 
     generateComponent(component: TemplateComponent): UseTemplateComponent {
@@ -137,7 +151,11 @@ export class TemplateMessageBuilderComponent {
         return useComponent;
     }
 
-    handleHeaderComponent(component: TemplateComponent, useComponent: UseTemplateComponent, example: ComponentExample) {
+    handleHeaderComponent(
+        component: TemplateComponent,
+        useComponent: UseTemplateComponent,
+        example: ComponentExample,
+    ) {
         if (
             component.format?.toLowerCase() != TemplateComponentFormat.Text.toLowerCase() &&
             example.header_handle?.length
@@ -153,9 +171,13 @@ export class TemplateMessageBuilderComponent {
             });
     }
 
-    handleBodyComponent(component: TemplateComponent, useComponent: UseTemplateComponent, example: ComponentExample) {
+    handleBodyComponent(
+        component: TemplateComponent,
+        useComponent: UseTemplateComponent,
+        example: ComponentExample,
+    ) {
         if (!example.body_text) return;
-        example.body_text.forEach((text) => {
+        example.body_text.forEach(text => {
             useComponent.parameters.push({
                 type: ParameterType.text,
                 text: "",
@@ -163,7 +185,11 @@ export class TemplateMessageBuilderComponent {
         });
     }
 
-    handleFooterComponent(component: TemplateComponent, useComponent: UseTemplateComponent, example: ComponentExample) {
+    handleFooterComponent(
+        component: TemplateComponent,
+        useComponent: UseTemplateComponent,
+        example: ComponentExample,
+    ) {
         return;
     }
 
@@ -242,7 +268,7 @@ export class TemplateMessageBuilderComponent {
         }
 
         // Flatten each object in sender_data
-        const flattenedData = [this.message.sender_data].map((item) => this.flattenObject(item));
+        const flattenedData = [this.message.sender_data].map(item => this.flattenObject(item));
 
         // Convert flattened data to CSV using PapaParse
         const csv = Papa.unparse(flattenedData);
@@ -263,22 +289,29 @@ export class TemplateMessageBuilderComponent {
     }
 
     async sendToContacts(contacts: ConversationMessagingProductContact[]) {
-        const senderData = this.message?.sender_data;
+        let senderData = this.message?.sender_data;
         if (!senderData) throw new Error("No sender data found");
-        const sendPromises = contacts.map((contact) =>
-            this.messageController
+        senderData = {
+            ...senderData,
+            messaging_product: "whatsapp",
+            type: MessageType.template,
+            recipient_type: "individual",
+        };
+        const sendPromises = contacts.map(contact => {
+            const to_id = contact.id;
+            const sender_data = {
+                ...senderData,
+                to: contact.product_details.phone_number,
+            };
+            const promise = this.messageController
                 .sendWhatsAppMessage({
-                    to_id: contact.id,
-                    sender_data: {
-                        ...this.message?.sender_data,
-                        messaging_product: "whatsapp",
-                        type: MessageType.template,
-                        recipient_type: "individual",
-                        to: contact.product_details.phone_number,
-                    },
+                    to_id,
+                    sender_data,
                 })
-                .catch((err) => this.handleErr(`Failed to send message to ${contact.id}`, err)),
-        );
+                .catch(err => this.handleErr(`Failed to send message to ${contact.id}`, err));
+            this.userConversationStore.addUnsent(sender_data, to_id);
+            return promise;
+        });
         await Promise.all(sendPromises);
     }
 
