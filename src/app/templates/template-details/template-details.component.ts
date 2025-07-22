@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Template } from "../../../core/template/model/template.model";
 import { CommonModule } from "@angular/common";
@@ -11,7 +11,13 @@ import { NGXLogger } from "ngx-logger";
 
 @Component({
     selector: "app-template-details",
-    imports: [CommonModule, FormsModule, TemplateMessageBuilderComponent, MatIconModule, TimeoutErrorModalComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        TemplateMessageBuilderComponent,
+        MatIconModule,
+        TimeoutErrorModalComponent,
+    ],
     templateUrl: "./template-details.component.html",
     styleUrl: "./template-details.component.scss",
     standalone: true,
@@ -33,7 +39,7 @@ export class TemplateDetailsComponent implements OnInit {
     }
 
     watchQueryParams() {
-        this.route.queryParams.subscribe(async (params) => {
+        this.route.queryParams.subscribe(async params => {
             const templateName = params["template.name"];
             if (!(templateName != this.templateName)) return await this.loadTemplate();
             this.templateName = templateName;
