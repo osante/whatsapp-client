@@ -25,7 +25,7 @@
                 <span class="text-lg font-normal">{{ headerText }}</span>
 
                 <span
-                    class="ml-2 rounded-md bg-white px-2 py-1 text-sm font-normal dark:bg-gray-900"
+                    class="ml-2 rounded-md bg-white px-2 py-1 text-sm font-normal text-gray-500 dark:bg-gray-900"
                     *ngIf="
                         !conversationStore.searchValue && !messagingProductContactIdFilter
                             ? conversationStore.count
@@ -128,7 +128,7 @@
 
             <button
                 type=""
-                class="absolute bottom-8 right-6 flex aspect-square w-16 items-center justify-center rounded-full bg-blue-700 dark:bg-blue-800 dark:text-white"
+                class="absolute bottom-8 right-6 flex aspect-square w-16 items-center justify-center rounded-full bg-blue-700 text-white dark:bg-blue-800"
                 (click)="sendToContacts()"
             >
                 <mat-icon class="">send</mat-icon>
