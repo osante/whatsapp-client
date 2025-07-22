@@ -30,6 +30,7 @@
                 aria-label="Edit"
                 i18n-aria-label
                 [disabled]="isLoading"
+                *ngIf="!isEditing"
             >
                 <mat-icon class="material-icons-outlined brightness-50">edit_square</mat-icon>
             </button>
@@ -162,7 +163,9 @@
                     *ngIf="messagingProductContact.id"
                     [disabled]="isLoading"
                     i18n
-                >Cancel</button>
+                >
+                    Cancel
+                </button>
             </div>
         </form>
 
