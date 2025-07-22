@@ -750,6 +750,34 @@
         <source>Details:</source>
         <target state="new">Detalhes:</target>
       </trans-unit>
+      <trans-unit id="3323415564519831786" datatype="html">
+        <source> Name is required. </source>
+        <target state="new"> Nome é obrigatório. </target>
+      </trans-unit>
+      <trans-unit id="214161068628107607" datatype="html">
+        <source> A valid email is required. </source>
+        <target state="new"> Um email válido é obrigatório. </target>
+      </trans-unit>
+      <trans-unit id="2159130950882492111" datatype="html">
+        <source>Cancel</source>
+        <target state="new">Cancelar</target>
+      </trans-unit>
+      <trans-unit id="187187500641108332" datatype="html">
+        <source>
+          <x id="INTERPOLATION" equiv-text="{{ messagingProductContact.contact.name || &quot;Unknown&quot; }}"/>
+        </source>
+        <target state="new">
+          <x id="INTERPOLATION" equiv-text="{{ messagingProductContact.contact.name || &quot;Desconhecido&quot; }}"/>
+        </target>
+      </trans-unit>
+      <trans-unit id="7585826646011739428" datatype="html">
+        <source>Edit</source>
+        <target state="new">Editar</target>
+      </trans-unit>
+      <trans-unit id="6562715443570244595" datatype="html">
+        <source>Message delivery failed</source>
+        <target state="new">Falha no envio da mensagem</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
