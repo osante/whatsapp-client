@@ -1,5 +1,6 @@
 import {
     Component,
+    ElementRef,
     EventEmitter,
     HostListener,
     Input,
@@ -35,6 +36,9 @@ import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/tim
 })
 export class ContactsModalComponent implements OnInit {
     private scrolling: boolean = false;
+
+    @ViewChild("searchTextarea")
+    searchTextarea!: ElementRef<HTMLTextAreaElement>;
 
     @Input("headerText") headerText!: string;
     @Input("bottomText") bottomText!: string;
@@ -198,6 +202,12 @@ export class ContactsModalComponent implements OnInit {
     private closeOnShiftEscape(event: KeyboardEvent) {
         event.preventDefault();
         this.closeModal();
+    }
+
+    @HostListener("window:keydown.control.shift.f", ["$event"])
+    private onControlShiftF(event: KeyboardEvent) {
+        event.preventDefault();
+        this.searchTextarea.nativeElement.focus();
     }
 
     errorStr: string = "";
