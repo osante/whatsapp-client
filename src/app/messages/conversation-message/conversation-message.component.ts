@@ -131,7 +131,8 @@ export class ConversationMessageComponent {
         this.optionsOpen = true;
     }
     @HostListener("window:keydown.shift.escape", ["$event"])
-    private onEscape(event: KeyboardEvent) {
+    private closeOnShiftEscape(event: KeyboardEvent) {
+        event.preventDefault();
         this.hideOptionsArrow();
         this.closeOptions();
     }

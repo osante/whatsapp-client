@@ -1,11 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    EventEmitter,
-    HostListener,
-    Input,
-    Output,
-} from "@angular/core";
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output } from "@angular/core";
 import { MessageType } from "../../../core/message/model/message-type.model";
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
@@ -39,13 +32,11 @@ export class MessageTypeSelectorComponent {
     //Shortcuts
     @HostListener("document:click", ["$event"])
     onDocumentClick(event: MouseEvent) {
-        const clickedInside = this.elementRef.nativeElement.contains(
-            event.target,
-        );
+        const clickedInside = this.elementRef.nativeElement.contains(event.target);
         if (!clickedInside) this.close.emit();
     }
     @HostListener("window:keydown.shift.escape", ["$event"])
-    private onShiftEscape(event: KeyboardEvent) {
+    private closeOnShiftEscape(event: KeyboardEvent) {
         event.preventDefault();
         this.close.emit();
     }

@@ -1,11 +1,5 @@
 import { CommonModule } from "@angular/common";
-import {
-    Component,
-    EventEmitter,
-    HostListener,
-    Input,
-    Output,
-} from "@angular/core";
+import { Component, EventEmitter, HostListener, Input, Output } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { SectionData } from "../../../core/message/model/section-data.model";
 
@@ -48,7 +42,7 @@ export class ListOptionsModalComponent {
 
     /** Close modal when user presses <Esc> anywhere. */
     @HostListener("window:keydown.shift.escape", ["$event"])
-    onKey(event: KeyboardEvent) {
+    private closeOnShiftEscape(event: KeyboardEvent) {
         event.preventDefault();
         this.close.emit();
     }

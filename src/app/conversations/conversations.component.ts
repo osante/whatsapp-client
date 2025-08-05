@@ -1,15 +1,10 @@
 import { CommonModule } from "@angular/common";
-import {
-    Component,
-    EventEmitter,
-    HostListener,
-    OnInit,
-    Output,
-} from "@angular/core";
+import { Component, EventEmitter, HostListener, OnInit, Output } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ConversationComponent } from "./conversation/conversation.component";
 import { ConversationMessagingProductContact } from "../../core/message/model/conversation.model";
 import { MessagingProductContactControllerService } from "../../core/messaging-product/controller/messaging-product-contact-controller.service";
+import { NGXLogger } from "ngx-logger";
 
 @Component({
     selector: "app-conversations",
@@ -29,12 +24,11 @@ export class ConversationsComponent implements OnInit {
         private route: ActivatedRoute,
         private messagingProductController: MessagingProductContactControllerService,
         private router: Router,
+        private logger: NGXLogger,
     ) {}
 
     async ngOnInit() {
-        const mpcId = this.route.snapshot.queryParamMap.get(
-            "messaging_product_contact.id",
-        );
+        const mpcId = this.route.snapshot.queryParamMap.get("messaging_product_contact.id");
         if (!mpcId) return;
         const mpc = (
             await this.messagingProductController.getWhatsAppContacts(
@@ -48,18 +42,12 @@ export class ConversationsComponent implements OnInit {
 
     // Adds id to the map if it doesn't exist
     addId(params: ConversationMessagingProductContact) {
-        if (
-            !this.messagingProductContacts.some(
-                (contact) => contact.id === params.id,
-            )
-        )
+        if (!this.messagingProductContacts.some(contact => contact.id === params.id))
             this.messagingProductContacts.push(params);
     }
 
     // Get current mesaging product id
-    getCurrentMessagingProductContactId(
-        params: ConversationMessagingProductContact,
-    ) {
+    getCurrentMessagingProductContactId(params: ConversationMessagingProductContact) {
         const paramValue = params.id;
 
         if (!paramValue) return;
@@ -69,8 +57,9 @@ export class ConversationsComponent implements OnInit {
     }
 
     /** Close / clean-up when Esc is pressed */
-    @HostListener("window:keydown.escape")
+    @HostListener("document:keydown.escape")
     private removeQueryParam(): void {
+        this.logger.debug("Closing from conversations...");
         this.router.navigate(
             [], // keep current URL
             {

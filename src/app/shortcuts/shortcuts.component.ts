@@ -49,9 +49,13 @@ export class ShortcutsComponent {
 
     /* ───────────── Keyboard handling ───────────── */
 
-    /** Close modal when user presses <Esc> anywhere. */
+    /**
+     * Listens for the keyboard shortcut Shift + Esc at the window level
+     * and closes the modal when pressed.
+     * The default browser behavior for this key combination is prevented.
+     */
     @HostListener("window:keydown.shift.escape", ["$event"])
-    onKey(event: KeyboardEvent) {
+    private closeOnShiftEscape(event: KeyboardEvent) {
         event.preventDefault();
         this.close.emit();
     }
@@ -71,6 +75,6 @@ export class ShortcutsComponent {
     matches(...texts: string[]): boolean {
         if (!this.searchTerm) return true; // no filter, show everything
         const t = this.searchTerm.toLowerCase();
-        return texts.some((txt) => txt.toLowerCase().includes(t));
+        return texts.some(txt => txt.toLowerCase().includes(t));
     }
 }

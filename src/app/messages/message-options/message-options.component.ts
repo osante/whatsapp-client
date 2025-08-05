@@ -169,7 +169,7 @@ export class MessageOptionsComponent {
         if (!this.elementRef.nativeElement.contains(event.target)) this.close.emit();
     }
     @HostListener("window:keydown.shift.escape", ["$event"])
-    private onShiftEscape(event: KeyboardEvent) {
+    private closeOnShiftEscape(event: KeyboardEvent) {
         event.preventDefault();
         this.close.emit();
     }
