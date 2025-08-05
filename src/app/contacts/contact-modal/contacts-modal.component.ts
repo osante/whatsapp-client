@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+} from "@angular/core";
 import { ConversationMessagingProductContact } from "../../../core/message/model/conversation.model";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CommonModule } from "@angular/common";
@@ -27,6 +36,9 @@ import { TimeoutErrorModalComponent } from "../../common/timeout-error-modal/tim
 })
 export class ContactsModalComponent implements OnInit {
     private scrolling: boolean = false;
+
+    @ViewChild("searchTextarea")
+    searchTextarea!: ElementRef<HTMLTextAreaElement>;
 
     @Input("headerText") headerText!: string;
     @Input("bottomText") bottomText!: string;
@@ -136,7 +148,7 @@ export class ContactsModalComponent implements OnInit {
     }
 
     watchQueryParams() {
-        this.route.queryParams.subscribe(async (params) => {
+        this.route.queryParams.subscribe(async params => {
             const messagingProductContactId = params["messaging_product_contact.id"];
             if (!messagingProductContactId) return;
             this.conversationStore.read(messagingProductContactId);
@@ -160,12 +172,14 @@ export class ContactsModalComponent implements OnInit {
 
     unselectConversation(conversation: ConversationMessagingProductContact) {
         this.selectedConversations = this.selectedConversations.filter(
-            (selectedConversation) => selectedConversation.id !== conversation.id,
+            selectedConversation => selectedConversation.id !== conversation.id,
         );
     }
 
     isConversationSelected(conversation: ConversationMessagingProductContact) {
-        return this.selectedConversations.some((selectedConversation) => selectedConversation.id === conversation.id);
+        return this.selectedConversations.some(
+            selectedConversation => selectedConversation.id === conversation.id,
+        );
     }
 
     sendToContacts() {
@@ -177,6 +191,23 @@ export class ContactsModalComponent implements OnInit {
     closeModal() {
         this.selectedConversations = [];
         this.close.emit();
+    }
+
+    /**
+     * Listens for the keyboard shortcut Shift + Esc at the window level
+     * and closes the modal when pressed.
+     * The default browser behavior for this key combination is prevented.
+     */
+    @HostListener("window:keydown.shift.escape", ["$event"])
+    private closeOnShiftEscape(event: KeyboardEvent) {
+        event.preventDefault();
+        this.closeModal();
+    }
+
+    @HostListener("window:keydown.control.shift.f", ["$event"])
+    private onControlShiftF(event: KeyboardEvent) {
+        event.preventDefault();
+        this.searchTextarea.nativeElement.focus();
     }
 
     errorStr: string = "";

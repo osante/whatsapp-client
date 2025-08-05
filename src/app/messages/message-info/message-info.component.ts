@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input, TemplateRef } from "@angular/core";
+import { Component, HostListener, Input, TemplateRef } from "@angular/core";
 import { Conversation } from "../../../core/message/model/conversation.model";
 import { MatIconModule } from "@angular/material/icon";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
@@ -13,20 +13,10 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     standalone: true,
 })
 export class MessageInfoComponent {
-    showModal = false;
-
     @Input("message") message!: Conversation;
     @Input("sent") sent: boolean = true;
 
     constructor() {}
-
-    openModal() {
-        this.showModal = true;
-    }
-
-    closeModal() {
-        this.showModal = false;
-    }
 
     showErrorModal = false;
 
@@ -40,5 +30,11 @@ export class MessageInfoComponent {
 
     closeErrorModal() {
         this.showErrorModal = false;
+    }
+
+    @HostListener("window:keydown.shift.escape", ["$event"])
+    private closeOnShiftEscape(event: KeyboardEvent) {
+        event.preventDefault();
+        this.closeErrorModal();
     }
 }
