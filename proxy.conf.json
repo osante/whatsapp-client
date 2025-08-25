@@ -1,0 +1,8 @@
+{
+  "/chat": {
+    "target": "https://sofi-bot.duckdns.org",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

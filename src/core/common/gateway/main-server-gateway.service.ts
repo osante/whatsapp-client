@@ -19,7 +19,7 @@ import { NGXLogger } from "ngx-logger";
 @Injectable({ providedIn: "root" })
 export class MainServerGatewayService {
     /* ───── Connection target ───── */
-    private readonly prefix = `ws${environment.mainServerSecurity ? "s" : ""}://${environment.mainServerUrl}`;
+    private readonly prefix = `${environment.mainServerWsUrl}`;
     private path: string[] = [];
 
     /* ───── Socket instance ───── */

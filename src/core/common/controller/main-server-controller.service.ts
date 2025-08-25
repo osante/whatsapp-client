@@ -8,7 +8,7 @@ import { ServerEndpoints } from "../constant/server-endpoints.enum";
     providedIn: "root",
 })
 export class MainServerControllerService {
-    prefix: string = `http${environment.mainServerSecurity ? "s" : ""}://${environment.mainServerUrl}`;
+    prefix: string = `${environment.mainServerUrl}`;
     path: ServerEndpoints[] = [];
 
     http: AxiosInstance = axios.create({
@@ -16,6 +16,11 @@ export class MainServerControllerService {
         headers: {
             Authorization: `Bearer `,
         },
+        withCredentials: true,
+        proxy: {
+            host: 'localhost',
+            port: 6900
+        }
     });
 
     constructor(protected auth: AuthService) {
@@ -33,6 +38,7 @@ export class MainServerControllerService {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
+            withCredentials: true,
         });
     }
 

@@ -25,12 +25,11 @@ export class AuthService {
         private cookieService: CookieService,
         private logger: NGXLogger,
     ) {
-        this.prefix = `http${environment.mainServerSecurity ? "s" : ""}://${
-            environment.mainServerUrl
-        }/${ServerEndpoints.user}/${ServerEndpoints.oauth}`;
+        this.prefix = `${environment.mainServerUrl}/${ServerEndpoints.user}/${ServerEndpoints.oauth}`;
 
         this.http = axios.create({
             baseURL: this.prefix,
+            withCredentials: true,
         });
     }
 
@@ -42,6 +41,9 @@ export class AuthService {
                 password,
                 grant_type: GrantType.password,
             } as TokenRequest,
+            {
+                withCredentials: true,
+            }
         );
         this.setToken(response.data.access_token);
         localStorage.setItem("refreshToken", response.data.refresh_token);
@@ -63,6 +65,9 @@ export class AuthService {
                 refresh_token,
                 grant_type: GrantType.refresh_token,
             } as TokenRequest,
+            {
+                withCredentials: true,
+            }
         );
         this.setToken(response.data.access_token);
         localStorage.setItem("refreshToken", response.data.refresh_token);

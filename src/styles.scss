@@ -8,6 +8,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --app-height: 100%;
+}
+
 .hide-scrollbar {
     /* For Webkit-based browsers (Chrome, Safari) */
     &::-webkit-scrollbar {
