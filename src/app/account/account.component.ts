@@ -13,6 +13,7 @@ import { SidebarComponent } from "../common/sidebar/sidebar.component";
 import { RoutePath } from "../app.routes";
 import { NGXLogger } from "ngx-logger";
 import { TimeoutErrorModalComponent } from "../common/timeout-error-modal/timeout-error-modal.component";
+import { NotificationService } from "../../core/notifications/notifications.service";
 
 @Component({
     selector: "app-account",
@@ -46,6 +47,7 @@ export class AccountComponent implements OnInit {
         public localSettings: LocalSettingsService,
         private renderer: Renderer2,
         private logger: NGXLogger,
+        private notificationService: NotificationService
     ) {}
 
     async ngOnInit(): Promise<void> {
@@ -94,6 +96,11 @@ export class AccountComponent implements OnInit {
     toggleMarkAsRead(autoMarkAsRead: boolean) {
         this.localSettings.setAutoMarkAsRead(autoMarkAsRead);
     }
+
+    enableNotifications() {
+        this.notificationService.requestPermission();
+    }
+        
 
     errorStr: string = "";
     errorData: any;

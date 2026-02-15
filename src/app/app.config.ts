@@ -1,7 +1,7 @@
 import {
     ApplicationConfig,
     importProvidersFrom,
-    provideZoneChangeDetection,
+    provideZoneChangeDetection, isDevMode,
 } from "@angular/core";
 import { provideRouter, ROUTES } from "@angular/router";
 
@@ -13,6 +13,7 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 import { NgxLoggerLevel, LoggerModule } from "ngx-logger";
 import { environment } from "../environments/environment";
 import { provideHttpClient } from "@angular/common/http";
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -38,6 +39,14 @@ export const appConfig: ApplicationConfig = {
                         : NgxLoggerLevel.DEBUG,
                 disableConsoleLogging: false,
             }),
-        ),
+        ), 
+        //provideServiceWorker('ngsw-worker.js', {
+        //    enabled: !isDevMode(),
+        //    registrationStrategy: 'registerWhenStable:30000'
+        //}), 
+        provideServiceWorker('custom-service-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+        }), 
     ],
 };

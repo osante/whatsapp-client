@@ -1,7 +1,6 @@
+<!-- LEFT SIDEBAR -->
+<app-sidebar [activePage]="currentFragment"></app-sidebar>
 <div class="w-screen h-screen flex">
-  <!-- LEFT SIDEBAR -->
-  <app-sidebar [activePage]="currentFragment"></app-sidebar>
-
   <!-- CHATS SIDEBAR -->
   <app-chats-sidebar
     [ngClass]="{
@@ -9,8 +8,8 @@
     }"
     (select)="conversations.getCurrentMessagingProductContactId($event)"
     #chatsSidebar
-  ></app-chats-sidebar>
-
+  >
+  </app-chats-sidebar>
   <!-- MAIN CONTENT WRAPPER (centered with mx-auto) -->
   <div
     class="flex-1 min-w-0 flex justify-center"

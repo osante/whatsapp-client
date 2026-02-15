@@ -21,20 +21,29 @@ export const userGuard: CanActivateFn = async (route, state) => {
         await authService.checkAndRefreshToken();
 
         if (!authService.getToken()) {
-            return router.createUrlTree([
+            const currentPath = window.location.pathname + window.location.search + window.location.hash;
+            window.location.href = `/oauth2/authorization/google?redirect_uri=${encodeURIComponent(currentPath)}`;
+            return false;
+            /*return router.createUrlTree([
                 `/${RoutePath.auth}/${RoutePath.login}`,
-            ]);
+            ]);*/
         }
 
         const me = await userStore
             .getCurrent()
             .then(() => true)
-            .catch(() =>
-                router.createUrlTree([`/${RoutePath.auth}/${RoutePath.login}`]),
-            );
+            .catch(() => {
+                const currentPath = window.location.pathname + window.location.search + window.location.hash;
+                window.location.href = `/oauth2/authorization/google?redirect_uri=${encodeURIComponent(currentPath)}`;
+                return false;
+                //return router.createUrlTree([`/${RoutePath.auth}/${RoutePath.login}`]);
+            });
 
         return me;
     } catch {
-        return router.createUrlTree([`/${RoutePath.auth}/${RoutePath.login}`]);
+        const currentPath = window.location.pathname + window.location.search + window.location.hash;
+        window.location.href = `/oauth2/authorization/google?redirect_uri=${encodeURIComponent(currentPath)}`;
+        return false;
+        //return router.createUrlTree([`/${RoutePath.auth}/${RoutePath.login}`]);
     }
 };

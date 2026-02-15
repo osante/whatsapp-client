@@ -90,7 +90,7 @@ export class ConversationFooterComponent {
     private _senderData: SenderData = {
         messaging_product: "whatsapp",
         recipient_type: "individual",
-        to: this.toPhoneNumberInput,
+        to: this.contactName,
         type: MessageType.text,
     };
     @Input("senderData")
@@ -99,6 +99,7 @@ export class ConversationFooterComponent {
     }
     set senderData(value: SenderData) {
         this._senderData = value;
+        console.log("Sender data updated:", value);
         const type = value.type;
         setTimeout(() => {
             this.messageType = type;
@@ -221,7 +222,7 @@ export class ConversationFooterComponent {
         const senderData = {
             messaging_product: "whatsapp",
             recipient_type: "individual",
-            to: this.toPhoneNumberInput,
+            to: this.contactName,
             type: MessageType.text,
             text: {
                 body: this.textBody,
@@ -240,6 +241,7 @@ export class ConversationFooterComponent {
                 context,
             },
         };
+        
         this.sent.emit(payload.sender_data);
         this.resetForm();
         const data = await this.messageController.sendWhatsAppMessage(payload);

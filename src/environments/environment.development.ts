@@ -4,11 +4,11 @@ export const environment = {
     env: "development",
 
     googleMapsApiKey: "your google maps api key", // Should allow  Google Places API and Google Maps JavaScript API
-    mainServerUrl: "localhost:6900",
-    mainServerSecurity: true,
+    mainServerUrl: "https://www.sofitek-bot.duckdns.org/chat",
+    mainServerWsUrl: "wss://www.sofitek-bot.duckdns.org/chat",
     nodeRedServerUrl: "localhost:1880",
-    nodeRedServerSecurity: true,
-    appTitle: "wacraft",
+    nodeRedServerSecurity: false,
+    appTitle: "SofiChat",
 
     webSocketBasePingInterval: 30000,
 };

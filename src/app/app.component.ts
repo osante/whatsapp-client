@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
     setAppHeight() {
         document.documentElement.style.setProperty(
             '--app-height',
-            `${window.innerHeight}px`
+            `${window.innerHeight-80}px`
         );
     }
 }

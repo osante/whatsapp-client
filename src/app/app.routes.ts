@@ -20,10 +20,10 @@ export enum RoutePath {
 }
 
 export const routes: Routes = [
-    {
+    /*{
         path: `${RoutePath.auth}/${RoutePath.login}`,
         component: LoginComponent,
-    },
+    },*/
     {
         path: RoutePath.home,
         component: HomeComponent,
@@ -44,7 +44,7 @@ export const routes: Routes = [
         component: UsersComponent,
         canActivate: [userGuard],
     },
-    environment.isLite
+    /*environment.isLite
         ? {
               path: RoutePath.automation,
               pathMatch: "full",
@@ -53,7 +53,7 @@ export const routes: Routes = [
               path: RoutePath.automation,
               component: AutomationComponent,
               canActivate: [userGuard],
-          },
+          },*/
     {
         path: "",
         redirectTo: RoutePath.home,
