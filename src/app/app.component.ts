@@ -20,13 +20,13 @@ export class AppComponent implements OnInit {
         this.setAppHeight();
     }
 
-    title = "wacraft-client";
+    title = "Sofitek";
 
     @HostListener('window:resize')
     setAppHeight() {
         document.documentElement.style.setProperty(
             '--app-height',
-            `${window.innerHeight-80}px`
+            `${window.innerHeight}px`
         );
     }
 }

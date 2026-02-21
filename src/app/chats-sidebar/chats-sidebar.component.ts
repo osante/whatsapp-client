@@ -23,35 +23,53 @@ import { MatIconModule } from "@angular/material/icon";
 import { KeyboardNavigableList } from "../common/keyboard/keyboard-navigable-list.base";
 import { NGXLogger } from "ngx-logger";
 import { TimeoutErrorModalComponent } from "../common/timeout-error-modal/timeout-error-modal.component";
+import { SidebarComponent } from "../common/sidebar/sidebar.component";
+import { HomeFragment } from "../home/model/home-fragment.model";
 
 @Component({
     selector: "app-chats-sidebar",
     imports: [
-        CommonModule,
-        MessageModule,
-        FormsModule,
-        MessagingProductContactFromMessagePipe,
-        MessagingProductContactFromMessagePipe,
-        ConversationPreviewComponent,
-        SmallButtonComponent,
-        MatIconModule,
-        RouterModule,
-    ],
+    CommonModule,
+    MessageModule,
+    FormsModule,
+    MessagingProductContactFromMessagePipe,
+    MessagingProductContactFromMessagePipe,
+    ConversationPreviewComponent,
+    SmallButtonComponent,
+    MatIconModule,
+    RouterModule,
+    SidebarComponent
+],
     templateUrl: "./chats-sidebar.component.html",
     styleUrl: "./chats-sidebar.component.scss",
     standalone: true,
 })
 export class ChatsSidebarComponent extends KeyboardNavigableList implements OnInit {
+    HomeFragment: typeof HomeFragment = HomeFragment;
     private scrolling: boolean = false;
 
     @ViewChild("searchTextarea")
     searchTextarea!: ElementRef<HTMLTextAreaElement>;
 
-    @Output("select") select = new EventEmitter<ConversationMessagingProductContact>();
+    @Output("select") 
+    select = new EventEmitter<ConversationMessagingProductContact>();
 
     messagingProductContactIdFilter?: string;
 
-    @ViewChild("errorModal") errorModal!: TimeoutErrorModalComponent;
+    @ViewChild("errorModal") 
+    errorModal!: TimeoutErrorModalComponent;
+
+    @ViewChild("draggableContainer") 
+    draggableContainer!: ElementRef<HTMLElement>;
+    isResizing = false;
+    sidebarWidth = 400;
+
+    @ViewChildren(ConversationPreviewComponent, { read: ElementRef })
+    protected rows!: QueryList<ElementRef<HTMLElement>>;
+    
+    errorStr: string = "";
+    errorData: any;
+    
 
     constructor(
         private route: ActivatedRoute,
@@ -151,6 +169,12 @@ export class ChatsSidebarComponent extends KeyboardNavigableList implements OnIn
         }
     }
 
+    selectConversation(conversation: ConversationMessagingProductContact) {
+        this.select.emit(conversation);
+        this.queryParamsService.sidebarOpen = false;
+        console.log("Selected conversation", conversation);
+    }
+
     // Handle message read.
     watchQueryParams() {
         this.route.queryParams.subscribe(async (params) => {
@@ -167,19 +191,13 @@ export class ChatsSidebarComponent extends KeyboardNavigableList implements OnIn
         };
     }
 
-    @ViewChildren(ConversationPreviewComponent, { read: ElementRef })
-    protected rows!: QueryList<ElementRef<HTMLElement>>;
-
     protected onEnter(i: number) {
         this.rows.toArray()[i].nativeElement.click();
     }
 
-    @ViewChild("draggableContainer")
-    draggableContainer!: ElementRef<HTMLElement>;
-    isResizing = false;
-    sidebarWidth = 400;
+    
     @HostListener("window:mousemove", ["$event"])
-    private onMouseMove(event: MouseEvent) {
+    protected onMouseMove(event: MouseEvent) {
         if (!this.isResizing) return;
         if (!this.queryParamsService.sidebarOpen) this.queryParamsService.openSidebar();
 
@@ -192,12 +210,12 @@ export class ChatsSidebarComponent extends KeyboardNavigableList implements OnIn
     }
 
     @HostListener("window:mouseup")
-    private onMouseUp() {
+    protected onMouseUp() {
         this.isResizing = false;
     }
 
     @HostListener("window:keydown.control.shift.f", ["$event"])
-    private onControlShiftF(event: KeyboardEvent) {
+    protected onControlShiftF(event: Event) {
         event.preventDefault();
         this.searchTextarea.nativeElement.focus();
     }
@@ -207,8 +225,6 @@ export class ChatsSidebarComponent extends KeyboardNavigableList implements OnIn
         event.preventDefault(); // Prevent text selection
     }
 
-    errorStr: string = "";
-    errorData: any;
     handleErr(message: string, err: any) {
         this.errorData = err?.response?.data;
         this.errorStr = err?.response?.data?.description || message;

@@ -75,7 +75,9 @@ export class ConversationPreviewComponent implements OnInit {
                     ? params["message.id"] === this.messageId
                     : true);
 
-            if (this.isSelected) this.select.emit(this.messagingProductContact);
+            if (this.isSelected) {
+                this.select.emit(this.messagingProductContact);
+            }
         });
     }
 

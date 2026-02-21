@@ -1,6 +1,21 @@
 <div
     class="flex justify-between items-center p-2 bg-gray-200 dark:bg-gray-700 dark:text-white relative dark:main-shadow"
 >
+        <div>
+            <button
+                id="sidebar-toggle"
+                class="rounded-lg w-10 aspect-square border flex items-center justify-center text-white border-gray-500 dark:border-gray-500"
+                (click)="queryParamsService.sidebarOpen = !queryParamsService.sidebarOpen"
+            >
+                <i
+                    [ngClass]="{
+                        'fa-solid fa-chevron-right transition-transform duration-300 outline-none': true,
+                        'text-gray-500 dark:text-gray-500': true,
+                        'rotate-180': queryParamsService.sidebarOpen,
+                    }"
+                ></i>
+            </button>
+        </div>
     <a
         [routerLink]="[]"
         [queryParams]="contactDetailsQueryParams"

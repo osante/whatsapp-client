@@ -5,6 +5,7 @@ import { ConversationMessagingProductContact } from "../../../core/message/model
 import { RouterModule } from "@angular/router";
 import { OptionsComponent } from "./options/options.component";
 import { contactDetailsQueryParams } from "./constant/query-params.constant";
+import { QueryParamsService } from "../../../core/navigation/service/query-params.service";
 
 @Component({
     selector: "app-conversation-header",
@@ -25,7 +26,7 @@ export class ConversationHeaderComponent {
     messagingProductContact!: ConversationMessagingProductContact;
     @Output() searchAtContactId = new EventEmitter<string>();
 
-    constructor() {}
+    constructor(public queryParamsService: QueryParamsService) {}
 
     contactDetailsQueryParams = contactDetailsQueryParams;
 

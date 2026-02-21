@@ -34,6 +34,7 @@ html {
 
 body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
+    padding-top: env(safe-area-inset-top);
 }
 
 @layer components {

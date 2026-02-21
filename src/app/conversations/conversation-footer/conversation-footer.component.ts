@@ -483,12 +483,12 @@ export class ConversationFooterComponent {
     //
     /* Ctrl/⌘ m – toggle types selector */
     @HostListener("window:keydown.control.m", ["$event"])
-    private handleControlM(e: KeyboardEvent) {
+    handleControlM(e: Event) {
         e.preventDefault();
         this.messageTypeSelectorOpen = !this.messageTypeSelectorOpen;
     }
     @HostListener("window:keydown.control.y", ["$event"])
-    private handleControlY(e: KeyboardEvent) {
+    handleControlY(e: Event) {
         e.preventDefault();
         this.area.nativeElement.focus();
     }

@@ -2,33 +2,7 @@
     class="bg-gray-200 dark:bg-gray-700 py-2 overflow-auto flex flex-row justify-between items-center border-gray-300 dark:border-gray-700 border-r"
 >
     <div class="flex flex-row items-center justify-center">
-        <div
-            [ngClass]="{
-                'flex flex-col items-center justify-center transition-all duration-300 overflow-hidden': true,
-                'max-h-0': isCollapsed,
-                'max-h-80': !isCollapsed,
-            }"
-        >
-            <button
-                id="sidebar-toggle"
-                class="rounded-lg w-10 aspect-square border flex items-center justify-center text-white border-gray-500 dark:border-gray-500"
-                (click)="
-                    queryParamsService.sidebarOpen
-                        ? queryParamsService.closeSidebar()
-                        : queryParamsService.openSidebar()
-                "
-            >
-                <i
-                    [ngClass]="{
-                        'fa-solid fa-chevron-right transition-transform duration-300 outline-none': true,
-                        'text-gray-500 dark:text-gray-500': true,
-                        'rotate-180': queryParamsService.sidebarOpen,
-                    }"
-                ></i>
-            </button>
-        </div>
-
-        <a
+        <!--a
             [routerLink]="['/', RoutePath.home]"
             [fragment]="HomeFragment.chats"
             [queryParams]="queryParamsService.globalQueryParams"
@@ -42,7 +16,7 @@
                 i18n-matTooltip
             >
             </app-small-button>
-        </a>
+        </a-->
         <a
             [routerLink]="['/', RoutePath.account]"
             [queryParams]="queryParamsService.globalQueryParams"

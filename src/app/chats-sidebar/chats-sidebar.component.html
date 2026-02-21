@@ -26,14 +26,16 @@
                         }}</span
                     >
                 </p>
-                <a
+                <!--a
                     [routerLink]="[]"
                     [queryParams]="addChatQueryParams"
                     queryParamsHandling="replace"
                     [preserveFragment]="true"
                 >
                     <app-small-button matSymbol="chat_add_on"> </app-small-button>
-                </a>
+                </a-->
+                <!-- LEFT SIDEBAR -->
+                <app-sidebar [activePage]="HomeFragment.chats"></app-sidebar>
             </h2>
 
             <div class="relative mt-4 flex w-full flex-row gap-2">
@@ -96,7 +98,7 @@
                     "
                     [date]="conversation.message.created_at"
                     [unread]="conversation.unread"
-                    (select)="select.emit($event)"
+                    (select)="selectConversation($event)"
                 ></app-conversation-preview>
             </li>
         </ul>
