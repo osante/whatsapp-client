@@ -58,7 +58,7 @@ export class ConversationsComponent implements OnInit {
 
     /** Close / clean-up when Esc is pressed */
     @HostListener("document:keydown.escape")
-    private removeQueryParam(): void {
+    removeQueryParam(): void {
         this.logger.debug("Closing from conversations...");
         this.router.navigate(
             [], // keep current URL

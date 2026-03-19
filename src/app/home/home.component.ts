@@ -1,5 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from "@angular/core";
-import { SidebarComponent } from "../common/sidebar/sidebar.component";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { ChatsSidebarComponent } from "../chats-sidebar/chats-sidebar.component";
 import { CommonModule } from "@angular/common";
 import { ConversationsComponent } from "../conversations/conversations.component";
@@ -17,7 +16,6 @@ import { environment } from "../../environments/environment";
     selector: "app-home",
     imports: [
         CommonModule,
-        SidebarComponent,
         ChatsSidebarComponent,
         ConversationsComponent,
         NewContactComponent,
