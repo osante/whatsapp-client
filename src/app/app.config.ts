@@ -14,6 +14,8 @@ import { NgxLoggerLevel, LoggerModule } from "ngx-logger";
 import { environment } from "../environments/environment";
 import { provideHttpClient } from "@angular/common/http";
 import { provideServiceWorker } from '@angular/service-worker';
+import { getBrowserLocale } from "../main";
+import { LOCALE_ID } from '@angular/core';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -48,5 +50,9 @@ export const appConfig: ApplicationConfig = {
             enabled: !isDevMode(),
             registrationStrategy: 'registerWhenStable:30000'
         }), 
+        {
+            provide: LOCALE_ID,
+            useFactory: getBrowserLocale
+        }
     ],
 };

@@ -126,18 +126,18 @@ export class ConversationMessageComponent {
 
     // Listen for clicks in this component
     @HostListener("keydown.enter", ["$event"])
-    private onEnter(event: MouseEvent) {
+    onEnter(event: MouseEvent) {
         this.showOptionsArrow();
         this.optionsOpen = true;
     }
     @HostListener("window:keydown.shift.escape", ["$event"])
-    private closeOnShiftEscape(event: KeyboardEvent) {
+    closeOnShiftEscape(event: KeyboardEvent) {
         event.preventDefault();
         this.hideOptionsArrow();
         this.closeOptions();
     }
     @HostListener("blur", ["$event"])
-    private onBlur() {
+    onBlur() {
         this.hideOptionsArrow();
         this.closeOptions();
     }

@@ -5,6 +5,18 @@ import { appConfig } from "./app/app.config";
 import { AppComponent } from "./app/app.component";
 import { environment } from "./environments/environment";
 import { getThemeMode, ThemeMode } from "./core/common/model/theme-modes.model";
+import { registerLocaleData } from '@angular/common';
+import localeEsMx from '@angular/common/locales/es-MX';
+import localeEn from '@angular/common/locales/en';
+
+registerLocaleData(localeEsMx);
+registerLocaleData(localeEn);
+
+export function getBrowserLocale() {
+  const locale = navigator.language || 'en-US';
+  if (locale.startsWith('es')) return 'es-MX';
+  return 'en-US';
+}
 
 // Inject Google Maps Script
 function loadGoogleMaps(apiKey: string) {
