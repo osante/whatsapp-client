@@ -1,5 +1,6 @@
 import { Component, OnInit, Renderer2, ViewChild } from "@angular/core";
 import { UserControllerService } from "../../core/user/controller/user-controller.service";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { UnreadMode } from "../../core/local-config/model/unread-mode.model";
@@ -14,6 +15,7 @@ import { RoutePath } from "../app.routes";
 import { NGXLogger } from "ngx-logger";
 import { TimeoutErrorModalComponent } from "../common/timeout-error-modal/timeout-error-modal.component";
 import { NotificationService } from "../../core/notifications/notifications.service";
+import { HomeFragment } from "../home/model/home-fragment.model";
 
 @Component({
     selector: "app-account",
@@ -22,6 +24,7 @@ import { NotificationService } from "../../core/notifications/notifications.serv
         FormsModule,
         MatTooltipModule,
         MatIconModule,
+        RouterModule,
         SidebarComponent,
         TimeoutErrorModalComponent,
     ],
@@ -31,6 +34,7 @@ import { NotificationService } from "../../core/notifications/notifications.serv
 })
 export class AccountComponent implements OnInit {
     RoutePath = RoutePath;
+    HomeFragment: typeof HomeFragment = HomeFragment;
 
     ThemeMode = ThemeMode;
     UnreadMode = UnreadMode;

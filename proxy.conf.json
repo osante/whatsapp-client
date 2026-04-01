@@ -1,6 +1,6 @@
 {
   "/chat": {
-    "target": "https://sofi-bot.duckdns.org",
+    "target": "https://sofitek.com.mx",
     "secure": true,
     "changeOrigin": true,
     "logLevel": "debug"

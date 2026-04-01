@@ -4,16 +4,13 @@
         <div>
             <button
                 id="sidebar-toggle"
-                class="rounded-lg w-10 aspect-square border flex items-center justify-center text-white border-gray-500 dark:border-gray-500"
+                class="mr-5 rounded-lg w-12 aspect-square border flex items-center justify-center text-white border-gray-500 dark:border-gray-500"
                 (click)="queryParamsService.sidebarOpen = !queryParamsService.sidebarOpen"
             >
-                <i
-                    [ngClass]="{
-                        'fa-solid fa-chevron-right transition-transform duration-300 outline-none': true,
-                        'text-gray-500 dark:text-gray-500': true,
-                        'rotate-180': queryParamsService.sidebarOpen,
-                    }"
-                ></i>
+                <i 
+                    class="fa-solid fa-chevron-left outline-none text-gray-500 dark:text-gray-500"
+                >
+                </i>
             </button>
         </div>
     <a

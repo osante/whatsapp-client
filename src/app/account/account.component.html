@@ -1,12 +1,31 @@
 <div class="relative flex h-screen w-full max-w-full justify-center">
-    <app-sidebar class="grow-0" [activePage]="RoutePath.account" #sidebar></app-sidebar>
-
+    <!--app-sidebar class="grow-0" [activePage]="RoutePath.account" #sidebar></app-sidebar-->
     <div
         class="grow-1 scrollable mx-auto h-full w-full overflow-y-scroll p-6 dark:bg-gray-900 dark:text-gray-100"
     >
-        <h3 class="mb-4 text-xl font-semibold text-gray-600 dark:text-gray-200" i18n>
-            Account settings
-        </h3>
+        <div class="flex justify-between items-center pb-2">
+            <a
+            [routerLink]="['/', RoutePath.home]"
+            [fragment]="HomeFragment.chats"
+            queryParamsHandling="replace"
+            class="navigator"
+        >
+            <button
+                id="sidebar-toggle"
+                class="mr-5 rounded-lg w-12 aspect-square border flex items-center justify-center text-white border-gray-500 dark:border-gray-500"
+            >
+                <i 
+                    class="fa-solid fa-chevron-left outline-none text-gray-500 dark:text-gray-500"
+                >
+                </i>
+            </button>
+        </a>
+            
+            
+            <h3 class="w-full text-xl font-semibold text-gray-600 dark:text-gray-200" i18n>
+                Account settings
+            </h3>
+        </div>
 
         <div
             *ngIf="userStore.currentUser"
