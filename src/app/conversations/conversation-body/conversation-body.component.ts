@@ -154,8 +154,9 @@ export class ConversationBodyComponent extends KeyboardNavigableList implements 
                     // If the history is empty, we need to load the top conversations
                     (this.userConversationStore.messageHistory.get(this.messagingProductContact.id)
                         ?.length || 0) === 0
-                )
+                ) {
                     return await this.getTopConversations();
+                }
                 if (
                     // If we have an offset, we need to clear it, clear the history and load the top conversations
                     await this.userConversationStore.getOffset(messagingProductContactId)
@@ -168,22 +169,24 @@ export class ConversationBodyComponent extends KeyboardNavigableList implements 
                 }
             }
 
-            // When searching for a specific message
-            await Promise.all([
-                this.userConversationStore.setOffset(
-                    messagingProductContactId,
-                    (await this.conversationController.countByMessagingProductContact(
-                        this.messagingProductContact.id,
-                        undefined,
-                        undefined,
-                        { created_at: DateOrderEnum.desc },
-                        { created_at_geq: new Date(createdAt) },
-                    )) +
+            if (createdAt) {
+                // When searching for a specific message
+                await Promise.all([
+                    this.userConversationStore.setOffset(
+                        messagingProductContactId,
+                        (await this.conversationController.countByMessagingProductContact(
+                            this.messagingProductContact.id,
+                            undefined,
+                            undefined,
+                            { created_at: DateOrderEnum.desc },
+                            { created_at_geq: new Date(createdAt) },
+                        )) +
                         this.userConversationStore.paginationLimit -
                         1,
-                ),
-                this.userConversationStore.resetHistory(this.messagingProductContact.id),
-            ]);
+                    ),
+                    this.userConversationStore.resetHistory(this.messagingProductContact.id),
+                ]);
+            }
 
             return await this.getBottomConversations();
         });
@@ -214,10 +217,10 @@ export class ConversationBodyComponent extends KeyboardNavigableList implements 
     }
 
     // Flag to prevent multiple adjustments
-    onAsyncContentLoaded(): void {}
+    onAsyncContentLoaded(): void { }
 
     @ViewChildren(ConversationMessageComponent, { read: ElementRef })
     protected rows!: QueryList<ElementRef<HTMLElement>>;
 
-    protected onEnter(i: number) {}
+    protected onEnter(i: number) { }
 }

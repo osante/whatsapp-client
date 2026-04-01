@@ -182,10 +182,11 @@ export class ConversationStoreService {
                 messagingProductContactId,
         );
         if (!conversation) return;
-        if (this.localSettings.unreadMode === UnreadMode.SERVER)
+        if (this.localSettings.unreadMode === UnreadMode.SERVER) {
             this.messagingProductContactController.updateLastReadAt(
                 this.messagingProductPipe.transform(conversation.message).id,
             );
+        }
         conversation.resetUnread();
     }
 

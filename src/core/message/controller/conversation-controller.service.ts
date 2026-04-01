@@ -81,6 +81,14 @@ export class ConversationControllerService extends MainServerControllerService {
         order: DateOrderWithDeletedAt = {},
         whereDate: WhereDateWithDeletedAt = {},
     ): Promise<number> {
+
+        const params = {
+            ...query,
+            ...pagination,
+            ...order,
+            ...whereDate,
+        };
+        
         return (
             await this.http.get<number>(
                 `count/${ServerEndpoints.messaging_product_contact}/${messagingProductContactId}`,

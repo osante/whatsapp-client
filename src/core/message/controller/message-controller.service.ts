@@ -102,18 +102,18 @@ export class MessageControllerService extends MainServerControllerService {
         order: DateOrderWithDeletedAt = {},
         whereDate: WhereDateWithDeletedAt = {},
     ): Promise<{ success: boolean }> {
+        const params = {
+            ...query,
+            ...pagination,
+            ...order,
+            ...whereDate,
+        };
+
         return (
             await this.http.post<{ success: boolean }>(
                 `${ServerEndpoints.whatsapp}/mark-as-read`,
                 undefined,
-                {
-                    params: {
-                        ...query,
-                        ...pagination,
-                        ...order,
-                        ...whereDate,
-                    },
-                },
+                { params }
             )
         ).data;
     }

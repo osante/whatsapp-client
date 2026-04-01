@@ -172,7 +172,6 @@ export class ChatsSidebarComponent extends KeyboardNavigableList implements OnIn
     selectConversation(conversation: ConversationMessagingProductContact) {
         this.select.emit(conversation);
         this.queryParamsService.sidebarOpen = false;
-        console.log("Selected conversation", conversation);
     }
 
     // Handle message read.
