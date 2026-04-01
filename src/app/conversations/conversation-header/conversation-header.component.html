@@ -1,18 +1,19 @@
 <div
     class="flex justify-between items-center p-2 bg-gray-200 dark:bg-gray-700 dark:text-white relative dark:main-shadow"
 >
-        <div>
-            <button
-                id="sidebar-toggle"
-                class="mr-5 rounded-lg w-12 aspect-square border flex items-center justify-center text-white border-gray-500 dark:border-gray-500"
-                (click)="queryParamsService.sidebarOpen = !queryParamsService.sidebarOpen"
+    <div>
+        <button
+            id="sidebar-toggle"
+            class="mr-5 rounded-lg w-12 aspect-square border flex items-center justify-center text-white border-gray-500 dark:border-gray-500"
+            (click)="queryParamsService.sidebarOpen = !queryParamsService.sidebarOpen"
+        >
+            <i 
+                class="fa-solid fa-chevron-left outline-none text-gray-500 dark:text-gray-500"
             >
-                <i 
-                    class="fa-solid fa-chevron-left outline-none text-gray-500 dark:text-gray-500"
-                >
-                </i>
-            </button>
-        </div>
+            </i>
+        </button>
+    </div>
+    
     <a
         [routerLink]="[]"
         [queryParams]="contactDetailsQueryParams"

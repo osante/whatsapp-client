@@ -24,7 +24,7 @@
                 class="fas fa-user-circle w-9xl mb-2 aspect-square text-9xl text-gray-500"
             ></i>
             <!-- Edit Button -->
-            <button
+            <!--button
                 class="absolute bottom-0 right-0 flex aspect-square items-center justify-center rounded-full bg-gray-300 p-2 dark:bg-gray-700 dark:text-white"
                 (click)="toggleEdit()"
                 aria-label="Edit"
@@ -33,7 +33,7 @@
                 *ngIf="!isEditing"
             >
                 <mat-icon class="material-icons-outlined brightness-50">edit_square</mat-icon>
-            </button>
+            </button-->
         </div>
 
         <!-- Editable Form -->
@@ -188,7 +188,7 @@
         </div>
     </div>
 
-    <div
+    <!--div
         class="mt-4 w-full max-w-full overflow-hidden pb-4 dark:bg-gray-800"
         *ngIf="messagingProductContact.id"
     >
@@ -214,7 +214,7 @@
                 [message]="message"
             ></app-media-preview>
         </div>
-    </div>
+    </div-->
 
     <div class="mt-4 w-full dark:bg-gray-800" *ngIf="messagingProductContact.id">
         <!-- Unblock Button -->
@@ -247,7 +247,7 @@
         </button>
 
         <!-- Block Button -->
-        <button
+        <!--button
             class="relative flex w-full items-center py-4 pl-8 text-start text-red-500 transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-gray-700"
             *ngIf="!messagingProductContact.blocked"
             (click)="blockContact()"
@@ -255,7 +255,7 @@
         >
             <i class="fas fa-ban mr-4"></i>
             <span i18n>Block</span>
-            <!-- Spinner for Blocking -->
+            ****Spinner for Blocking****
             <svg
                 *ngIf="isBlocking"
                 class="absolute right-4 ml-2 h-5 w-5 animate-spin text-white"
@@ -273,17 +273,17 @@
                 ></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
             </svg>
-        </button>
+        </button-->
 
         <!-- Delete Button -->
-        <button
+        <!--button
             class="relative flex w-full items-center py-4 pl-8 text-start text-red-500 transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-gray-700"
             (click)="deleteContact()"
             [disabled]="isDeleting || isLoading"
         >
             <i class="fas fa-trash mr-4"></i>
             <span i18n>Delete</span>
-            <!-- Spinner for Deleting -->
+            <*** Spinner for Deleting ***>
             <svg
                 *ngIf="isDeleting"
                 class="absolute right-4 ml-2 h-5 w-5 animate-spin text-white"
@@ -301,7 +301,7 @@
                 ></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
             </svg>
-        </button>
+        </button-->
 
         <!-- This must be included when handling many messaging products. -->
         <!-- <button -->

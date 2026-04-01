@@ -111,7 +111,7 @@ export class ContactInfoComponent implements OnInit {
                 //     this.phoneControl.setValue(intlPhoneNumber);
                 // }
 
-                await Promise.all([this.countMediaLinksAndDocs(), this.getInitialMedia()]);
+                //await Promise.all([this.countMediaLinksAndDocs(), this.getInitialMedia()]);
 
                 this.phoneControl.disable();
 
